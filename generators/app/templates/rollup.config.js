@@ -1,8 +1,7 @@
-const rollup = require('rollup');
-//const flow = require('rollup-plugin-flow-no-whitespace')
-const babel = require('rollup-plugin-babel');
-const uglify = require('rollup-plugin-uglify');
-const alias = require('rollup-plugin-alias');
+import rollup from 'rollup';
+import babel from 'rollup-plugin-babel';
+import uglify from 'rollup-plugin-uglify';
+import alias from 'rollup-plugin-alias';
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import path from 'path';
@@ -14,7 +13,7 @@ const root = path.resolve(__dirname, './');
 
 module.exports = {
     input: 'src/index.js',
-    name: 'canvasInputMethod',
+    name: 'projectName',
     sourcemap: true,
     output: {
         file: 'dist/bundle.js',

@@ -1,12 +1,12 @@
 {
-  "name": "",
+  "name": "canvas-input-method",
   "version": "0.0.1",
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {
     "build": "rollup -c build/rollup.config.js",
     "dev": "rollup -w -c build/rollup.config.js",
-    "test": ""
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",
@@ -32,12 +32,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Luobata/$1"
+    "url": "git+https://github.com/Luobata/canvas-input-methods.git"
   },
   "author": "luobata",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Luobata/$1/issues"
+    "url": "https://github.com/Luobata/canvas-input-methods/issues"
   },
-  "homepage": "https://github.com/Luobata/$1#readme"
+  "homepage": "https://github.com/Luobata/canvas-input-methods#readme"
 }
