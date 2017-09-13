@@ -37,8 +37,7 @@ module.exports = {
             ],
         }),
         alias({
-            UI: path.resolve(__dirname, '../src/ui'),
-            EVENT: path.resolve(__dirname, '../src/event')
+            ASSETS: path.resolve(__dirname, '../assets')
         })
     ]
 // output format - 'amd', 'cjs', 'es6', 'iife', 'umd'

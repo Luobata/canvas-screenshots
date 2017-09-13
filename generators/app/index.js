@@ -55,6 +55,7 @@ module.exports = class extends Generator {
     mkdirp('build');
     mkdirp('dist');
     mkdirp('src');
+    mkdirp('assets');
     this.fs.copy(
       this.templatePath('gitignore_tpl'),
       this.destinationPath('.gitignore')
