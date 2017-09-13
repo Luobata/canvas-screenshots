@@ -44,6 +44,16 @@ module.exports = class extends Generator {
       this.props = props;
     });
   }
+  defaults () {
+    if (path.basename(this.destinationPath()) !== this.props.projectName) {
+      this.log(
+        'Your generator must be inside a folder named ' + this.props.projectName + '\n' +
+        'I\'ll automatically create this folder.'
+      );
+      mkdirp(this.props.projectName);
+      this.destinationRoot(this.destinationPath(this.props.projectName));
+    }
+  }
 
   writing() {
     const pkg = this.fs.readJSON(this.templatePath('package_tpl.json'), {});
