@@ -6,12 +6,21 @@ var helpers = require('yeoman-test');
 describe('generator-luobata-code:app', () => {
   beforeAll(() => {
     return helpers.run(path.join(__dirname, '../generators/app'))
-      .withPrompts({someAnswer: true});
+      .withPrompts({projectName: 'luobata', projectDesc: 'test', someAnswer: true});
   });
 
   it('creates files', () => {
     assert.file([
-      'dummyfile.txt'
+      '.babelrc',
+      '.gitignore',
+      '.tern-project',
+      'package.json',
+      'src/index.js',
+      'dist',
+      'assets',
+      'build',
+      'src',
+      'build/rollup.config.js'
     ]);
   });
 });
