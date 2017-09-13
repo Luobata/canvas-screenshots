@@ -2,15 +2,16 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
-const _ = require('lodash')
+const _ = require('lodash');
+const mkdirp = require('mkdirp');
 
 function toCamelCase(string) {
-    if(string.indexOf('-') < 0 && string.indexOf('_') < 0) {
-        return string;
-    }
-    return string.replace(/[-_][^-_]/g , function(match) {
-        return match.charAt(1).toUpperCase();
-    }); 
+  if (string.indexOf('-') < 0 && string.indexOf('_') < 0) {
+    return string;
+  }
+  return string.replace(/[-_][^-_]/g, function (match) {
+    return match.charAt(1).toUpperCase();
+  });
 }
 
 module.exports = class extends Generator {
@@ -27,9 +28,9 @@ module.exports = class extends Generator {
       default: 'luobata_app'
     },
     {
-        type: 'input',
-        name: 'projectDesc',
-        message: 'Please input project description:'
+      type: 'input',
+      name: 'projectDesc',
+      message: 'Please input project description:'
     },
     {
       type: 'confirm',
@@ -72,7 +73,7 @@ module.exports = class extends Generator {
       this.templatePath('index.js'),
       'src/index.js'
     );
-    // this.fs.copy(
+    // This.fs.copy(
     //   this.templatePath('rollup.config.js'),
     //   'build/rollup.config.js'
     // );
@@ -80,7 +81,6 @@ module.exports = class extends Generator {
     this.fs.write(this.destinationPath('build/rollup.config.js'), readmeTpl({
       projectName: toCamelCase(this.props.projectName)
     }));
-
   }
 
   install() {
