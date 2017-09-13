@@ -1,0 +1,14 @@
+{
+  "name": "generator-luobata-code",
+  "version": "0.1.0",
+  "description": "",
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^2.0.0"
+  }
+}
