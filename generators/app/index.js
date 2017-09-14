@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const yosay = require('yosay');
 const _ = require('lodash');
 const mkdirp = require('mkdirp');
+const path = require('path');
 
 function toCamelCase(string) {
   if (string.indexOf('-') < 0 && string.indexOf('_') < 0) {
@@ -44,7 +45,7 @@ module.exports = class extends Generator {
       this.props = props;
     });
   }
-  defaults () {
+  defaults() {
     if (path.basename(this.destinationPath()) !== this.props.projectName) {
       this.log(
         'Your generator must be inside a folder named ' + this.props.projectName + '\n' +
