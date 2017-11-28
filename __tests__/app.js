@@ -14,6 +14,7 @@ describe('generator-luobata-code:app', () => {
       '.babelrc',
       '.gitignore',
       '.tern-project',
+      '.eslintrc',
       'package.json',
       'src/index.js',
       'dist',
