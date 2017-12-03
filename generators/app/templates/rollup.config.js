@@ -10,6 +10,7 @@ import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 
 const root = path.resolve(__dirname, './');
+const port = 10002;
 
 module.exports = {
     input: 'src/index.js',
@@ -21,7 +22,11 @@ module.exports = {
     },
     plugins: [
         // uglify(),
-        serve(),
+        serve({
+            open: true,
+            contentBase: '',
+            port: port
+        }),
         // livereload(),
         resolve(),
         flow(

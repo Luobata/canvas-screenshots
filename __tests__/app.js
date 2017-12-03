@@ -20,6 +20,7 @@ describe('generator-luobata-code:app', () => {
       'assets',
       'build',
       'src',
+      'index.html',
       'build/rollup.config.js'
     ]);
   });
