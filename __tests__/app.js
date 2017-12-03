@@ -17,12 +17,16 @@ describe('generator-luobata-code:app', () => {
       '.eslintrc',
       'package.json',
       'src/index.js',
+      'test/index.js',
       'dist',
       'assets',
       'build',
       'src',
       'index.html',
-      'build/rollup.config.js'
+      'test.html',
+      'build/rollup.config.js',
+      'build/dev-server.js',
+      'build/dev-client.js'
     ]);
   });
 });

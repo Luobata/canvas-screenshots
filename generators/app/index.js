@@ -67,6 +67,7 @@ module.exports = class extends Generator {
     mkdirp('build');
     mkdirp('dist');
     mkdirp('src');
+    mkdirp('test');
     mkdirp('assets');
     this.fs.copy(
       this.templatePath('gitignore_tpl'),
@@ -75,6 +76,10 @@ module.exports = class extends Generator {
     this.fs.copy(
       this.templatePath('index.html'),
       this.destinationPath('index.html')
+    );
+    this.fs.copy(
+      this.templatePath('test.html'),
+      this.destinationPath('test.html')
     );
     this.fs.copy(
       this.templatePath('babelrc_tpl'),
@@ -92,6 +97,10 @@ module.exports = class extends Generator {
       this.templatePath('index.js'),
       'src/index.js'
     );
+    this.fs.copy(
+      this.templatePath('index.js'),
+      'test/index.js'
+    );
     // This.fs.copy(
     //   this.templatePath('rollup.config.js'),
     //   'build/rollup.config.js'
@@ -100,6 +109,18 @@ module.exports = class extends Generator {
     this.fs.write(this.destinationPath('build/rollup.config.js'), readmeTpl({
       projectName: toCamelCase(this.props.projectName)
     }));
+    this.fs.copy(
+      this.templatePath('dev-client.js'),
+      'build/dev-client.js'
+    );
+    this.fs.copy(
+      this.templatePath('dev-server.js'),
+      'build/dev-server.js'
+    );
+    this.fs.copy(
+      this.templatePath('webpack.config.js'),
+      'build/webpack.config.js'
+    );
   }
 
   install() {
