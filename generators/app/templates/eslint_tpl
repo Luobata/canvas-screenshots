@@ -28,6 +28,7 @@
     "react/jsx-indent": "off",
     "react/jsx-first-prop-new-line": "off",
     "react/jsx-filename-extension": "off",
+    "no-plusplus": "off",
     "no-restricted-syntax": "off"
   }
 }
