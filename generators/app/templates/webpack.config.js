@@ -9,16 +9,13 @@ module.exports = {
     entry:  root + "/test/index.js",
     entry : {
         app : [
-            "./build/dev-client",
+            "webpack-hot-middleware/client?quiet=true",
             root + "/test/index.js"
         ]
     },
     output: {
-        stats: {
-            colors: true
-        },
-        noInfo: true,
         path: root + "/",
+        publicPath: '/',
         filename: "bundle.js"
     },
 
@@ -26,11 +23,11 @@ module.exports = {
         loaders: [
         {
             test: /\.json$/,
-            loader: "json"
+            loader: "json-loader"
         },
         {
             test: /\.js$/,
-            loader: 'babel',
+            loader: 'babel-loader',
             exclude: /node_modules/,
             include: root
         },
@@ -49,9 +46,8 @@ module.exports = {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new htmlWebpackPlugin({
             filename: 'test.html',
             template: 'test.html',
