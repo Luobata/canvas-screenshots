@@ -1,5 +1,12 @@
 import { config } from './config';
 
+interface Box {
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+}
+
 export default class {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
@@ -10,6 +17,8 @@ export default class {
     maskCtx: CanvasRenderingContext2D;
     shootBox: HTMLElement;
     show: Boolean;
+    beginMove: Boolean;
+    box: Box;
 
     constructor(selector: string) {
         this.canvas = document.querySelector(selector);
@@ -26,6 +35,13 @@ export default class {
         this.maskCtx = this.mask.getContext('2d');
         this.shootBox = document.createElement('div');
         this.show = true;
+        this.beginMove = false;
+        this.box = {
+            startX: 0,
+            startY: 0,
+            endX: 0,
+            endY: 0,
+        };
 
         this.initBackGround();
         this.initEvent();
@@ -52,13 +68,18 @@ export default class {
         this.mask.width = width;
         this.mask.height = height;
         this.maskCtx.save();
-        //this.maskCtx.clearRect(0, 0, width, height);
         this.maskCtx.beginPath();
         this.maskCtx.globalAlpha = 0.7;
         this.maskCtx.fillStyle = 'gray';
         this.maskCtx.fillRect(0, 0, width, height);
         this.maskCtx.stroke();
         this.maskCtx.restore();
+        this.maskCtx.clearRect(
+            this.box.startX,
+            this.box.startY,
+            this.box.endX - this.box.startX,
+            this.box.endY - this.box.startY,
+        );
     }
 
     initEvent() {
@@ -68,10 +89,44 @@ export default class {
             }
         });
         this.mask.addEventListener('mousedown', e => {
-            console.log(e);
+            this.beginBox(e);
         });
         this.mask.addEventListener('mousemove', e => {
-            console.log(e);
+            this.drawBox(e);
         });
+        this.mask.addEventListener('mouseup', e => {
+            this.beginMove = false;
+        });
+    }
+
+    beginBox(e: MouseEvent) {
+        this.box.startX = e.clientX;
+        this.box.startY = e.clientY;
+        this.beginMove = true;
+        console.log(e);
+    }
+
+    drawBox(e: MouseEvent) {
+        if (!this.beginMove) return;
+        console.log(e);
+
+        this.box.endX = e.clientX;
+        this.box.endY = e.clientY;
+
+        //if (e.clientX > this.box.startX) {
+        //    this.box.endX = this.box.startX;
+        //    this.box.startX = e.clientX;
+        //} else {
+        //    this.box.endX = e.clientX;
+        //}
+
+        //if (e.clientY > this.box.startY) {
+        //    this.box.endY = this.box.startY;
+        //    this.box.startY = e.clientY;
+        //} else {
+        //    this.box.endY = e.clientY;
+        //}
+
+        this.resize();
     }
 }
