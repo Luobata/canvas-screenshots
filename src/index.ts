@@ -1,1 +1,5 @@
-console.log(1);
+import ScreenShoot from "./canvas/screen";
+
+export default () => {
+    new ScreenShoot();
+};
