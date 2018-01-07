@@ -36,12 +36,7 @@ export default class {
         this.shootBox = document.createElement('div');
         this.show = true;
         this.beginMove = false;
-        this.box = {
-            startX: 0,
-            startY: 0,
-            endX: 0,
-            endY: 0,
-        };
+        this.initBox();
 
         this.initBackGround();
         this.initEvent();
@@ -60,6 +55,15 @@ export default class {
         this.body.appendChild(this.mask);
     }
 
+    initBox() {
+        this.box = {
+            startX: 0,
+            startY: 0,
+            endX: 0,
+            endY: 0,
+        };
+    }
+
     resize() {
         // TODO 防抖
         const width = this.body.clientWidth;
@@ -73,13 +77,14 @@ export default class {
         this.maskCtx.fillStyle = 'gray';
         this.maskCtx.fillRect(0, 0, width, height);
         this.maskCtx.stroke();
-        this.maskCtx.restore();
+
         this.maskCtx.clearRect(
             this.box.startX,
             this.box.startY,
             this.box.endX - this.box.startX,
             this.box.endY - this.box.startY,
         );
+        this.maskCtx.restore();
     }
 
     initEvent() {
@@ -96,37 +101,52 @@ export default class {
         });
         this.mask.addEventListener('mouseup', e => {
             this.beginMove = false;
+            this.drawEnd();
         });
     }
 
     beginBox(e: MouseEvent) {
+        this.initBox();
         this.box.startX = e.clientX;
         this.box.startY = e.clientY;
         this.beginMove = true;
-        console.log(e);
     }
 
     drawBox(e: MouseEvent) {
         if (!this.beginMove) return;
-        console.log(e);
 
         this.box.endX = e.clientX;
         this.box.endY = e.clientY;
 
-        //if (e.clientX > this.box.startX) {
-        //    this.box.endX = this.box.startX;
-        //    this.box.startX = e.clientX;
-        //} else {
-        //    this.box.endX = e.clientX;
-        //}
-
-        //if (e.clientY > this.box.startY) {
-        //    this.box.endY = this.box.startY;
-        //    this.box.startY = e.clientY;
-        //} else {
-        //    this.box.endY = e.clientY;
-        //}
-
         this.resize();
+    }
+
+    drawEnd() {
+        const borderWidth = 1;
+        this.maskCtx.save();
+        this.maskCtx.beginPath();
+        this.maskCtx.fillStyle = 'black';
+        this.maskCtx.moveTo(
+            this.box.startX - borderWidth,
+            this.box.startY - borderWidth,
+        );
+        this.maskCtx.lineTo(
+            this.box.endX + borderWidth,
+            this.box.startY - borderWidth,
+        );
+        this.maskCtx.lineTo(
+            this.box.endX + borderWidth,
+            this.box.endY + borderWidth,
+        );
+        this.maskCtx.lineTo(
+            this.box.startX - borderWidth,
+            this.box.endY + borderWidth,
+        );
+        this.maskCtx.lineTo(
+            this.box.startX - borderWidth,
+            this.box.startY - borderWidth,
+        );
+        this.maskCtx.restore();
+        this.maskCtx.stroke();
     }
 }
