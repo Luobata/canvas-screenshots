@@ -1,5 +1,5 @@
-import ScreenShoot from "./canvas/screen";
+import ScreenShoot from './canvas/screen';
 
 export default () => {
-    new ScreenShoot();
+    new ScreenShoot('#screen');
 };

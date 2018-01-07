@@ -1,3 +1,3 @@
-import canvas from "../src/index";
+import canvas from '../src/index';
 
-console.log(canvas);
+canvas();
