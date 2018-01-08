@@ -58,7 +58,7 @@ export default class {
 
     hackBody() {
         // TODO 浏览器前缀
-        this.body.style['userSelect'] = 'none';
+        this.mask.style['userSelect'] = 'none';
     }
 
     initBackGround() {
@@ -77,10 +77,10 @@ export default class {
 
     initBox() {
         this.box = {
-            startX: 0,
-            startY: 0,
-            endX: 0,
-            endY: 0,
+            startX: -1,
+            startY: -1,
+            endX: -1,
+            endY: -1,
         };
     }
 
@@ -108,12 +108,14 @@ export default class {
     }
 
     initEvent() {
+        let hasTrajectory = false;
         window.addEventListener('resize', e => {
             if (this.show) {
                 this.resize();
             }
         });
         this.mask.addEventListener('mousedown', e => {
+            hasTrajectory = false;
             if (!hasBox.call(this)) {
                 this.beginBox(e);
             } else {
@@ -124,6 +126,7 @@ export default class {
         this.mask.addEventListener('mousemove', e => {
             if (this.beginMove) {
                 this.drawBox(e);
+                hasTrajectory = true;
             } else if (hasBox.call(this)) {
                 this.cursorStyle = cursor.call(this, e);
                 this.mask.style.cursor = this.cursorStyle;
@@ -132,7 +135,11 @@ export default class {
         });
         this.mask.addEventListener('mouseup', e => {
             this.beginMove = false;
-            drawEnd.call(this);
+            if (hasTrajectory) {
+                drawEnd.call(this);
+            } else if (!hasBox.call(this)) {
+                this.initBox();
+            }
         });
     }
 
@@ -153,7 +160,7 @@ export default class {
     }
 
     screenShots() {
-        console.log(10);
+        console.log('begin shots');
         // 开始截图
     }
 }

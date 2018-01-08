@@ -1,9 +1,9 @@
 export const hasBox = function(): boolean {
     return !(
-        this.box.startX === 0 &&
-        this.box.startY === 0 &&
-        this.box.endX === 0 &&
-        this.box.endY === 0
+        this.box.startX === -1 ||
+        this.box.startY === -1 ||
+        this.box.endX === -1 ||
+        this.box.endY === -1
     );
 };
 
