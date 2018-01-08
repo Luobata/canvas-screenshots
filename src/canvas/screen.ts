@@ -1,4 +1,6 @@
 import { config } from './config';
+import { drawEnd } from './drawbox';
+import cursor from './cursor';
 
 interface Box {
     startX: number;
@@ -6,6 +8,19 @@ interface Box {
     endX: number;
     endY: number;
 }
+interface Circle {
+    x: number;
+    y: number;
+}
+
+const hasBox = function(): boolean {
+    return !(
+        this.box.startX === 0 &&
+        this.box.startY === 0 &&
+        this.box.endX === 0 &&
+        this.box.endY === 0
+    );
+};
 
 export default class {
     canvas: HTMLCanvasElement;
@@ -15,6 +30,7 @@ export default class {
     body: HTMLElement;
     mask: HTMLCanvasElement;
     maskCtx: CanvasRenderingContext2D;
+    maskCircles: Array<Circle>;
     shootBox: HTMLElement;
     show: Boolean;
     beginMove: Boolean;
@@ -36,6 +52,7 @@ export default class {
         this.shootBox = document.createElement('div');
         this.show = true;
         this.beginMove = false;
+        this.maskCircles = [];
         this.initBox();
 
         this.initBackGround();
@@ -97,7 +114,11 @@ export default class {
             this.beginBox(e);
         });
         this.mask.addEventListener('mousemove', e => {
-            this.drawBox(e);
+            if (this.beginMove) {
+                this.drawBox(e);
+            } else if (hasBox.call(this)) {
+                this.cursorListener(e);
+            }
         });
         this.mask.addEventListener('mouseup', e => {
             this.beginMove = false;
@@ -122,76 +143,12 @@ export default class {
     }
 
     drawEnd() {
-        const borderWidth = 1;
-        const circleWidth = 3;
-        this.maskCtx.save();
-        this.maskCtx.beginPath();
-        this.maskCtx.fillStyle = 'black';
-        // boder
-        this.maskCtx.moveTo(
-            this.box.startX - borderWidth,
-            this.box.startY - borderWidth,
-        );
-        this.maskCtx.lineTo(
-            this.box.endX + borderWidth,
-            this.box.startY - borderWidth,
-        );
-        this.maskCtx.lineTo(
-            this.box.endX + borderWidth,
-            this.box.endY + borderWidth,
-        );
-        this.maskCtx.lineTo(
-            this.box.startX - borderWidth,
-            this.box.endY + borderWidth,
-        );
-        this.maskCtx.lineTo(
-            this.box.startX - borderWidth,
-            this.box.startY - borderWidth,
-        );
-        this.maskCtx.restore();
-        this.maskCtx.stroke();
-        // circle
-        const circleMap = [
-            {
-                x: this.box.startX - borderWidth,
-                y: this.box.startY - borderWidth,
-            },
-            {
-                x: this.box.startX - borderWidth,
-                y: this.box.endY + borderWidth,
-            },
-            {
-                x: this.box.startX - borderWidth,
-                y: this.box.startY + (this.box.endY - this.box.startY) / 2,
-            },
-            {
-                x: this.box.startX + (this.box.endX - this.box.startX) / 2,
-                y: this.box.startY - borderWidth,
-            },
-            {
-                x: this.box.startX + (this.box.endX - this.box.startX) / 2,
-                y: this.box.endY + borderWidth,
-            },
-            {
-                x: this.box.endX + borderWidth,
-                y: this.box.startY - borderWidth,
-            },
-            {
-                x: this.box.endX + borderWidth,
-                y: this.box.endY + borderWidth,
-            },
-            {
-                x: this.box.endX + borderWidth,
-                y: this.box.startY + (this.box.endY - this.box.startY) / 2,
-            },
-        ];
-        for (let i of circleMap) {
-            this.maskCtx.beginPath();
-            this.maskCtx.fillStyle = 'black';
-            this.maskCtx.arc(i.x, i.y, circleWidth, 0, Math.PI * 2, true);
-            this.maskCtx.stroke();
-            this.maskCtx.fillStyle = 'white';
-            this.maskCtx.fill();
-        }
+        drawEnd.call(this);
+    }
+
+    cursorListener(e: MouseEvent) {
+        const cursorStyle = cursor.call(this, e);
+        this.mask.style.cursor = cursorStyle;
+        console.log(cursorStyle);
     }
 }
