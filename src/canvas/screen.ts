@@ -1,6 +1,7 @@
 import { config } from './config';
 import { drawEnd } from './drawbox';
-import cursor from './cursor';
+import { hasBox } from './help';
+import { cursor, cursorActionToBox } from './cursor';
 
 interface Box {
     startX: number;
@@ -12,15 +13,6 @@ interface Circle {
     x: number;
     y: number;
 }
-
-const hasBox = function(): boolean {
-    return !(
-        this.box.startX === 0 &&
-        this.box.startY === 0 &&
-        this.box.endX === 0 &&
-        this.box.endY === 0
-    );
-};
 
 export default class {
     canvas: HTMLCanvasElement;
@@ -35,6 +27,8 @@ export default class {
     show: Boolean;
     beginMove: Boolean;
     box: Box;
+    cursorStyle: string;
+    clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否确定
 
     constructor(selector: string) {
         this.canvas = document.querySelector(selector);
@@ -53,10 +47,18 @@ export default class {
         this.show = true;
         this.beginMove = false;
         this.maskCircles = [];
+        this.cursorStyle = 'crosshair';
+        this.clickTime = 0;
         this.initBox();
 
         this.initBackGround();
         this.initEvent();
+        this.hackBody();
+    }
+
+    hackBody() {
+        // TODO 浏览器前缀
+        this.body.style['userSelect'] = 'none';
     }
 
     initBackGround() {
@@ -66,7 +68,8 @@ export default class {
         this.mask.style.position = 'fixed';
         this.mask.style.top = '0';
         this.mask.style.left = '0';
-        this.mask.style.cursor = 'crosshair';
+        this.mask.style.cursor = this.cursorStyle;
+        //this.mask.attribute['onselectstart'] = 'return false;';
         this.resize();
 
         this.body.appendChild(this.mask);
@@ -111,18 +114,25 @@ export default class {
             }
         });
         this.mask.addEventListener('mousedown', e => {
-            this.beginBox(e);
+            if (!hasBox.call(this)) {
+                this.beginBox(e);
+            } else {
+                // TODO 根据状态判断操作
+                cursorActionToBox.call(this, e);
+            }
         });
         this.mask.addEventListener('mousemove', e => {
             if (this.beginMove) {
                 this.drawBox(e);
             } else if (hasBox.call(this)) {
-                this.cursorListener(e);
+                this.cursorStyle = cursor.call(this, e);
+                this.mask.style.cursor = this.cursorStyle;
+                // cursorActionToBox.call(e);
             }
         });
         this.mask.addEventListener('mouseup', e => {
             this.beginMove = false;
-            this.drawEnd();
+            drawEnd.call(this);
         });
     }
 
@@ -142,13 +152,8 @@ export default class {
         this.resize();
     }
 
-    drawEnd() {
-        drawEnd.call(this);
-    }
-
-    cursorListener(e: MouseEvent) {
-        const cursorStyle = cursor.call(this, e);
-        this.mask.style.cursor = cursorStyle;
-        console.log(cursorStyle);
+    screenShots() {
+        console.log(10);
+        // 开始截图
     }
 }

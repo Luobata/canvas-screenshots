@@ -1,3 +1,5 @@
+import { inBox } from './help';
+
 const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
 
 const inCircle = (
@@ -11,24 +13,23 @@ const inCircle = (
         Math.pow(circlePath, 2)
     );
 };
+let timer = new Date().getTime();
+const tick = 300; // 点击间隔 小于该值认为属于连续点击
 
-const inBox = (
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number,
-    positionX: number,
-    positionY: number,
-): boolean => {
-    return !!(
-        positionX >= startX &&
-        positionX <= endX &&
-        positionY >= startY &&
-        positionY <= endY
-    );
+const mousedown = function(e: MouseEvent) {
+    const now = new Date().getTime();
+    if (this.clickTime === 0) {
+        this.clickTime++;
+    } else if (this.clickTime === 1) {
+        if (now - timer <= tick) {
+            this.screenShots();
+            this.clickTime = 0;
+        }
+    }
+    timer = now;
 };
 
-export default function(e: MouseEvent): string {
+export const cursor = function(e: MouseEvent): string {
     let result = 'crosshair'; // 判断鼠标位置结果 默认即corsshair
     for (let i of this.maskCircles) {
         if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
@@ -38,19 +39,16 @@ export default function(e: MouseEvent): string {
     }
     if (result === 'crosshair') {
         // 如果还是十字 说明不是9个点 判断是否在矩形内部
-        if (
-            inBox(
-                this.box.startX,
-                this.box.startY,
-                this.box.endX,
-                this.box.endY,
-                e.clientX,
-                e.clientY,
-            )
-        ) {
+        if (inBox.call(this, e.clientX, e.clientY)) {
             result = 'all-scroll';
         }
     }
 
     return result;
-}
+};
+
+export const cursorActionToBox = function(e: MouseEvent) {
+    if (e.type === 'mousedown') {
+        mousedown.call(this, e);
+    }
+};
