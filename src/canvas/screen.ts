@@ -1,8 +1,8 @@
 import { config } from './config';
 import { drawEnd } from './drawbox';
-import { cursorActionToBox } from './cursor';
 import Box from './box';
 import Cursor from './cursor';
+import Mouse from './mouse';
 
 export default class {
     body: HTMLElement;
@@ -17,6 +17,7 @@ export default class {
 
     box: Box;
     cursor: Cursor;
+    mouse: Mouse;
 
     constructor(body: HTMLElement = document.body) {
         this.body = body;
@@ -29,6 +30,7 @@ export default class {
         this.clickTime = 0;
         this.box = new Box();
         this.cursor = new Cursor(this.box);
+        this.mouse = new Mouse();
 
         this.initBackGround();
         this.initEvent();
@@ -89,8 +91,7 @@ export default class {
             if (!this.box.hasBox()) {
                 this.beginBox(e);
             } else {
-                // TODO 根据状态判断操作
-                cursorActionToBox.call(this, e);
+                this.mouse.mouseDown(e, this.cursorStyle);
             }
         });
         this.mask.addEventListener('mousemove', e => {
@@ -98,10 +99,9 @@ export default class {
                 this.drawBox(e);
                 hasTrajectory = true;
             } else if (this.box.hasBox()) {
-                //this.cursorStyle = cursor.call(this, e);
                 this.cursorStyle = this.cursor.getCursor(e);
                 this.mask.style.cursor = this.cursorStyle;
-                cursorActionToBox.call(this, e);
+                this.mouse.mouseMove(e);
             }
         });
         this.mask.addEventListener('mouseup', e => {

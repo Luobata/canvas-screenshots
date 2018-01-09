@@ -19,48 +19,14 @@ const inCircle = (
         Math.pow(circlePath, 2)
     );
 };
-let timer = new Date().getTime();
-const tick = 300; // 点击间隔 小于该值认为属于连续点击
-
-const mousedown = function(e: MouseEvent) {
-    const now = new Date().getTime();
-    console.log(this.cursorStyle);
-    if (this.clickTime === 0) {
-        this.clickTime++;
-    } else if (this.clickTime === 1) {
-        if (now - timer <= tick) {
-            this.screenShots();
-            this.clickTime = 0;
-        }
-    }
-    timer = now;
-
-    switch (this.cursorStyle) {
-        case 'crosshair':
-            break;
-        default:
-            break;
-    }
-};
-
-export const cursorActionToBox = function(e: MouseEvent) {
-    if (e.type === 'mousedown') {
-        mousedown.call(this, e);
-    }
-
-    if (e.type === 'mousemove') {
-    }
-};
 
 export default class {
     maskCircles: Array<Circle>;
-    cursor: string;
     box: Box;
 
     constructor(box: Box) {
         this.box = box;
         this.maskCircles = [];
-        //this.cursor = this.getCursor();
     }
 
     getCursor(e: MouseEvent) {
