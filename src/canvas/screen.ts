@@ -1,6 +1,5 @@
 import { config } from './config';
 import { drawEnd } from './drawbox';
-import { hasBox } from './help';
 import { cursor, cursorActionToBox } from './cursor';
 import Box from './box';
 
@@ -93,15 +92,16 @@ export default class {
     }
 
     initEvent() {
-        let hasTrajectory = false;
+        let hasTrajectory = false; // 移动轨迹 避免只点击没有移动的情况
         window.addEventListener('resize', e => {
             if (this.show) {
+                // TODO resize box bug
                 this.resize();
             }
         });
         this.mask.addEventListener('mousedown', e => {
             hasTrajectory = false;
-            if (!hasBox.call(this)) {
+            if (!this.box.hasBox()) {
                 this.beginBox(e);
             } else {
                 // TODO 根据状态判断操作
@@ -112,7 +112,7 @@ export default class {
             if (this.beginMove) {
                 this.drawBox(e);
                 hasTrajectory = true;
-            } else if (hasBox.call(this)) {
+            } else if (this.box.hasBox()) {
                 this.cursorStyle = cursor.call(this, e);
                 this.mask.style.cursor = this.cursorStyle;
                 // cursorActionToBox.call(e);
@@ -122,7 +122,7 @@ export default class {
             this.beginMove = false;
             if (hasTrajectory) {
                 drawEnd.call(this);
-            } else if (!hasBox.call(this)) {
+            } else if (!this.box.hasBox()) {
                 this.box.initBox();
             }
         });
@@ -130,16 +130,20 @@ export default class {
 
     beginBox(e: MouseEvent) {
         this.box.initBox();
-        this.box.startX = e.clientX;
-        this.box.startY = e.clientY;
+        this.box.setPosition({
+            startX: e.clientX,
+            startY: e.clientY,
+        });
         this.beginMove = true;
     }
 
     drawBox(e: MouseEvent) {
         if (!this.beginMove) return;
 
-        this.box.endX = e.clientX;
-        this.box.endY = e.clientY;
+        this.box.setPosition({
+            endX: e.clientX,
+            endY: e.clientY,
+        });
 
         this.resize();
     }
