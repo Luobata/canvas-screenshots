@@ -3,6 +3,8 @@ import { drawEnd } from './drawbox';
 import Box from './box';
 import Cursor from './cursor';
 import Mouse from './mouse';
+//import event from 'event-emitter';
+const event = require('event-emitter');
 
 export default class {
     body: HTMLElement;
@@ -30,7 +32,7 @@ export default class {
         this.clickTime = 0;
         this.box = new Box();
         this.cursor = new Cursor(this.box);
-        this.mouse = new Mouse();
+        this.mouse = new Mouse(this.box);
 
         this.initBackGround();
         this.initEvent();
