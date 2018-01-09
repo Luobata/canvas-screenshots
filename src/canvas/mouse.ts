@@ -1,6 +1,5 @@
 import Box from './box';
 import { EventEmitter } from 'events';
-const ee = require('event-emitter')();
 
 let timer = new Date().getTime();
 const tick = 300; // 点击间隔 小于该值认为属于连续点击
@@ -40,6 +39,39 @@ export default class {
         switch (this.mouseEvent) {
             case 'crosshair':
                 break;
+            case 'nw-resize':
+                this.box.setPosition({
+                    startX: e.clientX,
+                    startY: e.clientY,
+                });
+                this.emitter.emit('draw');
+                break;
+            case 'w-resize':
+                this.box.setPosition({
+                    startX: e.clientX,
+                });
+                this.emitter.emit('draw');
+                break;
+            case 'sw-resize':
+                this.box.setPosition({
+                    startX: e.clientX,
+                    endY: e.clientY,
+                });
+                this.emitter.emit('draw');
+                break;
+            case 's-resize':
+                this.box.setPosition({
+                    endY: e.clientY,
+                });
+                this.emitter.emit('draw');
+                break;
+            case 'se-resize':
+                this.box.setPosition({
+                    endX: e.clientX,
+                    endY: e.clientY,
+                });
+                this.emitter.emit('draw');
+                break;
             case 'e-resize':
                 this.box.setPosition({
                     endX: e.clientX,
@@ -47,8 +79,26 @@ export default class {
                 this.emitter.emit('draw');
                 // 触发resize
                 break;
+            case 'ne-resize':
+                this.box.setPosition({
+                    startY: e.clientY,
+                    endX: e.clientX,
+                });
+                this.emitter.emit('draw');
+                // 触发resize
+                break;
+            case 'n-resize':
+                this.box.setPosition({
+                    startY: e.clientY,
+                });
+                this.emitter.emit('draw');
+                break;
             default:
                 break;
         }
+    }
+
+    mouseUp(e: MouseEvent) {
+        this.mouseEvent = 'corsshair';
     }
 }

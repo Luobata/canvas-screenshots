@@ -113,11 +113,14 @@ export default class {
                 drawEnd.call(this);
             } else if (!this.box.hasBox()) {
                 this.box.initBox();
+            } else {
+                this.mouse.mouseUp(e);
             }
         });
 
         emitter.on('draw', () => {
             this.resize();
+            drawEnd.call(this);
         });
     }
 

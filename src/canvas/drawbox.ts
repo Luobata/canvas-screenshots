@@ -1,6 +1,7 @@
 export const drawEnd = function() {
     const borderWidth = 1;
     const circleWidth = 3;
+    let result = [];
     this.maskCtx.save();
     this.maskCtx.beginPath();
     this.maskCtx.fillStyle = 'black';
@@ -95,6 +96,8 @@ export const drawEnd = function() {
         this.maskCtx.fill();
 
         // log circle info into maskCircles
-        this.cursor.maskCircles.push(i);
+        //this.cursor.maskCircles.push(i);
+        result.push(i);
     }
+    this.cursor.maskCircles = result;
 };
