@@ -4,7 +4,8 @@ import Box from './box';
 import Cursor from './cursor';
 import Mouse from './mouse';
 //import event from 'event-emitter';
-const event = require('event-emitter');
+const ee = require('event-emitter');
+const emitter = new ee();
 
 export default class {
     body: HTMLElement;
@@ -32,7 +33,7 @@ export default class {
         this.clickTime = 0;
         this.box = new Box();
         this.cursor = new Cursor(this.box);
-        this.mouse = new Mouse(this.box);
+        this.mouse = new Mouse(this.box, emitter);
 
         this.initBackGround();
         this.initEvent();
@@ -113,6 +114,10 @@ export default class {
             } else if (!this.box.hasBox()) {
                 this.box.initBox();
             }
+        });
+
+        emitter.on('draw', () => {
+            this.resize();
         });
     }
 
