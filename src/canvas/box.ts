@@ -6,7 +6,7 @@ enum insertFunction {
     arrow,
     text,
 }
-export default class {
+export default class Box {
     startX: number;
     startY: number;
     endX: number;
@@ -19,6 +19,7 @@ export default class {
         // 测试设定默认值
         this.currentFun = insertFunction[0];
         //new Rectangular();
+        // addEventListener 但是不能给当前模块加 canvas元素的event 只能靠穿透 能否从框架层面解决问题
     }
 
     initBox() {
