@@ -2,13 +2,8 @@ import { config } from './config';
 import { drawEnd } from './drawbox';
 import { hasBox } from './help';
 import { cursor, cursorActionToBox } from './cursor';
+import Box from './box';
 
-interface Box {
-    startX: number;
-    startY: number;
-    endX: number;
-    endY: number;
-}
 interface Circle {
     x: number;
     y: number;
@@ -49,7 +44,7 @@ export default class {
         this.maskCircles = [];
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
-        this.initBox();
+        this.box = new Box();
 
         this.initBackGround();
         this.initEvent();
@@ -69,19 +64,9 @@ export default class {
         this.mask.style.top = '0';
         this.mask.style.left = '0';
         this.mask.style.cursor = this.cursorStyle;
-        //this.mask.attribute['onselectstart'] = 'return false;';
         this.resize();
 
         this.body.appendChild(this.mask);
-    }
-
-    initBox() {
-        this.box = {
-            startX: -1,
-            startY: -1,
-            endX: -1,
-            endY: -1,
-        };
     }
 
     resize() {
@@ -138,13 +123,13 @@ export default class {
             if (hasTrajectory) {
                 drawEnd.call(this);
             } else if (!hasBox.call(this)) {
-                this.initBox();
+                this.box.initBox();
             }
         });
     }
 
     beginBox(e: MouseEvent) {
-        this.initBox();
+        this.box.initBox();
         this.box.startX = e.clientX;
         this.box.startY = e.clientY;
         this.beginMove = true;
