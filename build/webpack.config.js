@@ -21,7 +21,8 @@ module.exports = {
     resolve: {
         extensions: ['json', '.js', '.ts'],
         alias: {
-            LIB: path.resolve(__dirname, '../src/lib'),
+            LIB: path.resolve(__dirname, '../src/canvas/lib'),
+            INSERT: path.resolve(__dirname, '../src/canvas/insert'),
         },
     },
 

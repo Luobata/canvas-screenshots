@@ -122,6 +122,10 @@ export default class {
             this.resize();
             drawEnd.call(this);
         });
+
+        emitter.on('shot', () => {
+            this.screenShots();
+        });
     }
 
     beginBox(e: MouseEvent) {

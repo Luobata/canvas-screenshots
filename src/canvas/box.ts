@@ -1,11 +1,24 @@
+import Rectangular from 'INSERT/rectangular';
+// 插入功能
+enum insertFunction {
+    rectangular,
+    circle,
+    arrow,
+    text,
+}
 export default class {
     startX: number;
     startY: number;
     endX: number;
     endY: number;
 
+    currentFun?: string;
+
     constructor() {
         this.initBox();
+        // 测试设定默认值
+        this.currentFun = insertFunction[0];
+        //new Rectangular();
     }
 
     initBox() {

@@ -6,7 +6,24 @@
         "module": "commonjs",
         "target": "es5",
         "jsx": "react",
-        "lib": ["es2015", "es2017", "dom"]
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "paths": {
+            "LIB/*": [
+                "src/canvas/lib/*"
+            ],
+            "INSERT/*": [
+                "src/canvas/insert/*"
+            ]
+        },
+        "lib": [
+            "es2015",
+            "es2017",
+            "dom"
+        ]
     },
-    "include": ["./src/**/*"]
+    "include": [
+        "./src/**/*"
+    ]
 }

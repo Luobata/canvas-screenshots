@@ -24,14 +24,13 @@ export default class {
         } else if (this.clickTime === 1) {
             if (now - timer <= tick) {
                 // 调用截图
-                console.log('shot');
+                this.emitter.emit('shot');
                 this.clickTime = 0;
             }
         }
         timer = now;
 
         this.mouseEvent = cursorStyle;
-        console.log(this.mouseEvent);
     }
 
     mouseMove(e: MouseEvent) {
