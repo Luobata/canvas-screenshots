@@ -1,12 +1,8 @@
 import { config } from './config';
 import { drawEnd } from './drawbox';
-import { cursor, cursorActionToBox } from './cursor';
+import { cursorActionToBox } from './cursor';
 import Box from './box';
-
-interface Circle {
-    x: number;
-    y: number;
-}
+import Cursor from './cursor';
 
 export default class {
     canvas: HTMLCanvasElement;
@@ -16,13 +12,15 @@ export default class {
     body: HTMLElement;
     mask: HTMLCanvasElement;
     maskCtx: CanvasRenderingContext2D;
-    maskCircles: Array<Circle>;
     shootBox: HTMLElement;
     show: Boolean;
     beginMove: Boolean;
-    box: Box;
+
     cursorStyle: string;
     clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否确定
+
+    box: Box;
+    cursor: Cursor;
 
     constructor(selector: string) {
         this.canvas = document.querySelector(selector);
@@ -40,10 +38,10 @@ export default class {
         this.shootBox = document.createElement('div');
         this.show = true;
         this.beginMove = false;
-        this.maskCircles = [];
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
         this.box = new Box();
+        this.cursor = new Cursor(this.box);
 
         this.initBackGround();
         this.initEvent();
@@ -113,9 +111,10 @@ export default class {
                 this.drawBox(e);
                 hasTrajectory = true;
             } else if (this.box.hasBox()) {
-                this.cursorStyle = cursor.call(this, e);
+                //this.cursorStyle = cursor.call(this, e);
+                this.cursorStyle = this.cursor.getCursor(e);
                 this.mask.style.cursor = this.cursorStyle;
-                // cursorActionToBox.call(e);
+                cursorActionToBox.call(this, e);
             }
         });
         this.mask.addEventListener('mouseup', e => {

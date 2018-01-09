@@ -15,12 +15,21 @@ export default class {
         this.endY = -1;
     }
 
-    hasBox() {
+    hasBox(): boolean {
         return !(
             this.startX === -1 ||
             this.startY === -1 ||
             this.endX === -1 ||
             this.endY === -1
+        );
+    }
+
+    inBox(positionX: number, positionY: number): boolean {
+        return !!(
+            positionX >= this.startX &&
+            positionX <= this.endX &&
+            positionY >= this.startY &&
+            positionY <= this.endY
         );
     }
 

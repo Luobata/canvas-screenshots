@@ -95,6 +95,6 @@ export const drawEnd = function() {
         this.maskCtx.fill();
 
         // log circle info into maskCircles
-        this.maskCircles.push(i);
+        this.cursor.maskCircles.push(i);
     }
 };
