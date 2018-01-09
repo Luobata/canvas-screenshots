@@ -5,10 +5,6 @@ import Box from './box';
 import Cursor from './cursor';
 
 export default class {
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
-    offCanvas: HTMLCanvasElement;
-    offCtx: CanvasRenderingContext2D;
     body: HTMLElement;
     mask: HTMLCanvasElement;
     maskCtx: CanvasRenderingContext2D;
@@ -22,17 +18,8 @@ export default class {
     box: Box;
     cursor: Cursor;
 
-    constructor(selector: string) {
-        this.canvas = document.querySelector(selector);
-
-        if (!this.canvas) {
-            throw new Error(`The canvas dom ${selector} isn'nt exists!`);
-        }
-
-        this.ctx = this.canvas.getContext('2d');
-        this.offCanvas = document.createElement('canvas');
-        this.offCtx = this.offCanvas.getContext('2d');
-        this.body = document.body;
+    constructor(body: HTMLElement = document.body) {
+        this.body = body;
         this.mask = document.createElement('canvas');
         this.maskCtx = this.mask.getContext('2d');
         this.shootBox = document.createElement('div');
