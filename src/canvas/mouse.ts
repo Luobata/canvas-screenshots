@@ -39,6 +39,15 @@ export default class {
         switch (this.mouseEvent) {
             case 'crosshair':
                 break;
+            case 'all-scroll':
+                this.box.setPosition({
+                    startX: this.box.startX + e.movementX,
+                    startY: this.box.startY + e.movementY,
+                    endX: this.box.endX + e.movementX,
+                    endY: this.box.endY + e.movementY,
+                });
+                this.emitter.emit('draw');
+                break;
             case 'nw-resize':
                 this.box.setPosition({
                     startX: e.clientX,
