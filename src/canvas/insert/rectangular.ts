@@ -1,4 +1,3 @@
-// 周围点
 import { dragCircle, Rect } from 'LIB/interface';
 import { getCircleMap } from 'LIB/help';
 import { EventEmitter } from 'events';
@@ -43,7 +42,6 @@ export default class {
 
     event() {
         config.emitter.on('mousedown', e => {
-            console.log(e);
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseDown(e);
             }

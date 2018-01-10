@@ -34,16 +34,17 @@ export default class {
     }
 
     mouseMove(e: MouseEvent) {
+        console.log(this.mouseEvent);
         // move
         switch (this.mouseEvent) {
             case 'crosshair':
                 break;
             case 'all-scroll':
                 this.box.setPosition({
-                    startX: this.box.startX + e.movementX,
-                    startY: this.box.startY + e.movementY,
-                    endX: this.box.endX + e.movementX,
-                    endY: this.box.endY + e.movementY,
+                    startX: this.box.rect.startX + e.movementX,
+                    startY: this.box.rect.startY + e.movementY,
+                    endX: this.box.rect.endX + e.movementX,
+                    endY: this.box.rect.endY + e.movementY,
                 });
                 this.emitter.emit('draw');
                 break;

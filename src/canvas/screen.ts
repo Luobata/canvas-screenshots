@@ -1,14 +1,14 @@
-import { setConfig } from './config';
+import { setConfig, config } from './config';
 import { drawEnd } from './drawbox';
 import Box from './box';
 import Cursor from './cursor';
 import Mouse from './mouse';
-import { register, dispatch } from 'LIB/event';
-//import event from 'event-emitter';
 const ee = require('event-emitter');
 const emitter = new ee();
 
-setConfig(emitter);
+setConfig({
+    emitter,
+});
 
 export default class {
     body: HTMLElement;
@@ -34,9 +34,9 @@ export default class {
         this.beginMove = false;
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
-        this.box = new Box();
+        this.box = new Box(this.cursorStyle);
         this.cursor = new Cursor(this.box);
-        this.mouse = new Mouse(this.box, emitter);
+        //this.mouse = new Mouse(this.box, emitter);
 
         this.initBackGround();
         this.initEvent();
@@ -75,12 +75,14 @@ export default class {
         this.maskCtx.fillRect(0, 0, width, height);
         this.maskCtx.stroke();
 
-        this.maskCtx.clearRect(
-            this.box.startX,
-            this.box.startY,
-            this.box.endX - this.box.startX,
-            this.box.endY - this.box.startY,
-        );
+        if (this.box.hasBox()) {
+            this.maskCtx.clearRect(
+                this.box.rect.startX,
+                this.box.rect.startY,
+                this.box.rect.endX - this.box.rect.startX,
+                this.box.rect.endY - this.box.rect.startY,
+            );
+        }
         this.maskCtx.restore();
     }
 
@@ -97,7 +99,8 @@ export default class {
             if (!this.box.hasBox()) {
                 this.beginBox(e);
             } else {
-                this.mouse.mouseDown(e, this.cursorStyle);
+                //this.mouse.mouseDown(e, this.cursorStyle);
+                emitter.emit('end-mousedown', e);
             }
             emitter.emit('mousedown', e);
         });
@@ -108,7 +111,8 @@ export default class {
             } else if (this.box.hasBox()) {
                 this.cursorStyle = this.cursor.getCursor(e);
                 this.mask.style.cursor = this.cursorStyle;
-                this.mouse.mouseMove(e);
+                //this.mouse.mouseMove(e);
+                emitter.emit('end-mousemove', e);
             }
             emitter.emit('mousemove', e);
         });
@@ -119,7 +123,8 @@ export default class {
             } else if (!this.box.hasBox()) {
                 this.box.initBox();
             } else {
-                this.mouse.mouseUp(e);
+                emitter.emit('end-mouseup', e);
+                //this.mouse.mouseUp(e);
             }
             emitter.emit('mouseup', e);
         });
@@ -156,6 +161,7 @@ export default class {
 
     screenShots() {
         console.log('begin shots');
+        this.box.isFocus = false;
         // 开始截图
     }
 }
