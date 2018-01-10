@@ -1,11 +1,14 @@
-import { config } from './config';
+import { setConfig } from './config';
 import { drawEnd } from './drawbox';
 import Box from './box';
 import Cursor from './cursor';
 import Mouse from './mouse';
+import { register, dispatch } from 'LIB/event';
 //import event from 'event-emitter';
 const ee = require('event-emitter');
 const emitter = new ee();
+
+setConfig(emitter);
 
 export default class {
     body: HTMLElement;
@@ -96,6 +99,7 @@ export default class {
             } else {
                 this.mouse.mouseDown(e, this.cursorStyle);
             }
+            emitter.emit('mousedown', e);
         });
         this.mask.addEventListener('mousemove', e => {
             if (this.beginMove) {
@@ -106,6 +110,7 @@ export default class {
                 this.mask.style.cursor = this.cursorStyle;
                 this.mouse.mouseMove(e);
             }
+            emitter.emit('mousemove', e);
         });
         this.mask.addEventListener('mouseup', e => {
             this.beginMove = false;
@@ -116,6 +121,7 @@ export default class {
             } else {
                 this.mouse.mouseUp(e);
             }
+            emitter.emit('mouseup', e);
         });
 
         emitter.on('draw', () => {

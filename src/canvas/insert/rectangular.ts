@@ -1,6 +1,11 @@
 // 周围点
 import { dragCircle, Rect } from 'LIB/interface';
 import { getCircleMap } from 'LIB/help';
+import { EventEmitter } from 'events';
+import { config } from '../config';
+import Mouse from './mouse';
+const ee = require('event-emitter');
+const rectangularEmitter = new ee();
 
 export default class {
     ctx: CanvasRenderingContext2D;
@@ -11,17 +16,21 @@ export default class {
     lineWidth: number;
     borderRadious: number;
     circleWidth: number;
+    mouse: Mouse;
 
     circles: Array<dragCircle>;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
+        this.mouse = new Mouse(this, rectangularEmitter);
         this.isFocus = true;
         this.isStroke = true;
         this.color = 'red';
         this.lineWidth = 1;
         this.borderRadious = 1;
         this.circleWidth = 3;
+
+        this.event();
     }
 
     setPosition(rect: Rect, isDraw = false) {
@@ -30,6 +39,24 @@ export default class {
         if (isDraw) {
             this.draw();
         }
+    }
+
+    event() {
+        config.emitter.on('mousedown', e => {
+            console.log(e);
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseDown(e);
+            }
+        });
+    }
+
+    hasBox() {
+        return !!(
+            this.rect.startX !== undefined &&
+            this.rect.startY !== undefined &&
+            this.rect.endX !== undefined &&
+            this.rect.endY !== undefined
+        );
     }
 
     draw() {
