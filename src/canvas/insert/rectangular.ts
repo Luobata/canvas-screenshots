@@ -96,12 +96,6 @@ export default class {
             this.rect.startX - this.lineWidth,
             this.rect.startY - this.lineWidth,
         );
-        //this.ctx.fillRect(
-        //    this.rect.startX,
-        //    this.rect.startY,
-        //    this.rect.endX - this.rect.startX,
-        //    this.rect.endY - this.rect.startY,
-        //);
         if (this.isStroke) {
             this.ctx.strokeStyle = this.color;
             this.ctx.stroke();
