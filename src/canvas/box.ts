@@ -59,6 +59,7 @@ export default class Box {
         config.emitter.on('end-mousemove', e => {
             if (this.isFocus && this.hasBox()) {
                 this.cursorStyle = this.cursor.getCursor(e);
+                config.emitter.emit('cursor-change', this.cursorStyle);
                 this.mouse.mouseMove(e);
             }
         });
@@ -112,8 +113,6 @@ export default class Box {
         config.emitter.on('mousedown', e => {
             if (this.isFocus) return;
             if (!this.inBox(e.clientX, e.clientY)) return;
-
-            console.log(this.currentFun);
         });
     }
 

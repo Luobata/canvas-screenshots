@@ -31,7 +31,7 @@ export default class {
 
     getCursor(e: MouseEvent) {
         let result = 'crosshair'; // 判断鼠标位置结果 默认即corsshair
-        for (let i of this.maskCircles) {
+        for (let i of this.box.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
                 result = `${i.cssPosition}-resize`;

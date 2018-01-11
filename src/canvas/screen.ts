@@ -120,6 +120,10 @@ export default class {
         emitter.on('shot', () => {
             this.screenShots();
         });
+
+        emitter.on('cursor-change', (cursorStyle: string) => {
+            this.cursorStyle = cursorStyle;
+        });
     }
 
     beginBox(e: MouseEvent) {
