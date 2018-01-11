@@ -1,8 +1,5 @@
 import { setConfig, config } from './config';
-import { drawEnd } from './drawbox';
 import Box from './box';
-import Cursor from './cursor';
-import Mouse from './mouse';
 const ee = require('event-emitter');
 const emitter = new ee();
 
@@ -22,8 +19,6 @@ export default class {
     clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否确定
 
     box: Box;
-    cursor: Cursor;
-    mouse: Mouse;
 
     constructor(body: HTMLElement = document.body) {
         this.body = body;
@@ -34,9 +29,7 @@ export default class {
         this.beginMove = false;
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
-        this.box = new Box(this.cursorStyle);
-        this.cursor = new Cursor(this.box);
-        //this.mouse = new Mouse(this.box, emitter);
+        this.box = new Box(this.maskCtx, this.cursorStyle);
 
         this.initBackGround();
         this.initEvent();
@@ -75,14 +68,6 @@ export default class {
         this.maskCtx.fillRect(0, 0, width, height);
         this.maskCtx.stroke();
 
-        if (this.box.hasBox()) {
-            this.maskCtx.clearRect(
-                this.box.rect.startX,
-                this.box.rect.startY,
-                this.box.rect.endX - this.box.rect.startX,
-                this.box.rect.endY - this.box.rect.startY,
-            );
-        }
         this.maskCtx.restore();
     }
 
@@ -99,7 +84,6 @@ export default class {
             if (!this.box.hasBox()) {
                 this.beginBox(e);
             } else {
-                //this.mouse.mouseDown(e, this.cursorStyle);
                 emitter.emit('end-mousedown', e);
             }
             emitter.emit('mousedown', e);
@@ -109,9 +93,8 @@ export default class {
                 this.drawBox(e);
                 hasTrajectory = true;
             } else if (this.box.hasBox()) {
-                this.cursorStyle = this.cursor.getCursor(e);
+                //this.cursorStyle = this.cursor.getCursor(e);
                 this.mask.style.cursor = this.cursorStyle;
-                //this.mouse.mouseMove(e);
                 emitter.emit('end-mousemove', e);
             }
             emitter.emit('mousemove', e);
@@ -119,19 +102,19 @@ export default class {
         this.mask.addEventListener('mouseup', e => {
             this.beginMove = false;
             if (hasTrajectory) {
-                drawEnd.call(this);
+                this.box.isShowCircle = true;
+                this.box.draw();
             } else if (!this.box.hasBox()) {
                 this.box.initBox();
             } else {
                 emitter.emit('end-mouseup', e);
-                //this.mouse.mouseUp(e);
             }
             emitter.emit('mouseup', e);
         });
 
         emitter.on('draw', () => {
             this.resize();
-            drawEnd.call(this);
+            this.box.draw();
         });
 
         emitter.on('shot', () => {
@@ -157,6 +140,7 @@ export default class {
         });
 
         this.resize();
+        this.box.draw();
     }
 
     screenShots() {

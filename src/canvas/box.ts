@@ -16,14 +16,12 @@ enum insertFunction {
     text,
 }
 export default class Box {
+    ctx: CanvasRenderingContext2D;
     circles: Array<dragCircle>;
     rect?: Rect;
-    //startX: number;
-    //startY: number;
-    //endX: number;
-    //endY: number;
     cursorStyle: string;
     isFocus: Boolean;
+    isShowCircle: Boolean;
 
     lineWidth: number;
     borderRadious: number;
@@ -33,9 +31,11 @@ export default class Box {
 
     currentFun?: string;
 
-    constructor(cursorStyle: string) {
+    constructor(ctx: CanvasRenderingContext2D, cursorStyle: string) {
+        this.ctx = ctx;
         this.cursorStyle = cursorStyle;
         this.isFocus = true;
+        this.isShowCircle = false;
         this.initBox();
         this.lineWidth = 1;
         this.borderRadious = 1;
@@ -69,17 +69,16 @@ export default class Box {
             }
         });
 
-        boxEmitter.on('draw', () => {
-            const circleMap = getCircleMap(this.rect, this.lineWidth);
-            this.circles = circleMap;
-        });
+        boxEmitter.on('draw', () => {});
     }
 
     initBox() {
-        this.rect.startX = undefined;
-        this.rect.startY = undefined;
-        this.rect.endX = undefined;
-        this.rect.endY = undefined;
+        this.rect = {
+            startX: undefined,
+            startY: undefined,
+            endX: undefined,
+            endY: undefined,
+        };
     }
 
     hasBox() {
@@ -100,22 +99,8 @@ export default class Box {
         );
     }
 
-    //setPosition({ startX = -1, startY = -1, endX = -1, endY = -1 }) {
-    //    if (startX !== -1) {
-    //        this.startX = startX;
-    //    }
-    //    if (startY !== -1) {
-    //        this.startY = startY;
-    //    }
-    //    if (endX !== -1) {
-    //        this.endX = endX;
-    //    }
-    //    if (endY !== -1) {
-    //        this.endY = endY;
-    //    }
-    //}
     setPosition(rect: Rect, isDraw = false) {
-        this.rect = rect;
+        Object.assign(this.rect, rect);
 
         if (isDraw) {
             this.draw();
@@ -132,5 +117,61 @@ export default class Box {
         });
     }
 
-    draw() {}
+    draw() {
+        if (this.hasBox()) {
+            this.ctx.clearRect(
+                this.rect.startX,
+                this.rect.startY,
+                this.rect.endX - this.rect.startX,
+                this.rect.endY - this.rect.startY,
+            );
+        }
+
+        if (this.isFocus && this.isShowCircle) {
+            // draw circles
+            this.drawCircle();
+        }
+    }
+
+    drawCircle() {
+        const circleWidth = 3;
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = 'black';
+        // boder
+        this.ctx.moveTo(
+            this.rect.startX - this.lineWidth,
+            this.rect.startY - this.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rect.endX + this.lineWidth,
+            this.rect.startY - this.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rect.endX + this.lineWidth,
+            this.rect.endY + this.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rect.startX - this.lineWidth,
+            this.rect.endY + this.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rect.startX - this.lineWidth,
+            this.rect.startY - this.lineWidth,
+        );
+        this.ctx.restore();
+        this.ctx.stroke();
+
+        const circleMap = getCircleMap(this.rect, this.lineWidth);
+        this.circles = circleMap;
+
+        for (let i of circleMap) {
+            this.ctx.beginPath();
+            this.ctx.fillStyle = 'black';
+            this.ctx.arc(i.x, i.y, circleWidth, 0, Math.PI * 2, true);
+            this.ctx.stroke();
+            this.ctx.fillStyle = 'white';
+            this.ctx.fill();
+        }
+    }
 }
