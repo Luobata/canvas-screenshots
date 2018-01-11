@@ -7,17 +7,18 @@ const ee = require('event-emitter');
 const rectangularEmitter = new ee();
 
 export default class {
+    id: number;
     ctx: CanvasRenderingContext2D;
+    circles: Array<dragCircle>;
     rect?: Rect;
-    isFocus: Boolean; // 是否聚焦 聚焦才会展示可拖动点
-    isStroke: Boolean; // 是否是是空心的
+    isResize: boolean; // 是否正在绘制中
+    isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
+    isStroke: boolean; // 是否是是空心的
     color: string;
     lineWidth: number;
     borderRadious: number;
     circleWidth: number;
     mouse: Mouse;
-
-    circles: Array<dragCircle>;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
@@ -28,12 +29,14 @@ export default class {
         this.lineWidth = 1;
         this.borderRadious = 1;
         this.circleWidth = 3;
+        this.id = config.uid++;
+        this.initBox();
 
         this.event();
     }
 
     setPosition(rect: Rect, isDraw = false) {
-        this.rect = rect;
+        Object.assign(this.rect, rect);
 
         if (isDraw) {
             this.draw();
@@ -46,6 +49,15 @@ export default class {
                 this.mouse.mouseDown(e);
             }
         });
+    }
+
+    initBox() {
+        this.rect = {
+            startX: undefined,
+            startY: undefined,
+            endX: undefined,
+            endY: undefined,
+        };
     }
 
     hasBox() {
@@ -62,18 +74,39 @@ export default class {
         this.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.fillStyle = this.color;
         this.ctx.lineWidth = this.lineWidth;
         // 画圆角
-        this.ctx.fillRect(
-            this.rect.startX,
-            this.rect.startY,
-            this.rect.endX,
-            this.rect.endY,
+        this.ctx.moveTo(
+            this.rect.startX - this.lineWidth,
+            this.rect.startY - this.lineWidth,
         );
+        this.ctx.lineTo(
+            this.rect.endX + this.lineWidth,
+            this.rect.startY - this.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rect.endX + this.lineWidth,
+            this.rect.endY + this.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rect.startX - this.lineWidth,
+            this.rect.endY + this.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rect.startX - this.lineWidth,
+            this.rect.startY - this.lineWidth,
+        );
+        //this.ctx.fillRect(
+        //    this.rect.startX,
+        //    this.rect.startY,
+        //    this.rect.endX - this.rect.startX,
+        //    this.rect.endY - this.rect.startY,
+        //);
         if (this.isStroke) {
+            this.ctx.strokeStyle = this.color;
             this.ctx.stroke();
         } else {
+            this.ctx.fillStyle = this.color;
             this.ctx.fill();
         }
         for (let i of circleMap) {

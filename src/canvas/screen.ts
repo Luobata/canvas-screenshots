@@ -142,13 +142,19 @@ export default class {
             endY: e.clientY,
         });
 
-        this.resize();
-        this.box.draw();
+        this.globaldraw();
     }
 
     screenShots() {
         console.log('begin shots');
         this.box.isFocus = false;
+        this.cursorStyle = 'crosshair';
+        this.globaldraw();
         // 开始截图
+    }
+
+    globaldraw() {
+        this.resize();
+        this.box.draw();
     }
 }

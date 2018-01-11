@@ -4,6 +4,7 @@ import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
+import { Readable } from 'stream';
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
@@ -18,11 +19,11 @@ enum insertFunction {
 export default class Box {
     ctx: CanvasRenderingContext2D;
     circles: Array<dragCircle>;
+    content: Array<Rectangular>;
     rect?: Rect;
     cursorStyle: string;
     isFocus: Boolean;
     isShowCircle: Boolean;
-
     lineWidth: number;
     borderRadious: number;
     circleWidth: number;
@@ -46,8 +47,7 @@ export default class Box {
         this.listenMouse();
         this.mouse = new Mouse(this, boxEmitter);
         this.cursor = new Cursor(this);
-        //new Rectangular();
-        // addEventListener 但是不能给当前模块加 canvas元素的event 只能靠穿透 能否从框架层面解决问题
+        this.content = [];
     }
 
     events() {
@@ -71,6 +71,9 @@ export default class Box {
         });
 
         boxEmitter.on('draw', () => {});
+        boxEmitter.on('shot', () => {
+            config.emitter.emit('shot');
+        });
     }
 
     initBox() {
@@ -109,11 +112,42 @@ export default class Box {
     }
 
     listenMouse() {
-        let hasTrajectory = false;
-        config.emitter.on('mousedown', e => {
-            if (this.isFocus) return;
-            if (!this.inBox(e.clientX, e.clientY)) return;
-        });
+        switch (this.currentFun) {
+            case 'rectangular':
+                let newItem: Rectangular;
+                config.emitter.on('mousedown', e => {
+                    if (this.isFocus) return;
+                    if (!this.inBox(e.clientX, e.clientY)) return;
+                    newItem = new Rectangular(this.ctx);
+                    newItem.isResize = true;
+                    newItem.setPosition({
+                        startX: e.clientX,
+                        startY: e.clientY,
+                    });
+                });
+                config.emitter.on('mousemove', e => {
+                    if (this.isFocus) return;
+                    if (!this.inBox(e.clientX, e.clientY)) return;
+                    if (newItem && newItem.isResize) {
+                        this.draw();
+                        newItem.setPosition(
+                            {
+                                endX: e.clientX,
+                                endY: e.clientY,
+                            },
+                            true,
+                        );
+                    }
+                });
+                config.emitter.on('mouseup', e => {
+                    if (this.isFocus) return;
+                    if (!this.inBox(e.clientX, e.clientY)) return;
+                    newItem.isResize = false;
+                });
+                break;
+            default:
+                break;
+        }
     }
 
     draw() {
@@ -130,10 +164,13 @@ export default class Box {
         if (this.isFocus && this.isShowCircle) {
             this.drawCircle();
         }
+
+        for (let i of this.content) {
+            i.draw();
+        }
     }
 
     drawCircle() {
-        const circleWidth = 3;
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = 'black';
@@ -167,7 +204,7 @@ export default class Box {
         for (let i of circleMap) {
             this.ctx.beginPath();
             this.ctx.fillStyle = 'black';
-            this.ctx.arc(i.x, i.y, circleWidth, 0, Math.PI * 2, true);
+            this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
             this.ctx.stroke();
             this.ctx.fillStyle = 'white';
             this.ctx.fill();
