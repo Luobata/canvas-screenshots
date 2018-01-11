@@ -114,7 +114,6 @@ export default class {
 
         emitter.on('draw', () => {
             this.resize();
-            this.box.draw();
         });
 
         emitter.on('shot', () => {

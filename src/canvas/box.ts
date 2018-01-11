@@ -117,6 +117,7 @@ export default class Box {
     }
 
     draw() {
+        config.emitter.emit('draw');
         if (this.hasBox()) {
             this.ctx.clearRect(
                 this.rect.startX,
@@ -127,7 +128,6 @@ export default class Box {
         }
 
         if (this.isFocus && this.isShowCircle) {
-            // draw circles
             this.drawCircle();
         }
     }
