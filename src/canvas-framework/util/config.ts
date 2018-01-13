@@ -1,5 +1,5 @@
 interface Config {
-    uid?: nubmber;
+    uid?: number;
 }
 
 export const config: Config = {
