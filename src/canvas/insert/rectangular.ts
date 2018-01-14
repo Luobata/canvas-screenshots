@@ -114,12 +114,12 @@ export default class {
         );
     }
 
-    inBox(positionX: number, positionY: number): boolean {
+    inBox(positionX: number, positionY: number, circlePath = 0): boolean {
         return !!(
-            positionX >= this.rect.startX &&
-            positionX <= this.rect.endX &&
-            positionY >= this.rect.startY &&
-            positionY <= this.rect.endY
+            positionX - circlePath >= this.rect.startX &&
+            positionX - circlePath <= this.rect.endX &&
+            positionY - circlePath >= this.rect.startY &&
+            positionY - circlePath <= this.rect.endY
         );
     }
 

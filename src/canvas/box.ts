@@ -113,12 +113,18 @@ export default class Box {
         }
     }
 
-    focusRectangular() {
+    focusRectangular(e: MouseEvent) {
+        let focusItem;
         for (let i of this.content) {
-            if (i.isFocus) return i;
+            if (i.inBox(e.clientX, e.clientY, 10)) {
+                i.isFocus = true;
+                focusItem = i;
+            } else {
+                i.isFocus = false;
+            }
         }
 
-        return undefined;
+        return focusItem;
     }
 
     listenMouse() {
@@ -129,7 +135,7 @@ export default class Box {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
                     // 判断是否选中某个
-                    const item = this.focusRectangular();
+                    const item = this.focusRectangular(e);
                     if (item) {
                     } else {
                         newItem = new Rectangular(this.ctx);
