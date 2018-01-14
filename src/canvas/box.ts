@@ -126,6 +126,7 @@ export default class Box {
                 config.emitter.on('mousedown', e => {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
+                    // 判断是否选中某个
                     newItem =
                         this.focusRectangular() || new Rectangular(this.ctx);
                     newItem.isResize = true;
@@ -155,7 +156,7 @@ export default class Box {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
                     newItem.isResize = false;
-                    newItem.isFocus = false;
+                    //newItem.isFocus = false;
                 });
                 break;
             default:
