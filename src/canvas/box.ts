@@ -48,6 +48,7 @@ export default class Box {
         this.mouse = new Mouse(this, boxEmitter);
         this.cursor = new Cursor(this);
         this.content = new Set();
+        this.drawAll();
     }
 
     events() {
@@ -107,7 +108,8 @@ export default class Box {
         Object.assign(this.rect, rect);
 
         if (isDraw) {
-            this.draw();
+            //this.draw();
+            config.emitter.emit('draw-all');
         }
     }
 
@@ -127,15 +129,18 @@ export default class Box {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
                     // 判断是否选中某个
-                    newItem =
-                        this.focusRectangular() || new Rectangular(this.ctx);
-                    newItem.isResize = true;
-                    newItem.setPosition({
-                        startX: e.clientX,
-                        startY: e.clientY,
-                    });
-                    if (!this.content.has(newItem)) {
-                        this.content.add(newItem);
+                    const item = this.focusRectangular();
+                    if (item) {
+                    } else {
+                        newItem = new Rectangular(this.ctx);
+                        newItem.isResize = true;
+                        newItem.setPosition({
+                            startX: e.clientX,
+                            startY: e.clientY,
+                        });
+                        if (!this.content.has(newItem)) {
+                            this.content.add(newItem);
+                        }
                     }
                 });
                 config.emitter.on('mousemove', e => {
@@ -165,7 +170,7 @@ export default class Box {
     }
 
     draw() {
-        config.emitter.emit('draw');
+        //config.emitter.emit('draw');
         if (this.hasBox()) {
             this.ctx.clearRect(
                 this.rect.startX,
@@ -182,6 +187,11 @@ export default class Box {
         for (let i of this.content) {
             i.draw();
         }
+    }
+    drawAll() {
+        config.emitter.on('draw-all', () => {
+            this.draw();
+        });
     }
 
     drawCircle() {

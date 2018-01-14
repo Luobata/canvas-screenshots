@@ -47,13 +47,15 @@ export default class {
         this.initBox();
 
         this.event();
+        this.drawAll();
     }
 
     setPosition(rect: Rect, isDraw = false) {
         Object.assign(this.rect, rect);
 
         if (isDraw) {
-            this.draw();
+            //this.draw();
+            config.emitter.emit('draw-all');
         }
     }
 
@@ -78,7 +80,7 @@ export default class {
     event() {
         config.emitter.on('mousedown', e => {
             if (this.isFocus && this.hasBox()) {
-                this.mouse.mouseDown(e);
+                this.mouse.mouseDown(e, this.getCursor(e));
             }
         });
         config.emitter.on('mousemove', e => {
@@ -166,5 +168,10 @@ export default class {
             }
         }
         this.ctx.restore();
+    }
+    drawAll() {
+        config.emitter.on('draw-all', () => {
+            this.draw();
+        });
     }
 }

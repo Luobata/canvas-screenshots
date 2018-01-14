@@ -34,6 +34,7 @@ export default class {
         this.initBackGround();
         this.initEvent();
         this.hackBody();
+        this.drawAll();
     }
 
     hackBody() {
@@ -156,5 +157,11 @@ export default class {
     globaldraw() {
         this.resize();
         this.box.draw();
+    }
+
+    drawAll() {
+        config.emitter.on('draw-all', () => {
+            this.globaldraw();
+        });
     }
 }
