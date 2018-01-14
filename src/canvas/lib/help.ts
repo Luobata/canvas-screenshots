@@ -1,4 +1,4 @@
-import { Rect } from 'LIB/interface';
+import { Rect, Circle } from 'LIB/interface';
 
 export const getCircleMap = (obj: Rect, borderWidth: number) => {
     const circleMap = [
@@ -54,6 +54,68 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
         {
             x: obj.endX + borderWidth,
             y: obj.startY + (obj.endY - obj.startY) / 2,
+            position: 'right-middle',
+            cssPosition: 'e',
+        },
+    ];
+
+    return circleMap;
+};
+
+export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
+    const circleMap = [
+        {
+            x: obj.centerX - obj.radiusX - borderWidth,
+            y: obj.centerY - obj.radiusY - borderWidth,
+            position: 'left-top',
+            cssPosition: 'nw',
+        },
+        // left-bottom
+        {
+            x: obj.centerX - obj.radiusX - borderWidth,
+            y: obj.centerY + obj.radiusY + borderWidth,
+            position: 'left-botoom',
+            cssPosition: 'sw',
+        },
+        // left-middle
+        {
+            x: obj.centerX - obj.radiusX - borderWidth,
+            y: obj.centerY,
+            position: 'left-middle',
+            cssPosition: 'w',
+        },
+        // middle top
+        {
+            x: obj.centerX,
+            y: obj.centerY - obj.radiusY - borderWidth,
+            position: 'middle-top',
+            cssPosition: 'n',
+        },
+        // middle bottom
+        {
+            x: obj.centerX,
+            y: obj.centerY + obj.radiusY + borderWidth,
+            position: 'middle-bottom',
+            cssPosition: 's',
+        },
+        // right top
+        {
+            x: obj.centerX + obj.radiusX + borderWidth,
+            y: obj.centerY - obj.radiusY - borderWidth,
+            position: 'right-top',
+            cssPosition: 'ne',
+        },
+        // right bottom
+        {
+            x: obj.centerX + obj.radiusX + borderWidth,
+            y: obj.centerY + obj.radiusY + borderWidth,
+            position: 'right-bottom',
+            cssPosition: 'se',
+        },
+        // right middle
+        {
+            x: obj.centerX + obj.radiusX + borderWidth,
+            y: obj.centerY,
             position: 'right-middle',
             cssPosition: 'e',
         },

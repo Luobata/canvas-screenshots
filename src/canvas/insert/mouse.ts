@@ -34,7 +34,6 @@ export default class {
     }
 
     mouseMove(e: MouseEvent) {
-        console.log(this.mouseEvent);
         // move
         switch (this.mouseEvent) {
             case 'crosshair':

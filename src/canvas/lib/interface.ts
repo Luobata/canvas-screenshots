@@ -11,3 +11,10 @@ export interface Rect {
     endX?: number;
     endY?: number;
 }
+
+export interface Circle {
+    centerX: number;
+    centerY: number;
+    radiusX: number;
+    radiusY: number;
+}
