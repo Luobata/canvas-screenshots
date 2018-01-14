@@ -19,7 +19,7 @@ enum insertFunction {
 export default class Box {
     ctx: CanvasRenderingContext2D;
     circles: Array<dragCircle>;
-    content: Array<Rectangular>;
+    content: Set<Rectangular>;
     rect?: Rect;
     cursorStyle: string;
     isFocus: Boolean;
@@ -47,7 +47,7 @@ export default class Box {
         this.listenMouse();
         this.mouse = new Mouse(this, boxEmitter);
         this.cursor = new Cursor(this);
-        this.content = [];
+        this.content = new Set();
     }
 
     events() {
@@ -111,6 +111,14 @@ export default class Box {
         }
     }
 
+    focusRectangular() {
+        for (let i of this.content) {
+            if (i.isFocus) return i;
+        }
+
+        return undefined;
+    }
+
     listenMouse() {
         switch (this.currentFun) {
             case 'rectangular':
@@ -118,12 +126,16 @@ export default class Box {
                 config.emitter.on('mousedown', e => {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
-                    newItem = new Rectangular(this.ctx);
+                    newItem =
+                        this.focusRectangular() || new Rectangular(this.ctx);
                     newItem.isResize = true;
                     newItem.setPosition({
                         startX: e.clientX,
                         startY: e.clientY,
                     });
+                    if (!this.content.has(newItem)) {
+                        this.content.add(newItem);
+                    }
                 });
                 config.emitter.on('mousemove', e => {
                     if (this.isFocus) return;
@@ -143,6 +155,7 @@ export default class Box {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
                     newItem.isResize = false;
+                    newItem.isFocus = false;
                 });
                 break;
             default:

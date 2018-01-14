@@ -103,13 +103,15 @@ export default class {
             this.ctx.fillStyle = this.color;
             this.ctx.fill();
         }
-        for (let i of circleMap) {
-            this.ctx.beginPath();
-            this.ctx.fillStyle = this.color;
-            this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
-            this.ctx.stroke();
-            this.ctx.fillStyle = 'white';
-            this.ctx.fill();
+        if (this.isFocus) {
+            for (let i of circleMap) {
+                this.ctx.beginPath();
+                this.ctx.fillStyle = this.color;
+                this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
+                this.ctx.stroke();
+                this.ctx.fillStyle = 'white';
+                this.ctx.fill();
+            }
         }
         this.ctx.restore();
     }
