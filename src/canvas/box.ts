@@ -127,6 +127,13 @@ export default class Box {
         return focusItem;
     }
 
+    outFocus() {
+        for (let i of this.content) {
+            i.isFocus = false;
+        }
+        config.emitter.emit('draw-all');
+    }
+
     listenMouse() {
         switch (this.currentFun) {
             case 'rectangular':
@@ -138,6 +145,7 @@ export default class Box {
                     const item = this.focusRectangular(e);
                     if (item) {
                     } else {
+                        this.outFocus();
                         newItem = new Rectangular(this.ctx);
                         newItem.isResize = true;
                         newItem.setPosition({
