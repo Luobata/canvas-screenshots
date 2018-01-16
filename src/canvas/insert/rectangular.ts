@@ -100,25 +100,27 @@ export default class {
 
     event() {
         const that = this;
-        //config.emitter.on('mousedown', e => {
-        //    if (this.isFocus && this.hasBox()) {
-        //        this.mouse.mouseDown(e, this.getCursor(e));
-        //    }
-        //});
-        config.emitter.on('mousedown', mouseDown);
-        config.emitter.on('mousemove', mouseMove);
-        config.emitter.on('mouseup', mouseUp);
-        //config.emitter.on('mousemove', e => {
-        //    config.emitter.emit('cursor-change', this.getCursor(e));
-        //    if (this.isFocus && this.hasBox()) {
-        //        this.mouse.mouseMove(e);
-        //    }
-        //});
-        //config.emitter.on('mouseup', e => {
-        //    if (this.isFocus && this.hasBox()) {
-        //        this.mouse.mouseUp(e);
-        //    }
-        //});
+        config.emitter.on('mousedown', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseDown(e, this.getCursor(e));
+            }
+        });
+        //config.emitter.on('mousedown', mouseDown);
+        //config.emitter.on('mousemove', mouseMove);
+        //config.emitter.on('mouseup', mouseUp);
+        config.emitter.on('mousemove', e => {
+            if (this.hasBox()) {
+                config.emitter.emit('cursor-change', this.getCursor(e));
+            }
+            if (this.isFocus) {
+                this.mouse.mouseMove(e);
+            }
+        });
+        config.emitter.on('mouseup', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseUp(e);
+            }
+        });
     }
 
     initBox() {
@@ -200,8 +202,8 @@ export default class {
         });
     }
     destory() {
-        config.emitter.off('mousedown', mouseDown);
-        config.emitter.off('mousedown', mouseMove);
-        config.emitter.off('mousedown', mouseUp);
+        //config.emitter.off('mousedown', mouseDown);
+        //config.emitter.off('mousedown', mouseMove);
+        //config.emitter.off('mousedown', mouseUp);
     }
 }

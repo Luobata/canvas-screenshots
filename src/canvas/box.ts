@@ -179,7 +179,6 @@ export default class Box {
                         newItem.destory();
                     }
                     newItem.isResize = false;
-                    //newItem.isFocus = false;
                 });
                 break;
             default:
@@ -188,7 +187,6 @@ export default class Box {
     }
 
     draw() {
-        //config.emitter.emit('draw');
         if (this.hasBox()) {
             this.ctx.clearRect(
                 this.rect.startX,
