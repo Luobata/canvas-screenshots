@@ -20,6 +20,23 @@ const inCircle = (
     );
 };
 
+let mouseDown = function(e: MouseEvent) {
+    if (this.isFocus && this.hasBox()) {
+        this.mouse.mouseDown(e, this.getCursor(e));
+    }
+};
+let mouseMove = function(e: MouseEvent) {
+    config.emitter.emit('cursor-change', this.getCursor(e));
+    if (this.isFocus && this.hasBox()) {
+        this.mouse.mouseMove(e);
+    }
+};
+let mouseUp = function(e: MouseEvent) {
+    if (this.isFocus && this.hasBox()) {
+        this.mouse.mouseUp(e);
+    }
+};
+
 export default class {
     id: number;
     ctx: CanvasRenderingContext2D;
@@ -44,6 +61,10 @@ export default class {
         this.borderRadious = 1;
         this.circleWidth = 3;
         this.id = config.uid++;
+
+        mouseDown = mouseDown.bind(this);
+        mouseUp = mouseUp.bind(this);
+        mouseMove = mouseMove.bind(this);
         this.initBox();
 
         this.event();
@@ -78,22 +99,26 @@ export default class {
     }
 
     event() {
-        config.emitter.on('mousedown', e => {
-            if (this.isFocus && this.hasBox()) {
-                this.mouse.mouseDown(e, this.getCursor(e));
-            }
-        });
-        config.emitter.on('mousemove', e => {
-            if (this.isFocus && this.hasBox()) {
-                config.emitter.emit('cursor-change', this.getCursor(e));
-                this.mouse.mouseMove(e);
-            }
-        });
-        config.emitter.on('mouseup', e => {
-            if (this.isFocus && this.hasBox()) {
-                this.mouse.mouseUp(e);
-            }
-        });
+        const that = this;
+        //config.emitter.on('mousedown', e => {
+        //    if (this.isFocus && this.hasBox()) {
+        //        this.mouse.mouseDown(e, this.getCursor(e));
+        //    }
+        //});
+        config.emitter.on('mousedown', mouseDown);
+        config.emitter.on('mousemove', mouseMove);
+        config.emitter.on('mouseup', mouseUp);
+        //config.emitter.on('mousemove', e => {
+        //    config.emitter.emit('cursor-change', this.getCursor(e));
+        //    if (this.isFocus && this.hasBox()) {
+        //        this.mouse.mouseMove(e);
+        //    }
+        //});
+        //config.emitter.on('mouseup', e => {
+        //    if (this.isFocus && this.hasBox()) {
+        //        this.mouse.mouseUp(e);
+        //    }
+        //});
     }
 
     initBox() {
@@ -173,5 +198,10 @@ export default class {
         config.emitter.on('draw-all', () => {
             this.draw();
         });
+    }
+    destory() {
+        config.emitter.off('mousedown', mouseDown);
+        config.emitter.off('mousedown', mouseMove);
+        config.emitter.off('mousedown', mouseUp);
     }
 }

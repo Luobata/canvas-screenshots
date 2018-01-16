@@ -174,6 +174,10 @@ export default class Box {
                 config.emitter.on('mouseup', e => {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
+                    if (!newItem.hasBox()) {
+                        this.content.delete(newItem);
+                        newItem.destory();
+                    }
                     newItem.isResize = false;
                     //newItem.isFocus = false;
                 });

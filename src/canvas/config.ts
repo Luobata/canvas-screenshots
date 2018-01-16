@@ -1,7 +1,7 @@
-import { EventEmitter } from 'events';
+import { Emitter } from 'event-emitter';
 
 interface Config {
-    emitter?: EventEmitter;
+    emitter?: Emitter;
     uid?: number;
 }
 
