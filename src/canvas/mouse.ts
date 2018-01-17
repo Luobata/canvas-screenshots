@@ -34,6 +34,8 @@ export default class {
     }
 
     mouseMove(e: MouseEvent) {
+        // 翻转后 替换的坐标也要相应的替换
+        console.log(this.mouseEvent);
         // move
         switch (this.mouseEvent) {
             case 'crosshair':
