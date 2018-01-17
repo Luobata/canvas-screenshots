@@ -117,19 +117,21 @@ export default class Box {
         let focusItem;
         for (let i of this.content) {
             if (i.inBox(e.clientX, e.clientY, 10)) {
-                i.isFocus = true;
+                //i.isFocus = true;
                 focusItem = i;
             } else {
-                i.isFocus = false;
+                //i.isFocus = false;
             }
         }
 
         return focusItem;
     }
 
-    outFocus() {
+    outFocus(item?: Rectangular) {
         for (let i of this.content) {
-            i.isFocus = false;
+            if (!(item && item === i)) {
+                i.isFocus = false;
+            }
         }
         config.emitter.emit('draw-all');
     }
@@ -137,48 +139,64 @@ export default class Box {
     listenMouse() {
         switch (this.currentFun) {
             case 'rectangular':
-                let newItem: Rectangular;
+                let newItem: Rectangular | null;
+                let position = {
+                    startX: -1,
+                    startY: -1,
+                };
                 config.emitter.on('mousedown', e => {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
-                    // 判断是否选中某个
-                    const item = this.focusRectangular(e);
-                    if (item) {
-                    } else {
-                        this.outFocus();
-                        newItem = new Rectangular(this.ctx);
-                        newItem.isResize = true;
-                        newItem.setPosition({
+                    if (!this.content.size) {
+                        position = {
                             startX: e.clientX,
                             startY: e.clientY,
-                        });
-                        if (!this.content.has(newItem)) {
-                            this.content.add(newItem);
+                        };
+                    } else {
+                        const item = this.focusRectangular(e);
+                        if (item) {
+                            newItem = item;
+                            this.outFocus(item);
+                        } else {
+                            this.outFocus();
+                            position = { startX: e.clientX, startY: e.clientY };
                         }
                     }
                 });
                 config.emitter.on('mousemove', e => {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
-                    if (newItem && newItem.isResize) {
-                        this.draw();
+                    if (newItem) {
+                        if (position.startX !== -1) {
+                            newItem.setPosition(
+                                {
+                                    endX: e.clientX,
+                                    endY: e.clientY,
+                                },
+                                true,
+                            );
+                        }
+                    } else if (position.startX !== -1) {
+                        newItem = new Rectangular(this.ctx);
+                        this.content.add(newItem);
                         newItem.setPosition(
                             {
+                                startX: position.startX,
+                                startY: position.startY,
                                 endX: e.clientX,
                                 endY: e.clientY,
                             },
                             true,
                         );
+                    } else {
+                        // 不操作 等待元素自己监听mousemove
                     }
                 });
                 config.emitter.on('mouseup', e => {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
-                    if (!newItem.hasBox()) {
-                        this.content.delete(newItem);
-                        newItem.destory();
-                    }
-                    newItem.isResize = false;
+                    position.startX = -1;
+                    newItem = null;
                 });
                 break;
             default:

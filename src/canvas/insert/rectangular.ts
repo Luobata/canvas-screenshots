@@ -20,29 +20,11 @@ const inCircle = (
     );
 };
 
-let mouseDown = function(e: MouseEvent) {
-    if (this.isFocus && this.hasBox()) {
-        this.mouse.mouseDown(e, this.getCursor(e));
-    }
-};
-let mouseMove = function(e: MouseEvent) {
-    config.emitter.emit('cursor-change', this.getCursor(e));
-    if (this.isFocus && this.hasBox()) {
-        this.mouse.mouseMove(e);
-    }
-};
-let mouseUp = function(e: MouseEvent) {
-    if (this.isFocus && this.hasBox()) {
-        this.mouse.mouseUp(e);
-    }
-};
-
 export default class {
     id: number;
     ctx: CanvasRenderingContext2D;
     circles: Array<dragCircle>;
     rect?: Rect;
-    isResize: boolean; // 是否正在绘制中
     isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
     isStroke: boolean; // 是否是是空心的
     color: string;
@@ -62,9 +44,6 @@ export default class {
         this.circleWidth = 3;
         this.id = config.uid++;
 
-        mouseDown = mouseDown.bind(this);
-        mouseUp = mouseUp.bind(this);
-        mouseMove = mouseMove.bind(this);
         this.initBox();
 
         this.event();
@@ -105,9 +84,6 @@ export default class {
                 this.mouse.mouseDown(e, this.getCursor(e));
             }
         });
-        //config.emitter.on('mousedown', mouseDown);
-        //config.emitter.on('mousemove', mouseMove);
-        //config.emitter.on('mouseup', mouseUp);
         config.emitter.on('mousemove', e => {
             if (this.hasBox()) {
                 config.emitter.emit('cursor-change', this.getCursor(e));
@@ -143,9 +119,9 @@ export default class {
 
     inBox(positionX: number, positionY: number, circlePath = 0): boolean {
         return !!(
-            positionX - circlePath >= this.rect.startX &&
+            positionX + circlePath >= this.rect.startX &&
             positionX - circlePath <= this.rect.endX &&
-            positionY - circlePath >= this.rect.startY &&
+            positionY + circlePath >= this.rect.startY &&
             positionY - circlePath <= this.rect.endY
         );
     }
@@ -200,10 +176,5 @@ export default class {
         config.emitter.on('draw-all', () => {
             this.draw();
         });
-    }
-    destory() {
-        //config.emitter.off('mousedown', mouseDown);
-        //config.emitter.off('mousedown', mouseMove);
-        //config.emitter.off('mousedown', mouseUp);
     }
 }
