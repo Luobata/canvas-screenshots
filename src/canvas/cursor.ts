@@ -29,12 +29,16 @@ export default class {
         this.maskCircles = [];
     }
 
-    getCursor(e: MouseEvent) {
+    getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair'; // 判断鼠标位置结果 默认即corsshair
         for (let i of this.box.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
-                result = `${i.cssPosition}-resize`;
+                if (type === 'eve') {
+                    result = `${i.cssPositionEve}-resize`;
+                } else {
+                    result = `${i.cssPosition}-resize`;
+                }
             }
         }
         if (result === 'crosshair') {

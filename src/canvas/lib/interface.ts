@@ -2,6 +2,7 @@ export interface dragCircle {
     x: number;
     y: number;
     cssPosition: string;
+    cssPositionEve: string;
     position: string;
 }
 

@@ -54,7 +54,7 @@ export default class Box {
     events() {
         config.emitter.on('end-mousedown', e => {
             if (this.isFocus && this.hasBox()) {
-                this.mouse.mouseDown(e, this.cursorStyle);
+                this.mouse.mouseDown(e, this.cursor.getCursor(e, 'eve'));
             }
         });
         config.emitter.on('end-mousemove', e => {
@@ -96,12 +96,29 @@ export default class Box {
     }
 
     inBox(positionX: number, positionY: number): boolean {
-        return !!(
-            positionX >= this.rect.startX &&
-            positionX <= this.rect.endX &&
-            positionY >= this.rect.startY &&
-            positionY <= this.rect.endY
-        );
+        const inX = (): boolean => {
+            if (this.rect.startX < this.rect.endX) {
+                return (
+                    positionX >= this.rect.startX && positionX <= this.rect.endX
+                );
+            } else {
+                return (
+                    positionX <= this.rect.startX && positionX >= this.rect.endX
+                );
+            }
+        };
+        const inY = (): boolean => {
+            if (this.rect.startY < this.rect.endY) {
+                return (
+                    positionY >= this.rect.startY && positionY <= this.rect.endY
+                );
+            } else {
+                return (
+                    positionY <= this.rect.startY && positionY >= this.rect.endY
+                );
+            }
+        };
+        return inX() && inY();
     }
 
     setPosition(rect: Rect, isDraw = false) {

@@ -63,7 +63,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.startX - borderWidth,
             y: obj.startY - borderWidth,
             position: 'left-top',
-            //cssPositionEve: 'nw',
+            cssPositionEve: 'nw',
             cssPosition: dir('left', 'top'),
         },
         // left-bottom
@@ -71,7 +71,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.startX - borderWidth,
             y: obj.endY + borderWidth,
             position: 'left-botoom',
-            //cssPositionEve: 'sw',
+            cssPositionEve: 'sw',
             cssPosition: dir('left', 'bottom'),
         },
         // left-middle
@@ -79,7 +79,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.startX - borderWidth,
             y: obj.startY + (obj.endY - obj.startY) / 2,
             position: 'left-middle',
-            //cssPositionEve: 'w',
+            cssPositionEve: 'w',
             cssPosition: dir('left', 'middle'),
         },
         // middle top
@@ -87,7 +87,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.startX + (obj.endX - obj.startX) / 2,
             y: obj.startY - borderWidth,
             position: 'middle-top',
-            //cssPosition: 'n',
+            cssPositionEve: 'n',
             cssPosition: dir('middle', 'top'),
         },
         // middle bottom
@@ -95,7 +95,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.startX + (obj.endX - obj.startX) / 2,
             y: obj.endY + borderWidth,
             position: 'middle-bottom',
-            //cssPosition: 's',
+            cssPositionEve: 's',
             cssPosition: dir('middle', 'bottom'),
         },
         // right top
@@ -103,7 +103,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.endX + borderWidth,
             y: obj.startY - borderWidth,
             position: 'right-top',
-            //cssPosition: 'ne',
+            cssPositionEve: 'ne',
             cssPosition: dir('right', 'top'),
         },
         // right bottom
@@ -111,7 +111,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.endX + borderWidth,
             y: obj.endY + borderWidth,
             position: 'right-bottom',
-            //cssPosition: 'se',
+            cssPositionEve: 'se',
             cssPosition: dir('right', 'bottom'),
         },
         // right middle
@@ -119,7 +119,7 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             x: obj.endX + borderWidth,
             y: obj.startY + (obj.endY - obj.startY) / 2,
             position: 'right-middle',
-            //cssPosition: 'e',
+            cssPositionEve: 'e',
             cssPosition: dir('right', 'middle'),
         },
     ];
@@ -134,6 +134,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX - obj.radiusX - borderWidth,
             y: obj.centerY - obj.radiusY - borderWidth,
             position: 'left-top',
+            cssPositionEve: 'nw',
             cssPosition: 'nw',
         },
         // left-bottom
@@ -141,6 +142,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX - obj.radiusX - borderWidth,
             y: obj.centerY + obj.radiusY + borderWidth,
             position: 'left-botoom',
+            cssPositionEve: 'sw',
             cssPosition: 'sw',
         },
         // left-middle
@@ -148,6 +150,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX - obj.radiusX - borderWidth,
             y: obj.centerY,
             position: 'left-middle',
+            cssPositionEve: 'w',
             cssPosition: 'w',
         },
         // middle top
@@ -155,6 +158,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX,
             y: obj.centerY - obj.radiusY - borderWidth,
             position: 'middle-top',
+            cssPositionEve: 'n',
             cssPosition: 'n',
         },
         // middle bottom
@@ -162,6 +166,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX,
             y: obj.centerY + obj.radiusY + borderWidth,
             position: 'middle-bottom',
+            cssPositionEve: 's',
             cssPosition: 's',
         },
         // right top
@@ -169,6 +174,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX + obj.radiusX + borderWidth,
             y: obj.centerY - obj.radiusY - borderWidth,
             position: 'right-top',
+            cssPositionEve: 'ne',
             cssPosition: 'ne',
         },
         // right bottom
@@ -176,6 +182,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX + obj.radiusX + borderWidth,
             y: obj.centerY + obj.radiusY + borderWidth,
             position: 'right-bottom',
+            cssPositionEve: 'se',
             cssPosition: 'se',
         },
         // right middle
@@ -183,6 +190,7 @@ export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
             x: obj.centerX + obj.radiusX + borderWidth,
             y: obj.centerY,
             position: 'right-middle',
+            cssPositionEve: 'e',
             cssPosition: 'e',
         },
     ];
