@@ -17,7 +17,7 @@ export default class {
         this.clickTime = 0;
     }
 
-    mouseDown(e: MouseEvent, cursorStyle = 'corsshair') {
+    mouseDown(e: MouseEvent, cursorStyle = 'crosshair') {
         const now = new Date().getTime();
         if (this.clickTime === 0) {
             this.clickTime++;
@@ -125,6 +125,6 @@ export default class {
     }
 
     mouseUp(e: MouseEvent) {
-        this.mouseEvent = 'corsshair';
+        this.mouseEvent = 'crosshair';
     }
 }

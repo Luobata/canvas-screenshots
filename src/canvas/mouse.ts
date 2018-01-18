@@ -127,6 +127,6 @@ export default class {
     }
 
     mouseUp(e: MouseEvent) {
-        this.mouseEvent = 'corsshair';
+        this.mouseEvent = 'crosshair';
     }
 }

@@ -30,7 +30,7 @@ export default class {
     }
 
     getCursor(e: MouseEvent, type?: string) {
-        let result = 'crosshair'; // 判断鼠标位置结果 默认即corsshair
+        let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
         for (let i of this.box.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标

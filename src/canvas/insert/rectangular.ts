@@ -60,7 +60,7 @@ export default class {
     }
 
     getCursor(e: MouseEvent, type?: string) {
-        let result = 'crosshair'; // 判断鼠标位置结果 默认即corsshair
+        let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
         for (let i of this.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
@@ -90,9 +90,13 @@ export default class {
             }
         });
         config.emitter.on('mousemove', e => {
-            if (this.hasBox()) {
-                config.emitter.emit('cursor-change', this.getCursor(e));
-            }
+            console.log(this.id, this.inBoxBorder(e.clientX, e.clientY));
+            //if (this.inBoxBorder(e.clientX, e.clientY)) {
+            const cursor = this.getCursor(e);
+            // cursor 有问题啊
+            // if (cursor !== 'crosshair')
+            config.emitter.emit('cursor-change', this.getCursor(e));
+            //}
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
