@@ -68,8 +68,8 @@ export default class {
             }
         }
         if (result === 'crosshair') {
-            // 如果还是十字 说明不是9个点 判断是否在矩形内部
-            if (this.inBox(e.clientX, e.clientY)) {
+            // 如果还是十字 如果在边上 则可以拖动
+            if (this.inBoxBorder(e.clientX, e.clientY)) {
                 result = 'all-scroll';
             }
         }
@@ -117,13 +117,94 @@ export default class {
         );
     }
 
+    inBoxBorder(positionX: number, positionY: number): boolean {
+        const centerX =
+            this.rect.startX + (this.rect.endX - this.rect.startX) / 2;
+        const centerY =
+            this.rect.startY + (this.rect.endY - this.rect.startY) / 2;
+        const inLength = Math.abs((this.rect.endY - this.rect.startY) / 2);
+        const outLength = inLength + this.lineWidth;
+        // const inX = () => {
+        //     const angle =Math.acos(
+        //         Math.abs(positinX - centerX) /
+        //         Math.sqrt(
+        //             Math.pow(positinX - centerX, 2) +
+        //                 Math.pow(positinY - centerY, 2),
+        //         ));
+        //     // const minL = Math.sin()
+        // };
+        const borderWidth = this.lineWidth + 5;
+        const sX =
+            this.rect.startX < this.rect.endX
+                ? this.rect.startX
+                : this.rect.endX;
+        const bX =
+            this.rect.startX >= this.rect.endX
+                ? this.rect.startX
+                : this.rect.endX;
+        const sY =
+            this.rect.startY < this.rect.endY
+                ? this.rect.startY
+                : this.rect.endY;
+        const bY =
+            this.rect.startY >= this.rect.endY
+                ? this.rect.startY
+                : this.rect.endY;
+        const inRow = (): boolean => {
+            return (
+                positionX >= sX - borderWidth &&
+                positionX <= bX + borderWidth &&
+                ((positionY >= sY - borderWidth && positionY <= sY) ||
+                    (positionY >= bY && positionY <= bY + borderWidth))
+            );
+        };
+
+        const inColumn = (): boolean => {
+            return (
+                positionY >= sY &&
+                positionY <= bY &&
+                ((positionX >= sX - borderWidth && positionX <= sX) ||
+                    (positionX >= bX && positionX <= bX + borderWidth))
+            );
+        };
+
+        return inRow() || inColumn();
+    }
+
     inBox(positionX: number, positionY: number, circlePath = 0): boolean {
-        return !!(
-            positionX + circlePath >= this.rect.startX &&
-            positionX - circlePath <= this.rect.endX &&
-            positionY + circlePath >= this.rect.startY &&
-            positionY - circlePath <= this.rect.endY
-        );
+        const inX = (): boolean => {
+            if (this.rect.startX < this.rect.endX) {
+                return (
+                    positionX + circlePath >= this.rect.startX &&
+                    positionX - circlePath <= this.rect.endX
+                );
+            } else {
+                return (
+                    positionX + circlePath <= this.rect.startX &&
+                    positionX - circlePath >= this.rect.endX
+                );
+            }
+        };
+        const inY = (): boolean => {
+            if (this.rect.startY < this.rect.endY) {
+                return (
+                    positionY + circlePath >= this.rect.startY &&
+                    positionY - circlePath <= this.rect.endY
+                );
+            } else {
+                return (
+                    positionY + circlePath <= this.rect.startY &&
+                    positionY - circlePath >= this.rect.endY
+                );
+            }
+        };
+        return inX() && inY();
+        // return !!(
+        //     positionX + circlePath >= this.rect.startX &&
+        //     positionX - circlePath <= this.rect.endX &&
+        //     positionY + circlePath >= this.rect.startY &&
+        //     positionY - circlePath <= this.rect.endY
+        // );
     }
 
     draw() {

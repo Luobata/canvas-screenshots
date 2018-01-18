@@ -133,7 +133,8 @@ export default class Box {
     focusRectangular(e: MouseEvent) {
         let focusItem;
         for (let i of this.content) {
-            if (i.inBox(e.clientX, e.clientY, 10)) {
+            //if (i.inBox(e.clientX, e.clientY, 10)) {
+            if (i.inBoxBorder(e.clientX, e.clientY)) {
                 //i.isFocus = true;
                 focusItem = i;
             } else {
@@ -148,6 +149,8 @@ export default class Box {
         for (let i of this.content) {
             if (!(item && item === i)) {
                 i.isFocus = false;
+            } else {
+                i.isFocus = true;
             }
         }
         config.emitter.emit('draw-all');
@@ -171,6 +174,7 @@ export default class Box {
                         };
                     } else {
                         const item = this.focusRectangular(e);
+                        console.log(item);
                         if (item) {
                             newItem = item;
                             this.outFocus(item);
