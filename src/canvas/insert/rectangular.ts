@@ -59,12 +59,17 @@ export default class {
         }
     }
 
-    getCursor(e: MouseEvent) {
+    getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair'; // 判断鼠标位置结果 默认即corsshair
         for (let i of this.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
-                result = `${i.cssPosition}-resize`;
+                //result = `${i.cssPosition}-resize`;
+                if (type === 'eve') {
+                    result = `${i.cssPositionEve}-resize`;
+                } else {
+                    result = `${i.cssPosition}-resize`;
+                }
             }
         }
         if (result === 'crosshair') {
@@ -81,7 +86,7 @@ export default class {
         const that = this;
         config.emitter.on('mousedown', e => {
             if (this.isFocus && this.hasBox()) {
-                this.mouse.mouseDown(e, this.getCursor(e));
+                this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
         });
         config.emitter.on('mousemove', e => {
@@ -133,23 +138,25 @@ export default class {
         //         ));
         //     // const minL = Math.sin()
         // };
-        const borderWidth = this.lineWidth + 5;
+        // margin 扩大可点击区域
+        const margin = 5;
+        const borderWidth = this.lineWidth + margin * 2;
         const sX =
             this.rect.startX < this.rect.endX
                 ? this.rect.startX
-                : this.rect.endX;
+                : this.rect.endX + margin;
         const bX =
             this.rect.startX >= this.rect.endX
                 ? this.rect.startX
-                : this.rect.endX;
+                : this.rect.endX - margin;
         const sY =
             this.rect.startY < this.rect.endY
                 ? this.rect.startY
-                : this.rect.endY;
+                : this.rect.endY + margin;
         const bY =
             this.rect.startY >= this.rect.endY
                 ? this.rect.startY
-                : this.rect.endY;
+                : this.rect.endY - margin;
         const inRow = (): boolean => {
             return (
                 positionX >= sX - borderWidth &&

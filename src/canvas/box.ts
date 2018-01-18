@@ -175,6 +175,7 @@ export default class Box {
                     } else {
                         const item = this.focusRectangular(e);
                         console.log(item);
+                        console.log(e.clientX, e.clientY);
                         if (item) {
                             newItem = item;
                             this.outFocus(item);
@@ -217,6 +218,7 @@ export default class Box {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
                     position.startX = -1;
+                    console.log(newItem.rect);
                     newItem = null;
                 });
                 break;
