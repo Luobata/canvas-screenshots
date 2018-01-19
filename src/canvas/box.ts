@@ -156,6 +156,19 @@ export default class Box {
         config.emitter.emit('draw-all');
     }
 
+    cursorChange(e: MouseEvent) {
+        let cursor = 'crosshair';
+        for (let i of this.content) {
+            if (i.inBoxBorder(e.clientX, e.clientY)) {
+                cursor = i.getCursor(e);
+            }
+        }
+
+        config.emitter.emit('cursor-change', cursor);
+
+        return cursor;
+    }
+
     listenMouse() {
         switch (this.currentFun) {
             case 'rectangular':
@@ -186,6 +199,7 @@ export default class Box {
                 config.emitter.on('mousemove', e => {
                     if (this.isFocus) return;
                     if (!this.inBox(e.clientX, e.clientY)) return;
+                    this.cursorChange(e);
                     if (newItem) {
                         if (position.startX !== -1) {
                             newItem.setPosition(

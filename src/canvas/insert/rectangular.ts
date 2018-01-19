@@ -90,13 +90,6 @@ export default class {
             }
         });
         config.emitter.on('mousemove', e => {
-            console.log(this.id, this.inBoxBorder(e.clientX, e.clientY));
-            //if (this.inBoxBorder(e.clientX, e.clientY)) {
-            const cursor = this.getCursor(e);
-            // cursor 有问题啊
-            // if (cursor !== 'crosshair')
-            config.emitter.emit('cursor-change', this.getCursor(e));
-            //}
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
