@@ -146,13 +146,18 @@ export default class Box {
     }
 
     outFocus(item?: Rectangular) {
+        // 把该item的位置放到最后
+        let topItem;
         for (let i of this.content) {
             if (!(item && item === i)) {
                 i.isFocus = false;
             } else {
                 i.isFocus = true;
+                this.content.delete(i);
+                topItem = i;
             }
         }
+        if (topItem) this.content.add(topItem);
         config.emitter.emit('draw-all');
     }
 

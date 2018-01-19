@@ -38,8 +38,9 @@ export default class {
         this.mouse = new Mouse(this, rectangularEmitter);
         this.isFocus = true;
         this.isStroke = true;
-        this.color = 'red';
-        this.lineWidth = 1;
+        // this.color = 'red';
+        this.color = (<any>window).color || 'red';
+        this.lineWidth = 3;
         this.borderRadious = 1;
         this.circleWidth = 3;
         this.id = config.uid++;
@@ -259,7 +260,7 @@ export default class {
     }
     drawAll() {
         config.emitter.on('draw-all', () => {
-            this.draw();
+            // this.draw();
         });
     }
 }
