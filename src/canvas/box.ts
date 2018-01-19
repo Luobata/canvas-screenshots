@@ -1,10 +1,13 @@
 import { dragCircle, Rect } from 'LIB/interface';
 import Rectangular from 'INSERT/rectangular';
+import Circle from 'INSERT/circle';
 import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
 import { Readable } from 'stream';
+
+type Content = Rectangular | Circle;
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
@@ -19,7 +22,7 @@ enum insertFunction {
 export default class Box {
     ctx: CanvasRenderingContext2D;
     circles: Array<dragCircle>;
-    content: Set<Rectangular>;
+    content: Set<Content>;
     rect?: Rect;
     cursorStyle: string;
     isFocus: Boolean;
@@ -145,7 +148,7 @@ export default class Box {
         return focusItem;
     }
 
-    outFocus(item?: Rectangular) {
+    outFocus(item?: Content) {
         // 把该item的位置放到最后
         let topItem;
         for (let i of this.content) {
@@ -177,7 +180,7 @@ export default class Box {
     listenMouse() {
         switch (this.currentFun) {
             case 'rectangular':
-                let newItem: Rectangular | null;
+                let newItem: Content | null;
                 let position = {
                     startX: -1,
                     startY: -1,
@@ -206,27 +209,33 @@ export default class Box {
                     if (!this.inBox(e.clientX, e.clientY)) return;
                     this.cursorChange(e);
                     if (newItem) {
-                        if (position.startX !== -1) {
+                        if (newItem instanceof Rectangular) {
+                            if (position.startX !== -1) {
+                                newItem.setPosition(
+                                    {
+                                        endX: e.clientX,
+                                        endY: e.clientY,
+                                    },
+                                    true,
+                                );
+                            }
+                        } else if (newItem instanceof Circle) {
+                        }
+                    } else if (position.startX !== -1) {
+                        if (this.currentFun === 'rectangular') {
+                            newItem = new Rectangular(this.ctx);
+                            this.content.add(newItem);
                             newItem.setPosition(
                                 {
+                                    startX: position.startX,
+                                    startY: position.startY,
                                     endX: e.clientX,
                                     endY: e.clientY,
                                 },
                                 true,
                             );
+                        } else if (this.currentFun === 'circle') {
                         }
-                    } else if (position.startX !== -1) {
-                        newItem = new Rectangular(this.ctx);
-                        this.content.add(newItem);
-                        newItem.setPosition(
-                            {
-                                startX: position.startX,
-                                startY: position.startY,
-                                endX: e.clientX,
-                                endY: e.clientY,
-                            },
-                            true,
-                        );
                     } else {
                         // 不操作 等待元素自己监听mousemove
                     }
