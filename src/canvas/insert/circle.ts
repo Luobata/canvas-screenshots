@@ -62,7 +62,23 @@ export default class {
         return result;
     }
 
-    inBoxBorder(postionX: number, positionY: number) {}
+    inBoxBorder(positionX: number, positionY: number) {
+        const margin = 0.1;
+        let a;
+        let b;
+        if (this.circle.radiusX > this.circle.radiusY) {
+            a = this.circle.radiusX;
+            b = this.circle.radiusY;
+        } else {
+            a = this.circle.radiusY;
+            b = this.circle.radiusX;
+        }
+        const res =
+            Math.pow(positionX - this.circle.centerX, 2) / Math.pow(a, 2) +
+            Math.pow(positionY - this.circle.centerY, 2) / Math.pow(b, 2);
+
+        return Math.abs(res - 1) < margin;
+    }
 
     inCircle() {}
 
@@ -76,6 +92,30 @@ export default class {
         this.ctx.fillStyle = this.borderColor;
         this.ctx.lineWidth = this.borderWidth;
         this.ctx.stroke();
+        const ellipse = (circle: Circle) => {
+            const r =
+                circle.radiusX > circle.radiusY
+                    ? circle.radiusX
+                    : circle.radiusY;
+            var ratioX = circle.radiusX / r;
+            var ratioY = circle.radiusY / r;
+            this.ctx.scale(ratioX, ratioY);
+            this.ctx.beginPath();
+            this.ctx.arc(
+                circle.centerX / ratioX,
+                circle.centerY / ratioY,
+                r,
+                0,
+                2 * Math.PI,
+                false,
+            );
+            this.ctx.closePath();
+            this.ctx.restore();
+            this.ctx.fill();
+        };
+
+        ellipse(this.circle);
+        // 画椭圆
         if (this.isFocus) {
             for (let i of circleMap) {
                 this.ctx.beginPath();

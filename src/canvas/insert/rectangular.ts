@@ -204,12 +204,6 @@ export default class {
             }
         };
         return inX() && inY();
-        // return !!(
-        //     positionX + circlePath >= this.rect.startX &&
-        //     positionX - circlePath <= this.rect.endX &&
-        //     positionY + circlePath >= this.rect.startY &&
-        //     positionY - circlePath <= this.rect.endY
-        // );
     }
 
     draw() {
