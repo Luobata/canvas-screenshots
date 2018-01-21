@@ -84,7 +84,6 @@ export default class {
     }
 
     event() {
-        const that = this;
         config.emitter.on('mousedown', e => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));

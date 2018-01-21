@@ -1,6 +1,9 @@
 import { dragCircle, Circle } from 'LIB/interface';
 import { config } from '../config';
 import { getCircleMapWithCircle } from 'LIB/help';
+import Mouse from './mouse-circle';
+const ee = require('event-emitter');
+const circleEmitter = new ee();
 
 const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
 
@@ -27,6 +30,7 @@ export default class {
     auxLineColor: string;
     borderWidth: number;
     circleWidth: number;
+    mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
@@ -37,6 +41,7 @@ export default class {
         this.auxLineColor = 'gray';
         this.circleWidth = 3;
         this.id = config.uid++;
+        this.mouse = new Mouse(this);
 
         this.initCircle();
         this.event();
@@ -84,26 +89,55 @@ export default class {
     }
 
     inBoxBorder(positionX: number, positionY: number) {
-        const margin = 0.1;
-        let a;
-        let b;
-        if (this.circle.radiusX > this.circle.radiusY) {
-            a = this.circle.radiusX;
-            b = this.circle.radiusY;
-        } else {
-            a = this.circle.radiusY;
-            b = this.circle.radiusX;
-        }
-        const res =
-            Math.pow(positionX - this.circle.centerX, 2) / Math.pow(a, 2) +
-            Math.pow(positionY - this.circle.centerY, 2) / Math.pow(b, 2);
+        const inCircle = () => {
+            const margin = 0.1;
+            let a;
+            let b;
+            if (this.circle.radiusX > this.circle.radiusY) {
+                a = this.circle.radiusX;
+                b = this.circle.radiusY;
+            } else {
+                a = this.circle.radiusY;
+                b = this.circle.radiusX;
+            }
+            const res =
+                Math.pow(positionX - this.circle.centerX, 2) / Math.pow(a, 2) +
+                Math.pow(positionY - this.circle.centerY, 2) / Math.pow(b, 2);
+            return Math.abs(res - 1) < margin;
+        };
 
-        return Math.abs(res - 1) < margin;
+        const inBorder = () => {};
+
+        return inCircle() || inBorder();
     }
 
     inCircle() {}
+    hasBox() {
+        return !!(
+            this.circle.centerX !== undefined &&
+            this.circle.centerY !== undefined &&
+            this.circle.radiusX !== undefined &&
+            this.circle.radiusY !== undefined
+        );
+    }
 
-    event() {}
+    event() {
+        config.emitter.on('mousedown', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
+            }
+        });
+        config.emitter.on('mousemove', e => {
+            if (this.isFocus) {
+                this.mouse.mouseMove(e);
+            }
+        });
+        config.emitter.on('mouseup', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseUp(e);
+            }
+        });
+    }
 
     draw() {
         const circleMap = getCircleMapWithCircle(this.circle, this.borderWidth);
