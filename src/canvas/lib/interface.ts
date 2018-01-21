@@ -14,8 +14,8 @@ export interface Rect {
 }
 
 export interface Circle {
-    centerX: number;
-    centerY: number;
-    radiusX: number;
-    radiusY: number;
+    centerX?: number;
+    centerY?: number;
+    radiusX?: number;
+    radiusY?: number;
 }

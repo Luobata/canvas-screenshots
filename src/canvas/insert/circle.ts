@@ -24,6 +24,7 @@ export default class {
     isFocus: boolean;
     color: string;
     borderColor: string;
+    auxLineColor: string;
     borderWidth: number;
     circleWidth: number;
 
@@ -31,12 +32,32 @@ export default class {
         this.ctx = ctx;
         this.isFocus = true;
         this.borderColor = 'black';
-        this.color = 'black';
+        this.borderWidth = 1;
+        this.color = (<any>window).color || 'red';
+        this.auxLineColor = 'gray';
         this.circleWidth = 3;
         this.id = config.uid++;
 
+        this.initCircle();
         this.event();
         this.drawAll();
+    }
+
+    initCircle() {
+        this.circle = {
+            centerX: -1,
+            centerY: -1,
+            radiusX: -1,
+            radiusY: -1,
+        };
+    }
+
+    setPosition(circle: Circle, isDraw = false) {
+        Object.assign(this.circle, circle);
+
+        if (isDraw) {
+            config.emitter.emit('draw-all');
+        }
     }
 
     getCursor(e: MouseEvent, type?: string) {
@@ -101,6 +122,8 @@ export default class {
             var ratioY = circle.radiusY / r;
             this.ctx.scale(ratioX, ratioY);
             this.ctx.beginPath();
+            this.ctx.fillStyle = this.borderColor;
+            this.ctx.lineWidth = this.borderWidth;
             this.ctx.arc(
                 circle.centerX / ratioX,
                 circle.centerY / ratioY,
@@ -111,12 +134,31 @@ export default class {
             );
             this.ctx.closePath();
             this.ctx.restore();
-            this.ctx.fill();
+            this.ctx.stroke();
         };
 
         ellipse(this.circle);
         // 画椭圆
         if (this.isFocus) {
+            const startX = this.circle.centerX - this.circle.radiusX;
+            const startY = this.circle.centerY - this.circle.radiusY;
+            const endX = this.circle.centerX + this.circle.radiusX;
+            const endY = this.circle.centerY + this.circle.radiusY;
+
+            this.ctx.moveTo(
+                startX - this.borderWidth,
+                startY - this.borderWidth,
+            );
+            this.ctx.lineTo(endX + this.borderWidth, startY - this.borderWidth);
+            this.ctx.lineTo(endX + this.borderWidth, endY + this.borderWidth);
+            this.ctx.lineTo(startX - this.borderWidth, endY + this.borderWidth);
+            this.ctx.lineTo(
+                startX - this.borderWidth,
+                startY - this.borderWidth,
+            );
+            this.ctx.lineWidth = 1;
+            this.ctx.strokeStyle = this.auxLineColor;
+            this.ctx.stroke();
             for (let i of circleMap) {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.color;
@@ -131,8 +173,6 @@ export default class {
     }
 
     drawAll() {
-        config.emitter.on('draw-all', () => {
-            this.drawAll();
-        });
+        config.emitter.on('draw-all', () => {});
     }
 }

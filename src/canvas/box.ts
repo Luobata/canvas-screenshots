@@ -45,7 +45,7 @@ export default class Box {
         this.borderRadious = 1;
         this.circleWidth = 3;
         // 测试设定默认值
-        this.currentFun = insertFunction[0];
+        this.currentFun = insertFunction[1];
         this.events();
         this.listenMouse();
         this.mouse = new Mouse(this, boxEmitter);
@@ -178,78 +178,102 @@ export default class Box {
     }
 
     listenMouse() {
-        switch (this.currentFun) {
-            case 'rectangular':
-                let newItem: Content | null;
-                let position = {
-                    startX: -1,
-                    startY: -1,
+        let newItem: Content | null;
+        let position = {
+            startX: -1,
+            startY: -1,
+        };
+        config.emitter.on('mousedown', e => {
+            if (this.isFocus) return;
+            if (!this.inBox(e.clientX, e.clientY)) return;
+            if (!this.content.size) {
+                position = {
+                    startX: e.clientX,
+                    startY: e.clientY,
                 };
-                config.emitter.on('mousedown', e => {
-                    if (this.isFocus) return;
-                    if (!this.inBox(e.clientX, e.clientY)) return;
-                    if (!this.content.size) {
-                        position = {
-                            startX: e.clientX,
-                            startY: e.clientY,
-                        };
-                    } else {
-                        const item = this.focusRectangular(e);
-                        if (item) {
-                            newItem = item;
-                            this.outFocus(item);
-                        } else {
-                            this.outFocus();
-                            position = { startX: e.clientX, startY: e.clientY };
-                        }
+            } else {
+                const item = this.focusRectangular(e);
+                if (item) {
+                    newItem = item;
+                    this.outFocus(item);
+                } else {
+                    this.outFocus();
+                    position = { startX: e.clientX, startY: e.clientY };
+                }
+            }
+        });
+        config.emitter.on('mousemove', e => {
+            if (this.isFocus) return;
+            if (!this.inBox(e.clientX, e.clientY)) return;
+            this.cursorChange(e);
+            if (newItem) {
+                if (newItem instanceof Rectangular) {
+                    if (position.startX !== -1) {
+                        newItem.setPosition(
+                            {
+                                endX: e.clientX,
+                                endY: e.clientY,
+                            },
+                            true,
+                        );
                     }
-                });
-                config.emitter.on('mousemove', e => {
-                    if (this.isFocus) return;
-                    if (!this.inBox(e.clientX, e.clientY)) return;
-                    this.cursorChange(e);
-                    if (newItem) {
-                        if (newItem instanceof Rectangular) {
-                            if (position.startX !== -1) {
-                                newItem.setPosition(
-                                    {
-                                        endX: e.clientX,
-                                        endY: e.clientY,
-                                    },
-                                    true,
-                                );
-                            }
-                        } else if (newItem instanceof Circle) {
-                        }
-                    } else if (position.startX !== -1) {
-                        if (this.currentFun === 'rectangular') {
-                            newItem = new Rectangular(this.ctx);
-                            this.content.add(newItem);
-                            newItem.setPosition(
-                                {
-                                    startX: position.startX,
-                                    startY: position.startY,
-                                    endX: e.clientX,
-                                    endY: e.clientY,
-                                },
-                                true,
-                            );
-                        } else if (this.currentFun === 'circle') {
-                        }
-                    } else {
-                        // 不操作 等待元素自己监听mousemove
+                } else if (newItem instanceof Circle) {
+                    if (position.startX !== -1) {
+                        newItem.setPosition(
+                            {
+                                centerX: (position.startX + e.clientX) / 2,
+                                centerY: (position.startY + e.clientY) / 2,
+                                radiusX: Math.abs(
+                                    (position.startX - e.clientX) / 2,
+                                ),
+                                radiusY: Math.abs(
+                                    (position.startY - e.clientY) / 2,
+                                ),
+                            },
+                            true,
+                        );
                     }
-                });
-                config.emitter.on('mouseup', e => {
-                    if (this.isFocus) return;
-                    if (!this.inBox(e.clientX, e.clientY)) return;
-                    position.startX = -1;
-                    newItem = null;
-                });
-                break;
-            default:
-                break;
-        }
+                }
+            } else if (position.startX !== -1) {
+                if (this.currentFun === 'rectangular') {
+                    newItem = new Rectangular(this.ctx);
+                    this.content.add(newItem);
+                    newItem.setPosition(
+                        {
+                            startX: position.startX,
+                            startY: position.startY,
+                            endX: e.clientX,
+                            endY: e.clientY,
+                        },
+                        true,
+                    );
+                } else if (this.currentFun === 'circle') {
+                    newItem = new Circle(this.ctx);
+                    this.content.add(newItem);
+                    newItem.setPosition(
+                        {
+                            centerX: (position.startX + e.clientX) / 2,
+                            centerY: (position.startY + e.clientY) / 2,
+                            radiusX: Math.abs(
+                                (position.startX - e.clientX) / 2,
+                            ),
+                            radiusY: Math.abs(
+                                (position.startY - e.clientY) / 2,
+                            ),
+                        },
+                        true,
+                    );
+                }
+            } else {
+                // 不操作 等待元素自己监听mousemove
+            }
+        });
+        config.emitter.on('mouseup', e => {
+            if (this.isFocus) return;
+            if (!this.inBox(e.clientX, e.clientY)) return;
+            position.startX = -1;
+            newItem = null;
+        });
     }
 
     draw() {
