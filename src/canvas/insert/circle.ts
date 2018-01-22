@@ -2,6 +2,7 @@ import { dragCircle, Circle } from 'LIB/interface';
 import { config } from '../config';
 import { getCircleMapWithCircle } from 'LIB/help';
 import Mouse from './mouse-circle';
+import { pointInRectangular } from 'LIB/geometric';
 const ee = require('event-emitter');
 const circleEmitter = new ee();
 
@@ -106,7 +107,81 @@ export default class {
             return Math.abs(res - 1) < margin;
         };
 
-        const inBorder = () => {};
+        const inBorder = () => {
+            const margin = 3;
+            const p1 = {
+                x: this.circle.centerX - this.circle.radiusX + margin,
+                y: this.circle.centerY - this.circle.radiusY + margin,
+            };
+            const p2 = {
+                x: this.circle.centerX + this.circle.radiusX - margin,
+                y: this.circle.centerY - this.circle.radiusY + margin,
+            };
+            const p3 = {
+                x: this.circle.centerX - this.circle.radiusX + margin,
+                y: this.circle.centerY + this.circle.radiusY - margin,
+            };
+            const p4 = {
+                x: this.circle.centerX + this.circle.radiusX - margin,
+                y: this.circle.centerY + this.circle.radiusY - margin,
+            };
+            const P1 = {
+                x:
+                    this.circle.centerX -
+                    this.circle.radiusX -
+                    this.borderWidth -
+                    margin,
+                y:
+                    this.circle.centerY -
+                    this.circle.radiusY -
+                    this.borderWidth -
+                    margin,
+            };
+            const P2 = {
+                x:
+                    this.circle.centerX +
+                    this.circle.radiusX +
+                    this.borderWidth +
+                    margin,
+                y:
+                    this.circle.centerY -
+                    this.circle.radiusY -
+                    this.borderWidth -
+                    margin,
+            };
+            const P3 = {
+                x:
+                    this.circle.centerX -
+                    this.circle.radiusX -
+                    this.borderWidth -
+                    margin,
+                y:
+                    this.circle.centerY +
+                    this.circle.radiusY +
+                    this.borderWidth +
+                    margin,
+            };
+            const P4 = {
+                x:
+                    this.circle.centerX +
+                    this.circle.radiusX +
+                    this.borderWidth +
+                    margin,
+                y:
+                    this.circle.centerY +
+                    this.circle.radiusY +
+                    this.borderWidth +
+                    margin,
+            };
+            const p = {
+                x: positionX,
+                y: positionY,
+            };
+            return (
+                !pointInRectangular(p1, p2, p3, p4, p) &&
+                pointInRectangular(P1, P2, P3, P4, p)
+            );
+        };
 
         return inCircle() || inBorder();
     }
