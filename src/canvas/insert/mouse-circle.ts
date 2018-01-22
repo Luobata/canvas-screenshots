@@ -59,7 +59,7 @@ export default class {
                 startX = e.clientX;
                 startY =
                     this.circle.circle.centerY - this.circle.circle.radiusY;
-                endX = this.circle.circle.centerX + this.circle.circle.radiusY;
+                endX = this.circle.circle.centerX + this.circle.circle.radiusX;
                 endY = e.clientY;
                 this.circle.setPosition(
                     {
@@ -84,9 +84,9 @@ export default class {
                 break;
             case 'se-resize':
                 startX =
-                    this.circle.circle.centerX + this.circle.circle.radiusX;
+                    this.circle.circle.centerX - this.circle.circle.radiusX;
                 startY =
-                    this.circle.circle.centerY + this.circle.circle.radiusY;
+                    this.circle.circle.centerY - this.circle.circle.radiusY;
                 endX = e.clientX;
                 endY = e.clientY;
                 this.circle.setPosition(
@@ -114,7 +114,7 @@ export default class {
                 break;
             case 'ne-resize':
                 startX =
-                    this.circle.circle.centerX + this.circle.circle.radiusX;
+                    this.circle.circle.centerX - this.circle.circle.radiusX;
                 startY = e.clientY;
                 endX = e.clientX;
                 endY = this.circle.circle.centerY + this.circle.circle.radiusY;
