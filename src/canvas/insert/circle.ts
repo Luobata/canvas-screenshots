@@ -22,7 +22,6 @@ const inCircle = (
 
 export default class {
     id: number;
-    // circle: Circle;
     rect: Rect;
     circles: Array<dragCircle>;
     ctx: CanvasRenderingContext2D;
