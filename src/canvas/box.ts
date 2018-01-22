@@ -221,14 +221,8 @@ export default class Box {
                     if (position.startX !== -1) {
                         newItem.setPosition(
                             {
-                                centerX: (position.startX + e.clientX) / 2,
-                                centerY: (position.startY + e.clientY) / 2,
-                                radiusX: Math.abs(
-                                    (position.startX - e.clientX) / 2,
-                                ),
-                                radiusY: Math.abs(
-                                    (position.startY - e.clientY) / 2,
-                                ),
+                                endX: e.clientX,
+                                endY: e.clientY,
                             },
                             true,
                         );
@@ -252,14 +246,10 @@ export default class Box {
                     this.content.add(newItem);
                     newItem.setPosition(
                         {
-                            centerX: (position.startX + e.clientX) / 2,
-                            centerY: (position.startY + e.clientY) / 2,
-                            radiusX: Math.abs(
-                                (position.startX - e.clientX) / 2,
-                            ),
-                            radiusY: Math.abs(
-                                (position.startY - e.clientY) / 2,
-                            ),
+                            startX: position.startX,
+                            startY: position.startY,
+                            endX: e.clientX,
+                            endY: e.clientY,
                         },
                         true,
                     );

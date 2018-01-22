@@ -1,6 +1,6 @@
-import { dragCircle, Circle } from 'LIB/interface';
+import { dragCircle, Circle, Rect } from 'LIB/interface';
 import { config } from '../config';
-import { getCircleMapWithCircle } from 'LIB/help';
+import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse-circle';
 import { pointInRectangular } from 'LIB/geometric';
 const ee = require('event-emitter');
@@ -22,7 +22,8 @@ const inCircle = (
 
 export default class {
     id: number;
-    circle: Circle;
+    // circle: Circle;
+    rect: Rect;
     circles: Array<dragCircle>;
     ctx: CanvasRenderingContext2D;
     isFocus: boolean;
@@ -50,16 +51,16 @@ export default class {
     }
 
     initCircle() {
-        this.circle = {
-            centerX: -1,
-            centerY: -1,
-            radiusX: -1,
-            radiusY: -1,
+        this.rect = {
+            startX: undefined,
+            startY: undefined,
+            endX: undefined,
+            endY: undefined,
         };
     }
 
-    setPosition(circle: Circle, isDraw = false) {
-        Object.assign(this.circle, circle);
+    setPosition(rect: Rect, isDraw = false) {
+        Object.assign(this.rect, rect);
 
         if (isDraw) {
             config.emitter.emit('draw-all');
@@ -94,84 +95,60 @@ export default class {
             const margin = 0.1;
             let a;
             let b;
-            if (this.circle.radiusX > this.circle.radiusY) {
-                a = this.circle.radiusX;
-                b = this.circle.radiusY;
+            const radiusX = Math.abs(this.rect.endX - this.rect.startX) / 2;
+            const radiusY = Math.abs(this.rect.endY - this.rect.startY) / 2;
+            const centerX = (this.rect.startX + this.rect.endX) / 2;
+            const centerY = (this.rect.startY + this.rect.endY) / 2;
+            if (radiusX > radiusY) {
+                a = radiusX;
+                b = radiusY;
             } else {
-                a = this.circle.radiusY;
-                b = this.circle.radiusX;
+                a = radiusY;
+                b = radiusX;
             }
             const res =
-                Math.pow(positionX - this.circle.centerX, 2) / Math.pow(a, 2) +
-                Math.pow(positionY - this.circle.centerY, 2) / Math.pow(b, 2);
+                Math.pow(positionX - centerX, 2) / Math.pow(a, 2) +
+                Math.pow(positionY - centerY, 2) / Math.pow(b, 2);
             return Math.abs(res - 1) < margin;
         };
 
         const inBorder = () => {
             const margin = 3;
+            const radiusX = Math.abs(this.rect.endX - this.rect.startX) / 2;
+            const radiusY = Math.abs(this.rect.endY - this.rect.startY) / 2;
+            const centerX = (this.rect.startX + this.rect.endX) / 2;
+            const centerY = (this.rect.startY + this.rect.endY) / 2;
             const p1 = {
-                x: this.circle.centerX - this.circle.radiusX + margin,
-                y: this.circle.centerY - this.circle.radiusY + margin,
+                x: centerX - radiusX + margin,
+                y: centerY - radiusY + margin,
             };
             const p2 = {
-                x: this.circle.centerX + this.circle.radiusX - margin,
-                y: this.circle.centerY - this.circle.radiusY + margin,
+                x: centerX + radiusX - margin,
+                y: centerY - radiusY + margin,
             };
             const p3 = {
-                x: this.circle.centerX - this.circle.radiusX + margin,
-                y: this.circle.centerY + this.circle.radiusY - margin,
+                x: centerX - radiusX + margin,
+                y: centerY + radiusY - margin,
             };
             const p4 = {
-                x: this.circle.centerX + this.circle.radiusX - margin,
-                y: this.circle.centerY + this.circle.radiusY - margin,
+                x: centerX + radiusX - margin,
+                y: centerY + radiusY - margin,
             };
             const P1 = {
-                x:
-                    this.circle.centerX -
-                    this.circle.radiusX -
-                    this.borderWidth -
-                    margin,
-                y:
-                    this.circle.centerY -
-                    this.circle.radiusY -
-                    this.borderWidth -
-                    margin,
+                x: centerX - radiusX - this.borderWidth - margin,
+                y: centerY - radiusY - this.borderWidth - margin,
             };
             const P2 = {
-                x:
-                    this.circle.centerX +
-                    this.circle.radiusX +
-                    this.borderWidth +
-                    margin,
-                y:
-                    this.circle.centerY -
-                    this.circle.radiusY -
-                    this.borderWidth -
-                    margin,
+                x: centerX + radiusX + this.borderWidth + margin,
+                y: centerY - radiusY - this.borderWidth - margin,
             };
             const P3 = {
-                x:
-                    this.circle.centerX -
-                    this.circle.radiusX -
-                    this.borderWidth -
-                    margin,
-                y:
-                    this.circle.centerY +
-                    this.circle.radiusY +
-                    this.borderWidth +
-                    margin,
+                x: centerX - radiusX - this.borderWidth - margin,
+                y: centerY + radiusY + this.borderWidth + margin,
             };
             const P4 = {
-                x:
-                    this.circle.centerX +
-                    this.circle.radiusX +
-                    this.borderWidth +
-                    margin,
-                y:
-                    this.circle.centerY +
-                    this.circle.radiusY +
-                    this.borderWidth +
-                    margin,
+                x: centerX + radiusX + this.borderWidth + margin,
+                y: centerY + radiusY + this.borderWidth + margin,
             };
             const p = {
                 x: positionX,
@@ -189,10 +166,10 @@ export default class {
     inCircle() {}
     hasBox() {
         return !!(
-            this.circle.centerX !== undefined &&
-            this.circle.centerY !== undefined &&
-            this.circle.radiusX !== undefined &&
-            this.circle.radiusY !== undefined
+            this.rect.startX !== undefined &&
+            this.rect.startY !== undefined &&
+            this.rect.endX !== undefined &&
+            this.rect.endY !== undefined
         );
     }
 
@@ -215,7 +192,7 @@ export default class {
     }
 
     draw() {
-        const circleMap = getCircleMapWithCircle(this.circle, this.borderWidth);
+        const circleMap = getCircleMap(this.rect, this.borderWidth);
         this.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
@@ -246,13 +223,18 @@ export default class {
             this.ctx.stroke();
         };
 
-        ellipse(this.circle);
+        ellipse({
+            centerX: (this.rect.startX + this.rect.endX) / 2,
+            centerY: (this.rect.startY + this.rect.endY) / 2,
+            radiusX: Math.abs(this.rect.startX - this.rect.endX) / 2,
+            radiusY: Math.abs(this.rect.startY - this.rect.endY) / 2,
+        });
         // 画椭圆
         if (this.isFocus) {
-            const startX = this.circle.centerX - this.circle.radiusX;
-            const startY = this.circle.centerY - this.circle.radiusY;
-            const endX = this.circle.centerX + this.circle.radiusX;
-            const endY = this.circle.centerY + this.circle.radiusY;
+            const startX = this.rect.startX;
+            const startY = this.rect.startY;
+            const endX = this.rect.endX;
+            const endY = this.rect.endY;
 
             this.ctx.moveTo(
                 startX - this.borderWidth,

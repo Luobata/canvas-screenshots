@@ -128,7 +128,6 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
 };
 
 export const getCircleMapWithCircle = (obj: Circle, borderWidth: number) => {
-    const positiveX = () => {};
     const circleMap = [
         {
             x: obj.centerX - obj.radiusX - borderWidth,
