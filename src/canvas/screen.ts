@@ -1,5 +1,6 @@
 import { setConfig, config } from './config';
 import Box from './box';
+import functionBox from './function-box.ts';
 const ee = require('event-emitter');
 const emitter = new ee();
 
@@ -29,7 +30,11 @@ export default class {
         this.beginMove = false;
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
-        this.box = new Box(this.maskCtx, this.cursorStyle);
+        this.box = new Box(
+            this.maskCtx,
+            this.cursorStyle,
+            functionBox(this.body),
+        );
 
         this.initBackGround();
         this.initEvent();

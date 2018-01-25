@@ -32,10 +32,15 @@ export default class Box {
     circleWidth: number;
     mouse: Mouse;
     cursor: Cursor;
+    functionBox: HTMLDivElement;
 
     currentFun?: string;
 
-    constructor(ctx: CanvasRenderingContext2D, cursorStyle: string) {
+    constructor(
+        ctx: CanvasRenderingContext2D,
+        cursorStyle: string,
+        functionBox: HTMLDivElement,
+    ) {
         this.ctx = ctx;
         this.cursorStyle = cursorStyle;
         this.isFocus = true;
@@ -52,6 +57,7 @@ export default class Box {
         this.cursor = new Cursor(this);
         this.content = new Set();
         this.drawAll();
+        this.functionBox = functionBox;
     }
 
     events() {

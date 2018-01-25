@@ -33,6 +33,10 @@ module.exports = {
                 loader: 'ts-loader',
             },
             {
+                test: /\.pug$/,
+                loader: 'pug-loader',
+            },
+            {
                 test: /\.json$/,
                 loader: 'json-loader',
             },
