@@ -1,20 +1,39 @@
-import { Rect } from 'LIB/interface';
+import { Position, dragCircle, Rect } from 'LIB/interface';
 import { config } from '../config';
+import { getArrowCircleMap } from 'LIB/help';
 import Mouse from './mouse-arrow';
+
+const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
+const inCircle = (
+    x: number,
+    y: number,
+    positionX: number,
+    positinY: number,
+): boolean => {
+    return !!(
+        Math.pow(x - positionX, 2) + Math.pow(y - positinY, 2) <=
+        Math.pow(circlePath, 2)
+    );
+};
 
 export default class {
     rect: Rect;
+    circles: Array<dragCircle>;
+    lines: Array<Position>;
     ctx: CanvasRenderingContext2D;
     color: string;
     id: number;
     isFocus: boolean;
     mouse: Mouse;
+    circleWidth: number;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
         this.color = (<any>window).color || 'red';
         this.id = config.uid++;
-        this.isFocus = false;
+        this.isFocus = true;
+        this.lines = [];
+        this.circleWidth = 3;
         this.mouse = new Mouse(this);
         this.init();
         this.event();
@@ -60,6 +79,23 @@ export default class {
 
     getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair';
+        for (let i of this.circles) {
+            if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
+                // 在这个范围内 对应的手势图标
+                //result = `${i.cssPosition}-resize`;
+                if (type === 'eve') {
+                    result = `${i.cssPositionEve}-resize`;
+                } else {
+                    result = `${i.cssPosition}-resize`;
+                }
+            }
+        }
+        if (result === 'crosshair') {
+            // 如果还是十字 如果在边上 则可以拖动
+            if (this.inBoxBorder(e.clientX, e.clientY)) {
+                result = 'all-scroll';
+            }
+        }
 
         return result;
     }
@@ -72,6 +108,9 @@ export default class {
     }
 
     draw() {
+        const circleMap = getArrowCircleMap(this.rect);
+        this.circles = circleMap;
+
         const lineWid = Math.sqrt(
             Math.pow(this.rect.endX - this.rect.startX, 2) +
                 Math.pow(this.rect.endY - this.rect.startY, 2),
@@ -98,6 +137,20 @@ export default class {
             x: this.rect.endX - arrowInWid * Math.cos(rec / 2 * 1 + rec / 4),
             y: this.rect.endY - arrowInWid * Math.sin(rec / 2 * 1 + rec / 4),
         };
+        this.lines = [
+            {
+                x: this.rect.startX,
+                y: this.rect.startX,
+            },
+            P3,
+            P1,
+            {
+                x: this.rect.endX,
+                y: this.rect.endX,
+            },
+            P2,
+            P4,
+        ];
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
@@ -108,6 +161,18 @@ export default class {
         this.ctx.lineTo(P2.x, P2.y);
         this.ctx.lineTo(P4.x, P4.y);
         this.ctx.fill();
+
+        if (this.isFocus) {
+            for (let i of circleMap) {
+                this.ctx.beginPath();
+                this.ctx.fillStyle = this.color;
+                this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
+                this.ctx.stroke();
+                this.ctx.fillStyle = 'white';
+                this.ctx.fill();
+            }
+        }
+
         this.ctx.restore();
     }
 }

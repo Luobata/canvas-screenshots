@@ -19,3 +19,8 @@ export interface Circle {
     radiusX?: number;
     radiusY?: number;
 }
+
+export interface Position {
+    x: number;
+    y: number;
+}

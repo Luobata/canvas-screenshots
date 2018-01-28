@@ -126,3 +126,75 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
 
     return circleMap;
 };
+
+export const getArrowCircleMap = (obj: Rect) => {
+    // 转向后 翻转
+    const dir = (dirX: string, dirY: string) => {
+        const positiveX = obj.startX < obj.endX;
+        const positiveY = obj.startY < obj.endY;
+        let res = '';
+
+        switch (dirY) {
+            case 'top':
+                if (positiveY) {
+                    res += 'n';
+                } else {
+                    res += 's';
+                }
+                break;
+            case 'middle':
+                break;
+            case 'bottom':
+                if (positiveY) {
+                    res += 's';
+                } else {
+                    res += 'n';
+                }
+                break;
+            default:
+                break;
+        }
+
+        switch (dirX) {
+            case 'left':
+                if (positiveX) {
+                    res += 'w';
+                } else {
+                    res += 'e';
+                }
+                break;
+            case 'right':
+                if (!positiveX) {
+                    res += 'w';
+                } else {
+                    res += 'e';
+                }
+                break;
+            case 'middle':
+                break;
+            default:
+                break;
+        }
+
+        return res;
+    };
+
+    const circleMap = [
+        {
+            x: obj.startX,
+            y: obj.startY,
+            position: 'left-top',
+            cssPositionEve: 'nw',
+            cssPosition: dir('left', 'top'),
+        },
+        {
+            x: obj.endX,
+            y: obj.endY,
+            position: 'right-bottom',
+            cssPositionEve: 'se',
+            cssPosition: dir('right', 'bottom'),
+        },
+    ];
+
+    return circleMap;
+};
