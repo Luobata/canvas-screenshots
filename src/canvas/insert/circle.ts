@@ -3,8 +3,6 @@ import { config } from '../config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse-circle';
 import { pointInRectangular } from 'LIB/geometric';
-const ee = require('event-emitter');
-const circleEmitter = new ee();
 
 const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
 

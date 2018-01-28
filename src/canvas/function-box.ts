@@ -16,6 +16,22 @@ export default (parent: HTMLElement) => {
             text: 'A',
             className: 'arrow',
         },
+        {
+            text: 'P',
+            className: 'pen',
+        },
+        {
+            text: 'T',
+            className: 'text',
+        },
+        {
+            text: 'B',
+            className: 'back',
+        },
+        {
+            text: 'S',
+            className: 'save',
+        },
     ];
     const prefix = 'screen-shoot';
     const tmpl = tpl({

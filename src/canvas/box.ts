@@ -1,13 +1,14 @@
 import { dragCircle, Rect } from 'LIB/interface';
 import Rectangular from 'INSERT/rectangular';
 import Circle from 'INSERT/circle';
+import Arrow from 'INSERT/arrow';
 import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
 import { Readable } from 'stream';
 
-type Content = Rectangular | Circle;
+type Content = Rectangular | Circle | Arrow;
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
@@ -50,8 +51,6 @@ export default class Box {
         this.lineWidth = 1;
         this.borderRadious = 1;
         this.circleWidth = 3;
-        // 测试设定默认值
-        // this.currentFun = insertFunction[1];
         this.events();
         this.listenMouse();
         this.mouse = new Mouse(this, boxEmitter);
