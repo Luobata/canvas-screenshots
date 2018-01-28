@@ -223,7 +223,11 @@ export default class Box {
             if (!this.inBox(e.clientX, e.clientY)) return;
             this.cursorChange(e);
             if (newItem) {
-                if (newItem instanceof Rectangular) {
+                if (
+                    newItem instanceof Rectangular ||
+                    newItem instanceof Circle ||
+                    newItem instanceof Arrow
+                ) {
                     if (position.startX !== -1) {
                         newItem.setPosition(
                             {
@@ -233,16 +237,16 @@ export default class Box {
                             true,
                         );
                     }
-                } else if (newItem instanceof Circle) {
-                    if (position.startX !== -1) {
-                        newItem.setPosition(
-                            {
-                                endX: e.clientX,
-                                endY: e.clientY,
-                            },
-                            true,
-                        );
-                    }
+                    // } else if (newItem instanceof Circle) {
+                    //     if (position.startX !== -1) {
+                    //         newItem.setPosition(
+                    //             {
+                    //                 endX: e.clientX,
+                    //                 endY: e.clientY,
+                    //             },
+                    //             true,
+                    //         );
+                    //     }
                 }
             } else if (position.startX !== -1) {
                 if (this.currentFun === 'rectangular') {
@@ -259,6 +263,18 @@ export default class Box {
                     );
                 } else if (this.currentFun === 'circle') {
                     newItem = new Circle(this.ctx);
+                    this.content.add(newItem);
+                    newItem.setPosition(
+                        {
+                            startX: position.startX,
+                            startY: position.startY,
+                            endX: e.clientX,
+                            endY: e.clientY,
+                        },
+                        true,
+                    );
+                } else if (this.currentFun === 'arrow') {
+                    newItem = new Arrow(this.ctx);
                     this.content.add(newItem);
                     newItem.setPosition(
                         {

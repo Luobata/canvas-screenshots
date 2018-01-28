@@ -1,5 +1,6 @@
 import { Rect } from 'LIB/interface';
 import { config } from '../config';
+import Mouse from './mouse-arrow';
 
 export default class {
     rect: Rect;
@@ -7,12 +8,52 @@ export default class {
     color: string;
     id: number;
     isFocus: boolean;
+    mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
         this.color = (<any>window).color || 'red';
         this.id = config.uid++;
         this.isFocus = false;
+        this.mouse = new Mouse(this);
+        this.init();
+        this.event();
+    }
+
+    init() {
+        this.rect = {
+            startX: undefined,
+            startY: undefined,
+            endX: undefined,
+            endY: undefined,
+        };
+    }
+
+    hasBox() {
+        return !!(
+            this.rect.startX !== undefined &&
+            this.rect.startY !== undefined &&
+            this.rect.endX !== undefined &&
+            this.rect.endY !== undefined
+        );
+    }
+
+    event() {
+        config.emitter.on('mousedown', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
+            }
+        });
+        config.emitter.on('mousemove', e => {
+            if (this.isFocus) {
+                this.mouse.mouseMove(e);
+            }
+        });
+        config.emitter.on('mouseup', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseUp(e);
+            }
+        });
     }
 
     inBoxBorder(positionX: number, positionY: number) {}
