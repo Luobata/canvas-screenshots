@@ -5,10 +5,16 @@ export default (parent: HTMLElement) => {
     const div = document.createElement('div');
     const item = [
         {
+            text: 'R',
             className: 'rectangular',
         },
         {
+            text: 'C',
             className: 'circle',
+        },
+        {
+            text: 'A',
+            className: 'arrow',
         },
     ];
     const prefix = 'screen-shoot';
@@ -16,9 +22,7 @@ export default (parent: HTMLElement) => {
         item,
         prefix,
     });
-    console.log(tmpl);
-    div.style.position = 'absolute';
-    div.id = `#${prefix}`;
+    div.id = `${prefix}`;
     div.innerHTML = tmpl;
 
     parent.appendChild(div);

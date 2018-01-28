@@ -41,6 +41,7 @@ export default class Box {
         cursorStyle: string,
         functionBox: HTMLDivElement,
     ) {
+        const that = this;
         this.ctx = ctx;
         this.cursorStyle = cursorStyle;
         this.isFocus = true;
@@ -50,7 +51,7 @@ export default class Box {
         this.borderRadious = 1;
         this.circleWidth = 3;
         // 测试设定默认值
-        this.currentFun = insertFunction[1];
+        // this.currentFun = insertFunction[1];
         this.events();
         this.listenMouse();
         this.mouse = new Mouse(this, boxEmitter);
@@ -58,6 +59,16 @@ export default class Box {
         this.content = new Set();
         this.drawAll();
         this.functionBox = functionBox;
+
+        Array.prototype.forEach.call(
+            this.functionBox.querySelectorAll('.box-item'),
+            (v: HTMLElement) => {
+                v.addEventListener('click', function() {
+                    that.currentFun = this.getAttribute('type');
+                    config.emitter.emit('blur');
+                });
+            },
+        );
     }
 
     events() {

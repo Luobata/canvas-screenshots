@@ -15,6 +15,7 @@ export default class {
     shootBox: HTMLElement;
     show: Boolean;
     beginMove: Boolean;
+    functionBox: HTMLDivElement;
 
     cursorStyle: string;
     clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否确定
@@ -30,13 +31,10 @@ export default class {
         this.beginMove = false;
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
-        this.box = new Box(
-            this.maskCtx,
-            this.cursorStyle,
-            functionBox(this.body),
-        );
-
         this.initBackGround();
+        this.functionBox = functionBox(this.body);
+        this.box = new Box(this.maskCtx, this.cursorStyle, this.functionBox);
+
         this.initEvent();
         this.hackBody();
         this.drawAll();
@@ -110,6 +108,9 @@ export default class {
             if (hasTrajectory) {
                 this.box.isShowCircle = true;
                 this.box.draw();
+                this.functionBox.style.left = this.box.rect.endX - 100 + 'px';
+                this.functionBox.style.top = this.box.rect.endY + 10 + 'px';
+                this.functionBox.style.display = 'block';
             } else if (!this.box.hasBox()) {
                 this.box.initBox();
             } else {
@@ -124,6 +125,10 @@ export default class {
 
         emitter.on('shot', () => {
             this.screenShots();
+        });
+
+        emitter.once('blur', () => {
+            this.blur();
         });
 
         emitter.on('cursor-change', (cursorStyle: string) => {
@@ -153,10 +158,13 @@ export default class {
 
     screenShots() {
         console.log('begin shots');
+        // 开始截图
+    }
+
+    blur() {
         this.box.isFocus = false;
         this.cursorStyle = 'crosshair';
         this.globaldraw();
-        // 开始截图
     }
 
     globaldraw() {
