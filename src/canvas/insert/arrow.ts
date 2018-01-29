@@ -2,6 +2,7 @@ import { Position, dragCircle, Rect } from 'LIB/interface';
 import { config } from '../config';
 import { getArrowCircleMap } from 'LIB/help';
 import Mouse from './mouse-arrow';
+import { pointInArea } from 'LIB/geometric';
 
 const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
 const inCircle = (
@@ -75,7 +76,9 @@ export default class {
         });
     }
 
-    inBoxBorder(positionX: number, positionY: number) {}
+    inBoxBorder(x: number, y: number) {
+        return pointInArea(this.lines, { x, y });
+    }
 
     getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair';
@@ -140,16 +143,16 @@ export default class {
         this.lines = [
             {
                 x: this.rect.startX,
-                y: this.rect.startX,
+                y: this.rect.startY,
             },
-            P3,
+            // P3,
             P1,
             {
                 x: this.rect.endX,
-                y: this.rect.endX,
+                y: this.rect.endY,
             },
             P2,
-            P4,
+            // P4,
         ];
         this.ctx.save();
         this.ctx.beginPath();
