@@ -126,9 +126,6 @@ export default class {
         );
         let margin = Math.PI / 4;
         const min = margin - rec;
-        // rec = 1;
-        console.log(rec, margin);
-        console.log((margin - rec) / Math.PI * 180);
         let minuX: number = 1;
         let minuY: number = 1;
 
@@ -151,7 +148,6 @@ export default class {
             x: this.rect.endX - arrowWid * Math.cos(margin + rec) * minuX,
             y: this.rect.endY - arrowWid * Math.sin(margin + rec) * minuY,
         };
-        console.log(P1, P2);
         const P3 = {
             x:
                 this.rect.endX -
