@@ -124,8 +124,13 @@ export default class {
             Math.abs(this.rect.endY - this.rect.startY) /
                 Math.abs(this.rect.endX - this.rect.startX),
         );
-        let minuX: number;
-        let minuY: number;
+        let margin = Math.PI / 4;
+        const min = margin - rec;
+        // rec = 1;
+        console.log(rec, margin);
+        console.log((margin - rec) / Math.PI * 180);
+        let minuX: number = 1;
+        let minuY: number = 1;
 
         if (this.rect.endX > this.rect.startX) {
             minuX = 1;
@@ -139,28 +144,29 @@ export default class {
         }
 
         const P1 = {
-            x: this.rect.endX - arrowWid * Math.cos(rec / 2 * 3) * minuX,
-            y: this.rect.endY - arrowWid * Math.sin(rec / 2 * 3) * minuY,
+            x: this.rect.endX - arrowWid * Math.cos(margin - rec) * minuX,
+            y: this.rect.endY + arrowWid * Math.sin(margin - rec) * minuY,
         };
         const P2 = {
-            x: this.rect.endX - arrowWid * Math.cos(rec / 2 * 1) * minuX,
-            y: this.rect.endY - arrowWid * Math.sin(rec / 2 * 1) * minuY,
+            x: this.rect.endX - arrowWid * Math.cos(margin + rec) * minuX,
+            y: this.rect.endY - arrowWid * Math.sin(margin + rec) * minuY,
         };
+        console.log(P1, P2);
         const P3 = {
             x:
                 this.rect.endX -
-                arrowInWid * Math.cos(rec / 2 * 3 - rec / 4) * minuX,
+                arrowInWid * Math.cos(margin - rec - margin / 2) * minuX,
             y:
-                this.rect.endY -
-                arrowInWid * Math.sin(rec / 2 * 3 - rec / 4) * minuY,
+                this.rect.endY +
+                arrowInWid * Math.sin(margin - rec - margin / 2) * minuY,
         };
         const P4 = {
             x:
                 this.rect.endX -
-                arrowInWid * Math.cos(rec / 2 * 1 + rec / 4) * minuX,
+                arrowInWid * Math.cos(margin + rec - margin / 2) * minuX,
             y:
                 this.rect.endY -
-                arrowInWid * Math.sin(rec / 2 * 1 + rec / 4) * minuY,
+                arrowInWid * Math.sin(margin + rec - margin / 2) * minuY,
         };
         this.lines = [
             {
