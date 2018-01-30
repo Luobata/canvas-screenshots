@@ -120,25 +120,47 @@ export default class {
         );
         const arrowWid = lineWid * 0.2; // 箭头位置总长度的十分之一
         const arrowInWid = arrowWid * 0.7;
-        const rec = Math.atan(
+        let rec = Math.atan(
             Math.abs(this.rect.endY - this.rect.startY) /
                 Math.abs(this.rect.endX - this.rect.startX),
         );
+        let minuX: number;
+        let minuY: number;
+
+        if (this.rect.endX > this.rect.startX) {
+            minuX = 1;
+        } else {
+            minuX = -1;
+        }
+        if (this.rect.endY > this.rect.startY) {
+            minuY = 1;
+        } else {
+            minuY = -1;
+        }
+
         const P1 = {
-            x: this.rect.endX - arrowWid * Math.cos(rec / 2 * 3),
-            y: this.rect.endY - arrowWid * Math.sin(rec / 2 * 3),
+            x: this.rect.endX - arrowWid * Math.cos(rec / 2 * 3) * minuX,
+            y: this.rect.endY - arrowWid * Math.sin(rec / 2 * 3) * minuY,
         };
         const P2 = {
-            x: this.rect.endX - arrowWid * Math.cos(rec / 2 * 1),
-            y: this.rect.endY - arrowWid * Math.sin(rec / 2 * 1),
+            x: this.rect.endX - arrowWid * Math.cos(rec / 2 * 1) * minuX,
+            y: this.rect.endY - arrowWid * Math.sin(rec / 2 * 1) * minuY,
         };
         const P3 = {
-            x: this.rect.endX - arrowInWid * Math.cos(rec / 2 * 3 - rec / 4),
-            y: this.rect.endY - arrowInWid * Math.sin(rec / 2 * 3 - rec / 4),
+            x:
+                this.rect.endX -
+                arrowInWid * Math.cos(rec / 2 * 3 - rec / 4) * minuX,
+            y:
+                this.rect.endY -
+                arrowInWid * Math.sin(rec / 2 * 3 - rec / 4) * minuY,
         };
         const P4 = {
-            x: this.rect.endX - arrowInWid * Math.cos(rec / 2 * 1 + rec / 4),
-            y: this.rect.endY - arrowInWid * Math.sin(rec / 2 * 1 + rec / 4),
+            x:
+                this.rect.endX -
+                arrowInWid * Math.cos(rec / 2 * 1 + rec / 4) * minuX,
+            y:
+                this.rect.endY -
+                arrowInWid * Math.sin(rec / 2 * 1 + rec / 4) * minuY,
         };
         this.lines = [
             {
