@@ -2,7 +2,7 @@ import { dragCircle, Rect } from 'LIB/interface';
 import { getCircleMap } from 'LIB/help';
 import { EventEmitter } from 'events';
 import { config } from '../config';
-import Mouse from './mouse';
+import Mouse from './mouse-rectangular';
 const ee = require('event-emitter');
 const rectangularEmitter = new ee();
 
