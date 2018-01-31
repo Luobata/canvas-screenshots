@@ -34,6 +34,7 @@ export const pointInArea = (
     positions: Array<Position>,
     point: Position,
 ): boolean => {
+    // 只对凸多边形有用 凹多边形有bug
     if (positions.length < 3) return false;
 
     let total = 0;
@@ -57,4 +58,23 @@ export const pointInArea = (
     const margin = 0.05;
 
     return Math.abs(total / 360 - 1) < margin;
+};
+
+/**
+ *
+ * @param posions 线的点位置集合
+ * @param pos 点的位置
+ * @param margin  距离最大值 该值内认为在线上
+ */
+export const pointInLine = (
+    positions: Array<Position>,
+    pos: Position,
+    margin: number,
+) => {
+    for (let i of positions) {
+        const vec = new Vector({ x: i.x - pos.x, y: i.y - pos.y });
+        if (vec.mod() <= margin) return true;
+    }
+
+    return false;
 };

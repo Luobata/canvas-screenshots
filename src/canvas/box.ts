@@ -2,13 +2,14 @@ import { dragCircle, Rect } from 'LIB/interface';
 import Rectangular from 'INSERT/rectangular';
 import Circle from 'INSERT/circle';
 import Arrow from 'INSERT/arrow';
+import Pen from 'INSERT/pen';
 import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
 import { Readable } from 'stream';
 
-type Content = Rectangular | Circle | Arrow;
+type Content = Rectangular | Circle | Arrow | Pen;
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
@@ -18,6 +19,7 @@ enum insertFunction {
     rectangular,
     circle,
     arrow,
+    pen,
     text,
 }
 export default class Box {
@@ -237,16 +239,16 @@ export default class Box {
                             true,
                         );
                     }
-                    // } else if (newItem instanceof Circle) {
-                    //     if (position.startX !== -1) {
-                    //         newItem.setPosition(
-                    //             {
-                    //                 endX: e.clientX,
-                    //                 endY: e.clientY,
-                    //             },
-                    //             true,
-                    //         );
-                    //     }
+                } else if (newItem instanceof Pen) {
+                    if (position.startX !== -1) {
+                        newItem.addPosition(
+                            {
+                                x: e.clientX,
+                                y: e.clientY,
+                            },
+                            true,
+                        );
+                    }
                 }
             } else if (position.startX !== -1) {
                 if (this.currentFun === 'rectangular') {
@@ -282,6 +284,16 @@ export default class Box {
                             startY: position.startY,
                             endX: e.clientX,
                             endY: e.clientY,
+                        },
+                        true,
+                    );
+                } else if (this.currentFun === 'pen') {
+                    newItem = new Pen(this.ctx);
+                    this.content.add(newItem);
+                    newItem.addPosition(
+                        {
+                            x: position.startX,
+                            y: position.startY,
                         },
                         true,
                     );
