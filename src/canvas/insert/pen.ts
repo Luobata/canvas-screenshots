@@ -18,13 +18,13 @@ export default class {
         this.id = config.uid++;
         this.isFocus = true;
         this.lines = [];
-        this.lineWidth = 1;
+        this.lineWidth = 3;
         this.mouse = new Mouse(this);
         this.event();
     }
 
     inBoxBorder(x: number, y: number) {
-        return pointInLine(this.lines, { x, y }, 3);
+        return pointInLine(this.lines, { x, y }, 10 + this.lineWidth);
     }
 
     getCursor(e: MouseEvent) {
@@ -47,7 +47,7 @@ export default class {
             }
         });
 
-        config.emitter.on('mosemove', e => {
+        config.emitter.on('mousemove', e => {
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
@@ -82,7 +82,7 @@ export default class {
         this.ctx.beginPath();
         this.ctx.strokeStyle = this.color;
         this.ctx.lineWidth = this.lineWidth;
-        this.ctx.lineJoin = 'round';
+        // this.ctx.lineJoin = 'round';
         this.ctx.moveTo(this.lines[0].x, this.lines[0].y);
 
         for (let i = 1; i < this.lines.length; i++) {
