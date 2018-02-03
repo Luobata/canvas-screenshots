@@ -216,6 +216,7 @@ export default class Box {
                         y: position.startY,
                     });
                     this.content.add(newItem);
+                    config.emitter.emit('draw-all');
                 }
             } else {
                 const item = this.focusRectangular(e);
@@ -257,16 +258,16 @@ export default class Box {
                             true,
                         );
                     }
-                } else if (newItem instanceof Text) {
-                    if (position.startX !== -1) {
-                        newItem.setPosition(
-                            {
-                                x: e.clientX,
-                                y: e.clientY,
-                            },
-                            true,
-                        );
-                    }
+                    // } else if (newItem instanceof Text) {
+                    //     if (position.startX !== -1) {
+                    //         newItem.setPosition(
+                    //             {
+                    //                 x: e.clientX,
+                    //                 y: e.clientY,
+                    //             },
+                    //             true,
+                    //         );
+                    //     }
                 }
             } else if (position.startX !== -1) {
                 if (this.currentFun === 'rectangular') {

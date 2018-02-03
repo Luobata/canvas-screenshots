@@ -4,21 +4,28 @@ import { config } from '../config';
 export default class {
     position: Position;
     ctx: CanvasRenderingContext2D;
-    textArea: HTMLElement;
+    input: HTMLElement;
     text: string;
+    width: number;
+    height: number;
     color: string;
+    borderColor: string;
     fontSize: string;
     fontFamily: string;
     id: number;
     isFocus: boolean;
+    inputListener: EventListener;
 
     constructor(ctx: CanvasRenderingContext2D, pos: Position) {
         this.position = pos;
         this.ctx = ctx;
         this.color = (<any>window).color || 'red';
+        this.borderColor = 'white';
         this.id = config.uid++;
         this.text = '';
         this.isFocus = true;
+        this.width = 100;
+        this.height = 40;
         this.initTextArea();
         this.event();
     }
@@ -43,21 +50,45 @@ export default class {
     }
 
     initTextArea() {
-        this.textArea = document.createElement('textArea');
-        this.textArea.className = 'function-text';
-        // this.textArea.style.display = 'none';
-        this.textArea.style.left = `${this.position.x}px`;
-        this.textArea.style.top = `${this.position.y}px`;
-        this.textArea.style.color = this.color;
+        this.input = document.createElement('input');
+        this.input.className = 'function-text';
+        // this.input.style.visibility = 'hidden';
+        this.input.style.opacity = '0';
+        this.input.style.left = `${this.position.x}px`;
+        this.input.style.top = `${this.position.y}px`;
+        this.input.style.color = this.color;
         if (this.isFocus) {
-            this.textArea.setAttribute('tabIndex', '1');
-            this.textArea.setAttribute('autofocus', 'true');
+            this.input.setAttribute('tabIndex', '1');
+            this.input.setAttribute('autofocus', 'true');
+            this.input.focus();
         }
+        this.inputListener = (e: KeyboardEvent) => {
+            this.text = (<HTMLInputElement>e.target).value;
+        };
 
-        config.wrap.appendChild(this.textArea);
+        this.input.addEventListener('input', this.inputListener);
+
+        config.wrap.appendChild(this.input);
     }
 
     event() {}
 
-    draw() {}
+    draw() {
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = this.borderColor;
+        this.ctx.moveTo(this.position.x, this.position.y);
+        this.ctx.lineTo(this.position.x + this.width, this.position.y);
+        this.ctx.lineTo(
+            this.position.x + this.width,
+            this.position.y + this.height,
+        );
+        this.ctx.lineTo(this.position.x, this.position.y + this.height);
+        this.ctx.lineTo(this.position.x, this.position.y);
+        // TODO draw text
+
+        this.ctx.stroke();
+        this.ctx.closePath();
+        this.ctx.restore();
+    }
 }
