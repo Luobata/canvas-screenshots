@@ -3,6 +3,7 @@ import { Emitter } from 'event-emitter';
 interface Config {
     emitter?: Emitter;
     uid?: number;
+    wrap?: HTMLElement;
 }
 
 export const config: Config = {

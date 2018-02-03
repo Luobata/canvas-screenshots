@@ -3,13 +3,14 @@ import Rectangular from 'INSERT/rectangular';
 import Circle from 'INSERT/circle';
 import Arrow from 'INSERT/arrow';
 import Pen from 'INSERT/pen';
+import Text from 'INSERT/text';
 import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
 import { Readable } from 'stream';
 
-type Content = Rectangular | Circle | Arrow | Pen;
+type Content = Rectangular | Circle | Arrow | Pen | Text;
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
@@ -209,6 +210,13 @@ export default class Box {
                     startX: e.clientX,
                     startY: e.clientY,
                 };
+                if (this.currentFun === 'text') {
+                    newItem = new Text(this.ctx, {
+                        x: position.startX,
+                        y: position.startY,
+                    });
+                    this.content.add(newItem);
+                }
             } else {
                 const item = this.focusRectangular(e);
                 if (item) {
@@ -242,6 +250,16 @@ export default class Box {
                 } else if (newItem instanceof Pen) {
                     if (position.startX !== -1) {
                         newItem.addPosition(
+                            {
+                                x: e.clientX,
+                                y: e.clientY,
+                            },
+                            true,
+                        );
+                    }
+                } else if (newItem instanceof Text) {
+                    if (position.startX !== -1) {
+                        newItem.setPosition(
                             {
                                 x: e.clientX,
                                 y: e.clientY,
@@ -297,6 +315,7 @@ export default class Box {
                         },
                         true,
                     );
+                } else if (this.currentFun === 'text') {
                 }
             } else {
                 // 不操作 等待元素自己监听mousemove

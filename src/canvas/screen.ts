@@ -34,6 +34,9 @@ export default class {
         this.initBackGround();
         this.functionBox = functionBox(this.body);
         this.box = new Box(this.maskCtx, this.cursorStyle, this.functionBox);
+        setConfig({
+            wrap: this.body,
+        });
 
         this.initEvent();
         this.hackBody();
