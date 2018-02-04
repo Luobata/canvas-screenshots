@@ -108,7 +108,21 @@ export default class {
             return 33;
             // return height;
         };
-        console.log(getHeight());
+        let txts = [];
+        let len = 1;
+        while (
+            len <= this.rows &&
+            this.text[len * (this.cols - 1)] !== undefined
+        ) {
+            txts.push(
+                this.text.substr(
+                    (len - 1) * (this.cols - 1),
+                    len * (this.cols - 1),
+                ),
+            );
+            len++;
+        }
+        console.log(txts);
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
