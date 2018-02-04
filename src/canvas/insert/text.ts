@@ -15,6 +15,7 @@ export default class {
     id: number;
     isFocus: boolean;
     inputListener: EventListener;
+    inputBlurListener: EventListener;
 
     constructor(ctx: CanvasRenderingContext2D, pos: Position) {
         this.position = pos;
@@ -26,6 +27,8 @@ export default class {
         this.isFocus = true;
         this.width = 100;
         this.height = 40;
+        this.fontSize = '35px';
+        this.fontFamily = 'microsoft-yahei';
         this.initTextArea();
         this.event();
     }
@@ -53,10 +56,11 @@ export default class {
         this.input = document.createElement('input');
         this.input.className = 'function-text';
         // this.input.style.visibility = 'hidden';
-        this.input.style.opacity = '0';
+        // this.input.style.opacity = '0';
         this.input.style.left = `${this.position.x}px`;
         this.input.style.top = `${this.position.y}px`;
         this.input.style.color = this.color;
+        this.input.setAttribute('size', '4');
         if (this.isFocus) {
             this.input.setAttribute('tabIndex', '1');
             this.input.setAttribute('autofocus', 'true');
@@ -64,27 +68,62 @@ export default class {
         }
         this.inputListener = (e: KeyboardEvent) => {
             this.text = (<HTMLInputElement>e.target).value;
+            const length = this.text.length > 4 ? this.text.length : 4;
+            this.input.setAttribute('size', length.toString());
         };
-
+        this.inputBlurListener = (e: KeyboardEvent) => {
+            this.drawText();
+            // this.input.style.display = 'none';
+        };
         this.input.addEventListener('input', this.inputListener);
+        this.input.addEventListener('blur', this.inputBlurListener);
 
         config.wrap.appendChild(this.input);
     }
 
     event() {}
 
+    getTextWidth(txt: string) {
+        this.ctx.save();
+        this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
+        const width = this.ctx.measureText(txt);
+        this.ctx.restore();
+        return width;
+    }
+
+    drawText() {
+        const getHeight = () => {
+            this.ctx.save();
+            this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
+            const height = this.ctx.measureText('w');
+            return 33;
+            // return height;
+        };
+        console.log(getHeight());
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.color;
+        this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
+        this.ctx.fillText(
+            this.text,
+            this.position.x + 1 + 10,
+            this.position.y + getHeight(),
+        );
+        this.ctx.restore();
+    }
+
     draw() {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.strokeStyle = this.borderColor;
-        this.ctx.moveTo(this.position.x, this.position.y);
-        this.ctx.lineTo(this.position.x + this.width, this.position.y);
-        this.ctx.lineTo(
-            this.position.x + this.width,
-            this.position.y + this.height,
-        );
-        this.ctx.lineTo(this.position.x, this.position.y + this.height);
-        this.ctx.lineTo(this.position.x, this.position.y);
+        // this.ctx.moveTo(this.position.x, this.position.y);
+        // this.ctx.lineTo(this.position.x + this.width, this.position.y);
+        // this.ctx.lineTo(
+        //     this.position.x + this.width,
+        //     this.position.y + this.height,
+        // );
+        // this.ctx.lineTo(this.position.x, this.position.y + this.height);
+        // this.ctx.lineTo(this.position.x, this.position.y);
         // TODO draw text
 
         this.ctx.stroke();
