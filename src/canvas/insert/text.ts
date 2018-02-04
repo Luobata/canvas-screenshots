@@ -8,6 +8,8 @@ export default class {
     text: string;
     width: number;
     height: number;
+    cols: number;
+    rows: number;
     color: string;
     borderColor: string;
     fontSize: string;
@@ -27,6 +29,8 @@ export default class {
         this.isFocus = true;
         this.width = 100;
         this.height = 40;
+        this.cols = 10;
+        this.rows = 2;
         this.fontSize = '35px';
         this.fontFamily = 'microsoft-yahei';
         this.initTextArea();
@@ -53,14 +57,15 @@ export default class {
     }
 
     initTextArea() {
-        this.input = document.createElement('input');
+        this.input = document.createElement('textArea');
         this.input.className = 'function-text';
         // this.input.style.visibility = 'hidden';
         // this.input.style.opacity = '0';
         this.input.style.left = `${this.position.x}px`;
         this.input.style.top = `${this.position.y}px`;
         this.input.style.color = this.color;
-        this.input.setAttribute('size', '4');
+        this.input.setAttribute('cols', this.cols.toString());
+        this.input.setAttribute('rows', this.rows.toString());
         if (this.isFocus) {
             this.input.setAttribute('tabIndex', '1');
             this.input.setAttribute('autofocus', 'true');
@@ -68,8 +73,12 @@ export default class {
         }
         this.inputListener = (e: KeyboardEvent) => {
             this.text = (<HTMLInputElement>e.target).value;
-            const length = this.text.length > 4 ? this.text.length : 4;
-            this.input.setAttribute('size', length.toString());
+            const length = this.text.length;
+            const row = length / (this.cols - 1);
+            const left = length % (this.cols - 1);
+            const rows = left ? row + 1 : row;
+            const realRow = rows > 2 ? rows : 2;
+            this.input.setAttribute('rows', realRow.toString());
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
             this.drawText();
@@ -107,7 +116,7 @@ export default class {
         this.ctx.fillText(
             this.text,
             this.position.x + 1 + 10,
-            this.position.y + getHeight(),
+            this.position.y + getHeight() + 10,
         );
         this.ctx.restore();
     }
