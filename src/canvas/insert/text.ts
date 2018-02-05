@@ -18,6 +18,7 @@ export default class {
     fontFamily: string;
     id: number;
     isFocus: boolean;
+    isEditor: boolean;
     inputListener: EventListener;
     inputBlurListener: EventListener;
     mouse: Mouse;
@@ -57,6 +58,18 @@ export default class {
         config.emitter.emit('draw-all');
     }
 
+    focus() {
+        console.log(this.isFocus);
+        this.isEditor = true;
+        this.text = '';
+        this.input.style.left = `${this.position.x}px`;
+        this.input.style.top = `${this.position.y}px`;
+        this.input.style.display = 'block';
+
+        config.emitter.emit('draw-all');
+        // this.input.focus();
+    }
+
     inBoxBorder(x: number, y: number) {
         const p1 = {
             x: this.position.x,
@@ -90,10 +103,9 @@ export default class {
     }
 
     initTextArea() {
+        this.isEditor = true;
         this.input = document.createElement('textArea');
         this.input.className = 'function-text';
-        // this.input.style.visibility = 'hidden';
-        // this.input.style.opacity = '0';
         this.input.style.left = `${this.position.x}px`;
         this.input.style.top = `${this.position.y}px`;
         this.input.style.color = this.color;
@@ -114,10 +126,13 @@ export default class {
             this.input.setAttribute('rows', realRow.toString());
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
+            this.text = (<HTMLInputElement>e.target).value;
             this.drawText();
             this.width = this.input.offsetWidth;
             this.height = this.input.offsetHeight;
+            console.log(1);
             this.input.style.display = 'none';
+            this.isEditor = false;
         };
         this.input.addEventListener('input', this.inputListener);
         this.input.addEventListener('blur', this.inputBlurListener);
@@ -137,7 +152,7 @@ export default class {
         });
 
         config.emitter.on('mousemove', e => {
-            if (this.isFocus) {
+            if (this.isFocus && !this.isEditor) {
                 this.mouse.mouseMove(e);
             }
         });
@@ -179,7 +194,6 @@ export default class {
                 ),
             );
         }
-        console.log(len, txts);
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
