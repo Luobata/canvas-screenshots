@@ -109,20 +109,19 @@ export default class {
             // return height;
         };
         let txts = [];
-        let len = 1;
-        while (
-            len <= this.rows &&
-            this.text[len * (this.cols - 1)] !== undefined
-        ) {
+        const len =
+            this.text.length % (this.cols - 1)
+                ? parseInt((this.text.length / (this.cols - 1)).toFixed(), 10) +
+                  1
+                : this.text.length / (this.cols - 1);
+        for (let i = 0; i < len; i++) {
             txts.push(
                 this.text.substr(
-                    (len - 1) * (this.cols - 1),
-                    len * (this.cols - 1),
+                    i * (this.cols - 1),
+                    (i + 1) * (this.cols - 1),
                 ),
             );
-            len++;
         }
-        console.log(txts);
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
