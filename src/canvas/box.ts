@@ -220,6 +220,7 @@ export default class Box {
                 }
             } else {
                 const item = this.focusRectangular(e);
+                console.log(item);
                 if (item) {
                     newItem = item;
                     this.outFocus(item);

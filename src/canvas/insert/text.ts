@@ -1,5 +1,7 @@
 import { Position } from 'LIB/interface';
 import { config } from '../config';
+import { pointInRectangular } from 'LIB/geometric';
+import Mouse from './mouse-text';
 
 export default class {
     position: Position;
@@ -18,6 +20,7 @@ export default class {
     isFocus: boolean;
     inputListener: EventListener;
     inputBlurListener: EventListener;
+    mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, pos: Position) {
         this.position = pos;
@@ -27,14 +30,15 @@ export default class {
         this.id = config.uid++;
         this.text = '';
         this.isFocus = true;
-        this.width = 100;
-        this.height = 40;
+        // this.width = 100;
+        // this.height = 40;
         this.cols = 10;
         this.rows = 2;
         this.fontSize = '35px';
         this.fontFamily = 'monospace';
         this.initTextArea();
         this.event();
+        this.mouse = new Mouse(this);
     }
 
     getCursor(e: MouseEvent) {
@@ -46,7 +50,36 @@ export default class {
         return result;
     }
 
-    inBoxBorder(X: number, y: number) {}
+    move(x: number, y: number) {
+        this.position.x += x;
+        this.position.y += y;
+
+        config.emitter.emit('draw-all');
+    }
+
+    inBoxBorder(x: number, y: number) {
+        const p1 = {
+            x: this.position.x,
+            y: this.position.y,
+        };
+        const p2 = {
+            x: this.position.x + this.width,
+            y: this.position.y,
+        };
+        const p3 = {
+            x: this.position.x,
+            y: this.position.y + this.height,
+        };
+        const p4 = {
+            x: this.position.x + this.width,
+            y: this.position.y + this.height,
+        };
+        const p = {
+            x,
+            y,
+        };
+        return pointInRectangular(p1, p2, p3, p4, p);
+    }
 
     setPosition(pos: Position, isDraw = false) {
         this.position = pos;
@@ -82,6 +115,8 @@ export default class {
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
             this.drawText();
+            this.width = this.input.offsetWidth;
+            this.height = this.input.offsetHeight;
             this.input.style.display = 'none';
         };
         this.input.addEventListener('input', this.inputListener);
@@ -90,7 +125,29 @@ export default class {
         config.wrap.appendChild(this.input);
     }
 
-    event() {}
+    hasBox() {
+        return !!this.text;
+    }
+
+    event() {
+        config.emitter.on('mousedown', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseDown(this.getCursor(e));
+            }
+        });
+
+        config.emitter.on('mousemove', e => {
+            if (this.isFocus) {
+                this.mouse.mouseMove(e);
+            }
+        });
+
+        config.emitter.on('mouseup', e => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseUp();
+            }
+        });
+    }
 
     getTextWidth(txt: string) {
         this.ctx.save();
@@ -106,7 +163,6 @@ export default class {
             this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
             const height = this.ctx.measureText('w');
             return 35;
-            // return height;
         };
         let txts = [];
         const len =
@@ -155,5 +211,7 @@ export default class {
         this.ctx.stroke();
         this.ctx.closePath();
         this.ctx.restore();
+
+        this.drawText();
     }
 }
