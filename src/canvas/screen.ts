@@ -56,6 +56,7 @@ export default class {
         this.mask.style.top = '0';
         this.mask.style.left = '0';
         this.mask.style.cursor = this.cursorStyle;
+        this.mask.style.zIndex = '100';
         this.resize();
 
         this.body.appendChild(this.mask);

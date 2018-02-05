@@ -34,7 +34,7 @@ export default class {
         // this.width = 100;
         // this.height = 40;
         this.cols = 10;
-        this.rows = 2;
+        this.rows = 1;
         this.fontSize = '35px';
         this.fontFamily = 'monospace';
         this.initTextArea();
@@ -124,7 +124,7 @@ export default class {
             const row = length / (this.cols - 1);
             const left = length % (this.cols - 1);
             const rows = left ? row + 1 : row;
-            const realRow = rows > 2 ? rows : 2;
+            const realRow = rows > this.rows ? rows : this.rows;
             this.input.setAttribute('rows', realRow.toString());
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
