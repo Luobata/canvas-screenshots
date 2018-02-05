@@ -113,11 +113,15 @@ export default class {
         this.input.style.color = this.color;
         this.input.setAttribute('cols', this.cols.toString());
         this.input.setAttribute('rows', this.rows.toString());
-        if (this.isFocus) {
-            this.input.setAttribute('tabIndex', '1');
-            this.input.setAttribute('autofocus', 'true');
-            this.input.focus();
-        }
+        setTimeout(() => {
+            this.width = this.input.offsetWidth;
+            this.height = this.input.offsetHeight;
+            if (this.isFocus) {
+                this.input.setAttribute('tabIndex', '1');
+                this.input.setAttribute('autofocus', 'true');
+                this.input.focus();
+            }
+        }, 0);
         this.inputListener = (e: KeyboardEvent) => {
             this.text = (<HTMLInputElement>e.target).value;
             const length = this.text.length;
@@ -128,6 +132,7 @@ export default class {
             this.input.setAttribute('rows', realRow.toString());
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
+            console.log(this.id);
             this.text = (<HTMLInputElement>e.target).value;
             this.drawText();
             this.width = this.input.offsetWidth;

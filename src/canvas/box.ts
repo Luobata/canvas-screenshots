@@ -169,10 +169,14 @@ export default class Box {
 
     outFocus(item?: Content) {
         // 把该item的位置放到最后
-        let topItem;
+        let topItem; // 选中item放入最上层
+        let blurItem; // 判断是否有原宿blur
         for (let i of this.content) {
             if (!(item && item === i)) {
-                i.isFocus = false;
+                if (i.isFocus) {
+                    blurItem = i;
+                    i.isFocus = false;
+                }
             } else {
                 i.isFocus = true;
                 this.content.delete(i);
@@ -181,6 +185,8 @@ export default class Box {
         }
         if (topItem) this.content.add(topItem);
         config.emitter.emit('draw-all');
+
+        return blurItem;
     }
 
     cursorChange(e: MouseEvent) {
@@ -205,27 +211,36 @@ export default class Box {
         config.emitter.on('mousedown', e => {
             if (this.isFocus) return;
             if (!this.inBox(e.clientX, e.clientY)) return;
-            if (!this.content.size) {
+            const setPosition = (hasBlur = false) => {
                 position = {
                     startX: e.clientX,
                     startY: e.clientY,
                 };
-                if (this.currentFun === 'text') {
-                    newItem = new Text(this.ctx, {
-                        x: position.startX,
-                        y: position.startY,
-                    });
-                    this.content.add(newItem);
-                    config.emitter.emit('draw-all');
+                if (!hasBlur) {
+                    if (this.currentFun === 'text') {
+                        newItem = new Text(this.ctx, {
+                            x: position.startX,
+                            y: position.startY,
+                        });
+                        this.content.add(newItem);
+                        config.emitter.emit('draw-all');
+                    }
                 }
+            };
+            if (!this.content.size) {
+                setPosition();
             } else {
+                // 鼠标位置是否有选中某个item
                 const item = this.focusRectangular(e);
                 if (item) {
+                    // 有 操作该item
                     newItem = item;
                     this.outFocus(item);
+                    console.log('blur');
                 } else {
-                    this.outFocus();
-                    position = { startX: e.clientX, startY: e.clientY };
+                    // 没有让所有item blur 如果有blur的元素 不创建新的 否则创建新的
+                    const blurItem = this.outFocus();
+                    setPosition(!!blurItem);
                 }
             }
         });
@@ -258,16 +273,6 @@ export default class Box {
                             true,
                         );
                     }
-                    // } else if (newItem instanceof Text) {
-                    //     if (position.startX !== -1) {
-                    //         newItem.setPosition(
-                    //             {
-                    //                 x: e.clientX,
-                    //                 y: e.clientY,
-                    //             },
-                    //             true,
-                    //         );
-                    //     }
                 }
             } else if (position.startX !== -1) {
                 if (this.currentFun === 'rectangular') {
