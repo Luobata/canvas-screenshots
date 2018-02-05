@@ -59,15 +59,17 @@ export default class {
     }
 
     focus() {
-        console.log(this.isFocus);
         this.isEditor = true;
         this.text = '';
         this.input.style.left = `${this.position.x}px`;
         this.input.style.top = `${this.position.y}px`;
         this.input.style.display = 'block';
+        // 同时操作display 与input 会触发blur
+        setTimeout(() => {
+            this.input.focus();
+        }, 0);
 
         config.emitter.emit('draw-all');
-        // this.input.focus();
     }
 
     inBoxBorder(x: number, y: number) {
@@ -130,7 +132,6 @@ export default class {
             this.drawText();
             this.width = this.input.offsetWidth;
             this.height = this.input.offsetHeight;
-            console.log(1);
             this.input.style.display = 'none';
             this.isEditor = false;
         };
