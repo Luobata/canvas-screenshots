@@ -32,7 +32,7 @@ export default class {
         this.cols = 10;
         this.rows = 2;
         this.fontSize = '35px';
-        this.fontFamily = 'microsoft-yahei';
+        this.fontFamily = 'monospace';
         this.initTextArea();
         this.event();
     }
@@ -82,7 +82,7 @@ export default class {
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
             this.drawText();
-            // this.input.style.display = 'none';
+            this.input.style.display = 'none';
         };
         this.input.addEventListener('input', this.inputListener);
         this.input.addEventListener('blur', this.inputBlurListener);
@@ -105,7 +105,7 @@ export default class {
             this.ctx.save();
             this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
             const height = this.ctx.measureText('w');
-            return 33;
+            return 35;
             // return height;
         };
         let txts = [];
@@ -116,21 +116,25 @@ export default class {
                 : this.text.length / (this.cols - 1);
         for (let i = 0; i < len; i++) {
             txts.push(
-                this.text.substr(
-                    i * (this.cols - 1),
-                    (i + 1) * (this.cols - 1),
+                this.text.substring(
+                    i * this.cols,
+                    // this.cols,
+                    (i + 1) * this.cols,
                 ),
             );
         }
+        console.log(len, txts);
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
         this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
-        this.ctx.fillText(
-            this.text,
-            this.position.x + 1 + 10,
-            this.position.y + getHeight() + 10,
-        );
+        for (let i = 0; i < txts.length; i++) {
+            this.ctx.fillText(
+                txts[i],
+                this.position.x + 1 + 10,
+                this.position.y - 6 + getHeight() * (i + 1) + 10,
+            );
+        }
         this.ctx.restore();
     }
 
