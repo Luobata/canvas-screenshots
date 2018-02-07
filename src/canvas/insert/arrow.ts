@@ -166,14 +166,14 @@ export default class {
         };
         this.lines = [
             {
-                x: this.rect.startX - circlePath,
-                y: this.rect.startY - circlePath,
+                x: this.rect.startX - circlePath * minuX,
+                y: this.rect.startY - circlePath * minuY,
             },
             // P3,
             P1,
             {
-                x: this.rect.endX + circlePath,
-                y: this.rect.endY + circlePath,
+                x: this.rect.endX + circlePath * minuX,
+                y: this.rect.endY + circlePath * minuY,
             },
             P2,
             // P4,
