@@ -44,9 +44,11 @@ export default class {
         this.cols = 1;
         this.cols = 2;
         this.rows = 1;
-        this.textWidth = Math.floor(this.getTextWidth('1').width);
+        this.maxCols = this.cols;
+        this.maxRows = this.rows;
         this.fontSize = '35px';
         this.fontFamily = 'monospace';
+        this.textWidth = Math.floor(this.getTextWidth('1').width);
         this.initTextArea();
         this.event();
         this.mouse = new Mouse(this);
@@ -114,6 +116,13 @@ export default class {
         }
     }
 
+    getSize() {
+        setTimeout(() => {
+            this.width = this.input.offsetWidth;
+            this.height = this.input.offsetHeight;
+        }, 0);
+    }
+
     initTextArea() {
         this.isEditor = true;
         this.input = document.createElement('textArea');
@@ -139,10 +148,19 @@ export default class {
             const left = length % (this.cols - 1);
             const rows = left ? row + 1 : row;
             const realRow = rows > this.rows ? rows : this.rows;
-            this.input.setAttribute('rows', realRow.toString());
+            // this.input.setAttribute('rows', realRow.toString());
             // 输入cols 增加，遇到边界换行
-            // 观察发现每增加一列的宽度增加21
-            // this.input.setAttribute('cols', length.toString());
+            if (
+                this.position.x + this.width + this.textWidth <
+                config.boxRect.endX
+            ) {
+                this.input.setAttribute('cols', length.toString());
+            } else {
+                this.rows++;
+                this.input.setAttribute('rows', this.rows.toString());
+            }
+            this.maxCols = this.cols;
+            this.getSize();
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
             this.text = (<HTMLInputElement>e.target).value;

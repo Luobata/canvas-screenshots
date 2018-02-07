@@ -116,6 +116,9 @@ export default class {
                 this.functionBox.style.left = this.box.rect.endX - 100 + 'px';
                 this.functionBox.style.top = this.box.rect.endY + 10 + 'px';
                 this.functionBox.style.display = 'block';
+                setConfig({
+                    boxRect: this.box.rect,
+                });
             } else if (!this.box.hasBox()) {
                 this.box.initBox();
             } else {

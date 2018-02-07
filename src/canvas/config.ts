@@ -1,9 +1,11 @@
 import { Emitter } from 'event-emitter';
+import { Rect } from 'LIB/interface';
 
 interface Config {
     emitter?: Emitter;
     uid?: number;
     wrap?: HTMLElement;
+    boxRect?: Rect;
 }
 
 export const config: Config = {
