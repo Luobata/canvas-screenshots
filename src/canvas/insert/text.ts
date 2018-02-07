@@ -14,6 +14,7 @@ export default class {
     rows: number;
     color: string;
     borderColor: string;
+    borderWidth: number;
     fontSize: string;
     fontFamily: string;
     id: number;
@@ -27,7 +28,8 @@ export default class {
         this.position = pos;
         this.ctx = ctx;
         this.color = (<any>window).color || 'red';
-        this.borderColor = 'white';
+        this.borderColor = '#fff';
+        this.borderWidth = 1;
         this.id = config.uid++;
         this.text = '';
         this.isFocus = true;
@@ -216,16 +218,16 @@ export default class {
     draw() {
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.strokeStyle = this.borderColor;
-        // this.ctx.moveTo(this.position.x, this.position.y);
-        // this.ctx.lineTo(this.position.x + this.width, this.position.y);
-        // this.ctx.lineTo(
-        //     this.position.x + this.width,
-        //     this.position.y + this.height,
-        // );
-        // this.ctx.lineTo(this.position.x, this.position.y + this.height);
-        // this.ctx.lineTo(this.position.x, this.position.y);
-        // TODO draw text
+        if (this.isFocus && this.text) {
+            this.ctx.strokeStyle = this.borderColor;
+            this.ctx.lineWidth = this.borderWidth;
+            this.ctx.strokeRect(
+                this.position.x,
+                this.position.y,
+                this.width,
+                this.height,
+            );
+        }
 
         this.ctx.stroke();
         this.ctx.closePath();
