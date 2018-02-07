@@ -93,6 +93,10 @@ export default class Box {
             }
         });
 
+        config.emitter.on('removeItem', (item: Content) => {
+            this.content.delete(item);
+        });
+
         boxEmitter.on('draw', () => {});
         boxEmitter.on('shot', () => {
             config.emitter.emit('shot');

@@ -140,6 +140,10 @@ export default class {
             this.height = this.input.offsetHeight;
             this.input.style.display = 'none';
             this.isEditor = false;
+
+            if (this.text === '') {
+                this.destroyed();
+            }
         };
         this.input.addEventListener('input', this.inputListener);
         this.input.addEventListener('blur', this.inputBlurListener);
@@ -234,5 +238,11 @@ export default class {
         this.ctx.restore();
 
         this.drawText();
+    }
+
+    destroyed() {
+        this.input.removeEventListener('input', this.inputListener);
+        this.input.removeEventListener('blur', this.inputBlurListener);
+        config.emitter.emit('removeItem', this);
     }
 }
