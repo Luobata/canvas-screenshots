@@ -20,6 +20,9 @@ export default class {
     id: number;
     isFocus: boolean;
     isEditor: boolean;
+    mouseDown: EventListener;
+    mouseMove: EventListener;
+    mouseUp: EventListener;
     inputListener: EventListener;
     inputBlurListener: EventListener;
     mouse: Mouse;
@@ -156,23 +159,42 @@ export default class {
     }
 
     event() {
-        config.emitter.on('mousedown', e => {
+        this.mouseDown = (e: MouseEvent) => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseDown(this.getCursor(e));
             }
-        });
-
-        config.emitter.on('mousemove', e => {
+        };
+        this.mouseMove = (e: MouseEvent) => {
             if (this.isFocus && !this.isEditor) {
                 this.mouse.mouseMove(e);
             }
-        });
-
-        config.emitter.on('mouseup', e => {
+        };
+        this.mouseUp = e => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseUp();
             }
-        });
+        };
+
+        config.emitter.on('mousedown', this.mouseDown);
+        config.emitter.on('mousemove', this.mouseMove);
+        config.emitter.on('mouseup', this.mouseUp);
+        // config.emitter.on('mousedown', e => {
+        //     if (this.isFocus && this.hasBox()) {
+        //         this.mouse.mouseDown(this.getCursor(e));
+        //     }
+        // });
+
+        // config.emitter.on('mousemove', e => {
+        //     if (this.isFocus && !this.isEditor) {
+        //         this.mouse.mouseMove(e);
+        //     }
+        // });
+
+        // config.emitter.on('mouseup', e => {
+        //     if (this.isFocus && this.hasBox()) {
+        //         this.mouse.mouseUp();
+        //     }
+        // });
     }
 
     getTextWidth(txt: string) {
@@ -243,6 +265,10 @@ export default class {
     destroyed() {
         this.input.removeEventListener('input', this.inputListener);
         this.input.removeEventListener('blur', this.inputBlurListener);
+        config.emitter.off('mousedown', this.mouseDown);
+        config.emitter.off('mousemove', this.mouseMove);
+        config.emitter.off('mouseup', this.mouseUp);
+
         config.emitter.emit('removeItem', this);
     }
 }
