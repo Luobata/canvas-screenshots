@@ -236,7 +236,6 @@ export default class Box {
                     // 有 操作该item
                     newItem = item;
                     this.outFocus(item);
-                    console.log('blur');
                 } else {
                     // 没有让所有item blur 如果有blur的元素 不创建新的 否则创建新的
                     const blurItem = this.outFocus();
