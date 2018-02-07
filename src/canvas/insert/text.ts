@@ -12,6 +12,8 @@ export default class {
     height: number;
     cols: number;
     rows: number;
+    maxCols: number;
+    maxRows: number;
     color: string;
     borderColor: string;
     borderWidth: number;
@@ -20,6 +22,7 @@ export default class {
     id: number;
     isFocus: boolean;
     isEditor: boolean;
+    textWidth: number;
     mouseDown: EventListener;
     mouseMove: EventListener;
     mouseUp: EventListener;
@@ -38,8 +41,10 @@ export default class {
         this.isFocus = true;
         // this.width = 100;
         // this.height = 40;
-        this.cols = 10;
+        this.cols = 1;
+        this.cols = 2;
         this.rows = 1;
+        this.textWidth = Math.floor(this.getTextWidth('1').width);
         this.fontSize = '35px';
         this.fontFamily = 'monospace';
         this.initTextArea();
@@ -135,6 +140,9 @@ export default class {
             const rows = left ? row + 1 : row;
             const realRow = rows > this.rows ? rows : this.rows;
             this.input.setAttribute('rows', realRow.toString());
+            // 输入cols 增加，遇到边界换行
+            // 观察发现每增加一列的宽度增加21
+            // this.input.setAttribute('cols', length.toString());
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
             this.text = (<HTMLInputElement>e.target).value;
