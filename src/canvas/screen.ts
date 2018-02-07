@@ -89,6 +89,7 @@ export default class {
         });
         this.mask.addEventListener('mousedown', e => {
             hasTrajectory = false;
+            if (e.button !== 0) return;
             if (!this.box.hasBox()) {
                 this.beginBox(e);
             } else {
