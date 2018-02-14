@@ -3,10 +3,8 @@ import { config } from '../config';
 import { pointInRectangular } from 'LIB/geometric';
 import Mouse from './mouse-text';
 
-export default class {
+interface Text {
     position: Position;
-    ctx: CanvasRenderingContext2D;
-    input: HTMLElement;
     text: string;
     width: number;
     height: number;
@@ -19,28 +17,51 @@ export default class {
     borderWidth: number;
     fontSize: string;
     fontFamily: string;
-    id: number;
-    isFocus: boolean;
     isEditor: boolean;
     textWidth: number;
+}
+
+export default class {
+    id: number;
+    ctx: CanvasRenderingContext2D;
+    input: HTMLElement;
     mouseDown: EventListener;
     mouseMove: EventListener;
     mouseUp: EventListener;
     inputListener: EventListener;
     inputBlurListener: EventListener;
+    isFocus: boolean;
     mouse: Mouse;
 
+    position: Position;
+    text: string;
+    width: number;
+    height: number;
+    cols: number;
+    rows: number;
+    maxCols: number;
+    maxRows: number;
+    color: string;
+    borderColor: string;
+    borderWidth: number;
+    fontSize: string;
+    fontFamily: string;
+    isEditor: boolean;
+    textWidth: number;
+
+    Text: Text;
+    saveArray: Array<Text>;
+
     constructor(ctx: CanvasRenderingContext2D, pos: Position) {
-        this.position = pos;
         this.ctx = ctx;
+        this.isFocus = true;
+        this.id = config.uid++;
+
+        this.position = pos;
         this.color = (<any>window).color || 'red';
         this.borderColor = '#fff';
         this.borderWidth = 1;
-        this.id = config.uid++;
         this.text = '';
-        this.isFocus = true;
-        // this.width = 100;
-        // this.height = 40;
         this.cols = 1;
         this.cols = 2;
         this.rows = 1;
