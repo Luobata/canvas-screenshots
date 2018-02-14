@@ -3,28 +3,36 @@ import { config } from '../config';
 import Mouse from './mouse-pen';
 import { pointInLine } from 'LIB/geometric';
 
-export default class {
+interface pen {
     lines: Array<Position>;
-    ctx: CanvasRenderingContext2D;
     color: string;
-    id: number;
     lineWidth: number;
+}
+
+export default class {
+    id: number;
+    ctx: CanvasRenderingContext2D;
     isFocus: boolean;
     mouse: Mouse;
 
+    pen: pen;
+    saveArray: Array<pen>;
+
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.color = (<any>window).color || 'red';
         this.id = config.uid++;
         this.isFocus = true;
-        this.lines = [];
-        this.lineWidth = 3;
+        this.pen = {
+            color: (<any>window).color || 'red',
+            lines: [],
+            lineWidth: 3,
+        };
         this.mouse = new Mouse(this);
         this.event();
     }
 
     inBoxBorder(x: number, y: number) {
-        return pointInLine(this.lines, { x, y }, 10 + this.lineWidth);
+        return pointInLine(this.pen.lines, { x, y }, 10 + this.pen.lineWidth);
     }
 
     getCursor(e: MouseEvent) {
@@ -37,7 +45,7 @@ export default class {
     }
 
     hasBox(): boolean {
-        return this.lines.length > 1;
+        return this.pen.lines.length > 1;
     }
 
     event() {
@@ -61,7 +69,7 @@ export default class {
     }
 
     addPosition(pos: Position, isDraw = false) {
-        this.lines.push(pos);
+        this.pen.lines.push(pos);
 
         if (isDraw) {
             config.emitter.emit('draw-all');
@@ -69,7 +77,7 @@ export default class {
     }
 
     move(x: number, y: number) {
-        for (let i of this.lines) {
+        for (let i of this.pen.lines) {
             i.x += x;
             i.y += y;
         }
@@ -80,13 +88,13 @@ export default class {
     draw() {
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.strokeStyle = this.color;
-        this.ctx.lineWidth = this.lineWidth;
+        this.ctx.strokeStyle = this.pen.color;
+        this.ctx.lineWidth = this.pen.lineWidth;
         // this.ctx.lineJoin = 'round';
-        this.ctx.moveTo(this.lines[0].x, this.lines[0].y);
+        this.ctx.moveTo(this.pen.lines[0].x, this.pen.lines[0].y);
 
-        for (let i = 1; i < this.lines.length; i++) {
-            this.ctx.lineTo(this.lines[i].x, this.lines[i].y);
+        for (let i = 1; i < this.pen.lines.length; i++) {
+            this.ctx.lineTo(this.pen.lines[i].x, this.pen.lines[i].y);
         }
 
         this.ctx.stroke();
