@@ -48,14 +48,12 @@ export default class {
         this.initBox();
 
         this.event();
-        this.drawAll();
     }
 
     setPosition(rect: Rect, isDraw = false) {
         Object.assign(this.rect, rect);
 
         if (isDraw) {
-            //this.draw();
             config.emitter.emit('draw-all');
         }
     }
@@ -126,16 +124,6 @@ export default class {
             this.rect.startY + (this.rect.endY - this.rect.startY) / 2;
         const inLength = Math.abs((this.rect.endY - this.rect.startY) / 2);
         const outLength = inLength + this.lineWidth;
-        // const inX = () => {
-        //     const angle =Math.acos(
-        //         Math.abs(positinX - centerX) /
-        //         Math.sqrt(
-        //             Math.pow(positinX - centerX, 2) +
-        //                 Math.pow(positinY - centerY, 2),
-        //         ));
-        //     // const minL = Math.sin()
-        // };
-        // margin 扩大可点击区域
         const margin = 5;
         const borderWidth = this.lineWidth + margin * 2;
         const sX =
@@ -250,10 +238,5 @@ export default class {
             }
         }
         this.ctx.restore();
-    }
-    drawAll() {
-        config.emitter.on('draw-all', () => {
-            // this.draw();
-        });
     }
 }
