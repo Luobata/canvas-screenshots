@@ -20,30 +20,38 @@ const inCircle = (
     );
 };
 
-export default class {
-    id: number;
-    ctx: CanvasRenderingContext2D;
-    circles: Array<dragCircle>;
+interface rectangular {
     rect?: Rect;
-    isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
+    circles?: Array<dragCircle>;
     isStroke: boolean; // 是否是是空心的
     color: string;
     lineWidth: number;
     borderRadious: number;
     circleWidth: number;
+}
+
+export default class {
+    id: number;
+    ctx: CanvasRenderingContext2D;
     mouse: Mouse;
+    isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
+
+    rectangular: rectangular;
+    saveArray: Array<rectangular>;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
         this.mouse = new Mouse(this, rectangularEmitter);
-        this.isFocus = true;
-        this.isStroke = true;
-        // this.color = 'red';
-        this.color = (<any>window).color || 'red';
-        this.lineWidth = 3;
-        this.borderRadious = 1;
-        this.circleWidth = 3;
         this.id = config.uid++;
+
+        this.isFocus = true;
+        this.rectangular = {
+            isStroke: true,
+            color: (<any>window).color || 'red',
+            lineWidth: 3,
+            borderRadious: 1,
+            circleWidth: 3,
+        };
 
         this.initBox();
 
@@ -51,7 +59,7 @@ export default class {
     }
 
     setPosition(rect: Rect, isDraw = false) {
-        Object.assign(this.rect, rect);
+        Object.assign(this.rectangular.rect, rect);
 
         if (isDraw) {
             config.emitter.emit('draw-all');
@@ -60,7 +68,7 @@ export default class {
 
     getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
-        for (let i of this.circles) {
+        for (let i of this.rectangular.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
                 //result = `${i.cssPosition}-resize`;
@@ -100,7 +108,7 @@ export default class {
     }
 
     initBox() {
-        this.rect = {
+        this.rectangular.rect = {
             startX: undefined,
             startY: undefined,
             endX: undefined,
@@ -110,38 +118,42 @@ export default class {
 
     hasBox() {
         return !!(
-            this.rect.startX !== undefined &&
-            this.rect.startY !== undefined &&
-            this.rect.endX !== undefined &&
-            this.rect.endY !== undefined
+            this.rectangular.rect.startX !== undefined &&
+            this.rectangular.rect.startY !== undefined &&
+            this.rectangular.rect.endX !== undefined &&
+            this.rectangular.rect.endY !== undefined
         );
     }
 
     inBoxBorder(positionX: number, positionY: number): boolean {
         const centerX =
-            this.rect.startX + (this.rect.endX - this.rect.startX) / 2;
+            this.rectangular.rect.startX +
+            (this.rectangular.rect.endX - this.rectangular.rect.startX) / 2;
         const centerY =
-            this.rect.startY + (this.rect.endY - this.rect.startY) / 2;
-        const inLength = Math.abs((this.rect.endY - this.rect.startY) / 2);
-        const outLength = inLength + this.lineWidth;
+            this.rectangular.rect.startY +
+            (this.rectangular.rect.endY - this.rectangular.rect.startY) / 2;
+        const inLength = Math.abs(
+            (this.rectangular.rect.endY - this.rectangular.rect.startY) / 2,
+        );
+        const outLength = inLength + this.rectangular.lineWidth;
         const margin = 5;
-        const borderWidth = this.lineWidth + margin * 2;
+        const borderWidth = this.rectangular.lineWidth + margin * 2;
         const sX =
-            this.rect.startX < this.rect.endX
-                ? this.rect.startX
-                : this.rect.endX + margin;
+            this.rectangular.rect.startX < this.rectangular.rect.endX
+                ? this.rectangular.rect.startX
+                : this.rectangular.rect.endX + margin;
         const bX =
-            this.rect.startX >= this.rect.endX
-                ? this.rect.startX
-                : this.rect.endX - margin;
+            this.rectangular.rect.startX >= this.rectangular.rect.endX
+                ? this.rectangular.rect.startX
+                : this.rectangular.rect.endX - margin;
         const sY =
-            this.rect.startY < this.rect.endY
-                ? this.rect.startY
-                : this.rect.endY + margin;
+            this.rectangular.rect.startY < this.rectangular.rect.endY
+                ? this.rectangular.rect.startY
+                : this.rectangular.rect.endY + margin;
         const bY =
-            this.rect.startY >= this.rect.endY
-                ? this.rect.startY
-                : this.rect.endY - margin;
+            this.rectangular.rect.startY >= this.rectangular.rect.endY
+                ? this.rectangular.rect.startY
+                : this.rectangular.rect.endY - margin;
         const inRow = (): boolean => {
             return (
                 positionX >= sX - borderWidth &&
@@ -165,28 +177,28 @@ export default class {
 
     inBox(positionX: number, positionY: number, circlePath = 0): boolean {
         const inX = (): boolean => {
-            if (this.rect.startX < this.rect.endX) {
+            if (this.rectangular.rect.startX < this.rectangular.rect.endX) {
                 return (
-                    positionX + circlePath >= this.rect.startX &&
-                    positionX - circlePath <= this.rect.endX
+                    positionX + circlePath >= this.rectangular.rect.startX &&
+                    positionX - circlePath <= this.rectangular.rect.endX
                 );
             } else {
                 return (
-                    positionX + circlePath <= this.rect.startX &&
-                    positionX - circlePath >= this.rect.endX
+                    positionX + circlePath <= this.rectangular.rect.startX &&
+                    positionX - circlePath >= this.rectangular.rect.endX
                 );
             }
         };
         const inY = (): boolean => {
-            if (this.rect.startY < this.rect.endY) {
+            if (this.rectangular.rect.startY < this.rectangular.rect.endY) {
                 return (
-                    positionY + circlePath >= this.rect.startY &&
-                    positionY - circlePath <= this.rect.endY
+                    positionY + circlePath >= this.rectangular.rect.startY &&
+                    positionY - circlePath <= this.rectangular.rect.endY
                 );
             } else {
                 return (
-                    positionY + circlePath <= this.rect.startY &&
-                    positionY - circlePath >= this.rect.endY
+                    positionY + circlePath <= this.rectangular.rect.startY &&
+                    positionY - circlePath >= this.rectangular.rect.endY
                 );
             }
         };
@@ -194,44 +206,54 @@ export default class {
     }
 
     draw() {
-        const circleMap = getCircleMap(this.rect, this.lineWidth);
-        this.circles = circleMap;
+        const circleMap = getCircleMap(
+            this.rectangular.rect,
+            this.rectangular.lineWidth,
+        );
+        this.rectangular.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.lineWidth = this.lineWidth;
+        this.ctx.lineWidth = this.rectangular.lineWidth;
         // 画圆角
         this.ctx.moveTo(
-            this.rect.startX - this.lineWidth,
-            this.rect.startY - this.lineWidth,
+            this.rectangular.rect.startX - this.rectangular.lineWidth,
+            this.rectangular.rect.startY - this.rectangular.lineWidth,
         );
         this.ctx.lineTo(
-            this.rect.endX + this.lineWidth,
-            this.rect.startY - this.lineWidth,
+            this.rectangular.rect.endX + this.rectangular.lineWidth,
+            this.rectangular.rect.startY - this.rectangular.lineWidth,
         );
         this.ctx.lineTo(
-            this.rect.endX + this.lineWidth,
-            this.rect.endY + this.lineWidth,
+            this.rectangular.rect.endX + this.rectangular.lineWidth,
+            this.rectangular.rect.endY + this.rectangular.lineWidth,
         );
         this.ctx.lineTo(
-            this.rect.startX - this.lineWidth,
-            this.rect.endY + this.lineWidth,
+            this.rectangular.rect.startX - this.rectangular.lineWidth,
+            this.rectangular.rect.endY + this.rectangular.lineWidth,
         );
         this.ctx.lineTo(
-            this.rect.startX - this.lineWidth,
-            this.rect.startY - this.lineWidth,
+            this.rectangular.rect.startX - this.rectangular.lineWidth,
+            this.rectangular.rect.startY - this.rectangular.lineWidth,
         );
-        if (this.isStroke) {
-            this.ctx.strokeStyle = this.color;
+        if (this.rectangular.isStroke) {
+            this.ctx.strokeStyle = this.rectangular.color;
             this.ctx.stroke();
         } else {
-            this.ctx.fillStyle = this.color;
+            this.ctx.fillStyle = this.rectangular.color;
             this.ctx.fill();
         }
         if (this.isFocus) {
             for (let i of circleMap) {
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.color;
-                this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
+                this.ctx.fillStyle = this.rectangular.color;
+                this.ctx.arc(
+                    i.x,
+                    i.y,
+                    this.rectangular.circleWidth,
+                    0,
+                    Math.PI * 2,
+                    true,
+                );
                 this.ctx.stroke();
                 this.ctx.fillStyle = 'white';
                 this.ctx.fill();
