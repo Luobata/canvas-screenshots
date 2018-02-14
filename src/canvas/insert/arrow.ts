@@ -16,32 +16,40 @@ const inCircle = (
         Math.pow(circlePath, 2)
     );
 };
-
-export default class {
-    rect: Rect;
+interface arrow {
+    rect?: Rect;
     circles: Array<dragCircle>;
     lines: Array<Position>;
-    ctx: CanvasRenderingContext2D;
     color: string;
+    circleWidth: number;
+}
+
+export default class {
     id: number;
+    ctx: CanvasRenderingContext2D;
     isFocus: boolean;
     mouse: Mouse;
-    circleWidth: number;
+
+    arrow: arrow;
+    saveArray: Array<arrow>;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.color = (<any>window).color || 'red';
         this.id = config.uid++;
         this.isFocus = true;
-        this.lines = [];
-        this.circleWidth = 3;
+        this.arrow = {
+            color: (<any>window).color || 'red',
+            lines: [],
+            circles: [],
+            circleWidth: 3,
+        };
         this.mouse = new Mouse(this);
         this.init();
         this.event();
     }
 
     init() {
-        this.rect = {
+        this.arrow.rect = {
             startX: undefined,
             startY: undefined,
             endX: undefined,
@@ -51,10 +59,10 @@ export default class {
 
     hasBox() {
         return !!(
-            this.rect.startX !== undefined &&
-            this.rect.startY !== undefined &&
-            this.rect.endX !== undefined &&
-            this.rect.endY !== undefined
+            this.arrow.rect.startX !== undefined &&
+            this.arrow.rect.startY !== undefined &&
+            this.arrow.rect.endX !== undefined &&
+            this.arrow.rect.endY !== undefined
         );
     }
 
@@ -77,12 +85,12 @@ export default class {
     }
 
     inBoxBorder(x: number, y: number) {
-        return pointInArea(this.lines, { x, y });
+        return pointInArea(this.arrow.lines, { x, y });
     }
 
     getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair';
-        for (let i of this.circles) {
+        for (let i of this.arrow.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
                 //result = `${i.cssPosition}-resize`;
@@ -104,87 +112,87 @@ export default class {
     }
 
     setPosition(rect: Rect, isDraw = false) {
-        Object.assign(this.rect, rect);
+        Object.assign(this.arrow.rect, rect);
         if (isDraw) {
             config.emitter.emit('draw-all');
         }
     }
 
     draw() {
-        const circleMap = getArrowCircleMap(this.rect);
-        this.circles = circleMap;
+        const circleMap = getArrowCircleMap(this.arrow.rect);
+        this.arrow.circles = circleMap;
 
         const lineWid = Math.sqrt(
-            Math.pow(this.rect.endX - this.rect.startX, 2) +
-                Math.pow(this.rect.endY - this.rect.startY, 2),
+            Math.pow(this.arrow.rect.endX - this.arrow.rect.startX, 2) +
+                Math.pow(this.arrow.rect.endY - this.arrow.rect.startY, 2),
         );
         const arrowWid = lineWid * 0.2; // 箭头位置总长度的十分之一
         const arrowInWid = arrowWid * 0.7;
         let rec = Math.atan(
-            Math.abs(this.rect.endY - this.rect.startY) /
-                Math.abs(this.rect.endX - this.rect.startX),
+            Math.abs(this.arrow.rect.endY - this.arrow.rect.startY) /
+                Math.abs(this.arrow.rect.endX - this.arrow.rect.startX),
         );
         let margin = Math.PI / 4;
         const min = margin - rec;
         let minuX: number = 1;
         let minuY: number = 1;
 
-        if (this.rect.endX > this.rect.startX) {
+        if (this.arrow.rect.endX > this.arrow.rect.startX) {
             minuX = 1;
         } else {
             minuX = -1;
         }
-        if (this.rect.endY > this.rect.startY) {
+        if (this.arrow.rect.endY > this.arrow.rect.startY) {
             minuY = 1;
         } else {
             minuY = -1;
         }
 
         const P1 = {
-            x: this.rect.endX - arrowWid * Math.cos(margin - rec) * minuX,
-            y: this.rect.endY + arrowWid * Math.sin(margin - rec) * minuY,
+            x: this.arrow.rect.endX - arrowWid * Math.cos(margin - rec) * minuX,
+            y: this.arrow.rect.endY + arrowWid * Math.sin(margin - rec) * minuY,
         };
         const P2 = {
-            x: this.rect.endX - arrowWid * Math.cos(margin + rec) * minuX,
-            y: this.rect.endY - arrowWid * Math.sin(margin + rec) * minuY,
+            x: this.arrow.rect.endX - arrowWid * Math.cos(margin + rec) * minuX,
+            y: this.arrow.rect.endY - arrowWid * Math.sin(margin + rec) * minuY,
         };
         const P3 = {
             x:
-                this.rect.endX -
+                this.arrow.rect.endX -
                 arrowInWid * Math.cos(margin - rec - margin / 2) * minuX,
             y:
-                this.rect.endY +
+                this.arrow.rect.endY +
                 arrowInWid * Math.sin(margin - rec - margin / 2) * minuY,
         };
         const P4 = {
             x:
-                this.rect.endX -
+                this.arrow.rect.endX -
                 arrowInWid * Math.cos(margin + rec - margin / 2) * minuX,
             y:
-                this.rect.endY -
+                this.arrow.rect.endY -
                 arrowInWid * Math.sin(margin + rec - margin / 2) * minuY,
         };
-        this.lines = [
+        this.arrow.lines = [
             {
-                x: this.rect.startX - circlePath * minuX,
-                y: this.rect.startY - circlePath * minuY,
+                x: this.arrow.rect.startX - circlePath * minuX,
+                y: this.arrow.rect.startY - circlePath * minuY,
             },
             // P3,
             P1,
             {
-                x: this.rect.endX + circlePath * minuX,
-                y: this.rect.endY + circlePath * minuY,
+                x: this.arrow.rect.endX + circlePath * minuX,
+                y: this.arrow.rect.endY + circlePath * minuY,
             },
             P2,
             // P4,
         ];
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.fillStyle = this.color;
-        this.ctx.moveTo(this.rect.startX, this.rect.startY);
+        this.ctx.fillStyle = this.arrow.color;
+        this.ctx.moveTo(this.arrow.rect.startX, this.arrow.rect.startY);
         this.ctx.lineTo(P3.x, P3.y);
         this.ctx.lineTo(P1.x, P1.y);
-        this.ctx.lineTo(this.rect.endX, this.rect.endY);
+        this.ctx.lineTo(this.arrow.rect.endX, this.arrow.rect.endY);
         this.ctx.lineTo(P2.x, P2.y);
         this.ctx.lineTo(P4.x, P4.y);
         this.ctx.fill();
@@ -192,8 +200,15 @@ export default class {
         if (this.isFocus) {
             for (let i of circleMap) {
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.color;
-                this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
+                this.ctx.fillStyle = this.arrow.color;
+                this.ctx.arc(
+                    i.x,
+                    i.y,
+                    this.arrow.circleWidth,
+                    0,
+                    Math.PI * 2,
+                    true,
+                );
                 this.ctx.stroke();
                 this.ctx.fillStyle = 'white';
                 this.ctx.fill();
