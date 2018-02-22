@@ -35,6 +35,7 @@ export default class {
 
     position: Position;
     text: string;
+    txts: Array<string>;
     width: number;
     height: number;
     cols: number;
@@ -65,7 +66,6 @@ export default class {
         this.cols = 1;
         this.cols = 2;
         this.rows = 1;
-        this.maxCols = this.cols;
         this.maxRows = this.rows;
         this.fontSize = '35px';
         this.fontFamily = 'monospace';
@@ -73,6 +73,7 @@ export default class {
         this.initTextArea();
         this.event();
         this.mouse = new Mouse(this);
+        this.getMaxCols();
     }
 
     getCursor(e: MouseEvent) {
@@ -144,6 +145,42 @@ export default class {
         }, 0);
     }
 
+    getMaxCols() {
+        setTimeout(() => {
+            const num =
+                (config.boxRect.endX - this.position.x - this.width) /
+                this.textWidth;
+            this.maxCols = Math.floor(num) + 1;
+        }, 0);
+    }
+
+    getMaxRows() {}
+
+    getTextInput() {
+        const rows = this.text.split('\n');
+        const cols = [];
+        let maxCols = 0;
+        for (let i of rows) {
+            if (i.length > maxCols) {
+                maxCols = i.length > this.maxCols ? this.maxCols : i.length;
+                if (i.length > this.maxCols) {
+                    let j = 0;
+                    while (j < i.length) {
+                        cols.push(i.substr(j, this.maxCols));
+                        j += this.maxCols;
+                    }
+                } else {
+                    cols.push(i);
+                }
+            } else {
+                cols.push(i);
+            }
+        }
+        this.txts = cols;
+        this.input.setAttribute('cols', maxCols.toString());
+        this.input.setAttribute('rows', cols.length.toString());
+    }
+
     initTextArea() {
         this.isEditor = true;
         this.input = document.createElement('textArea');
@@ -169,18 +206,19 @@ export default class {
             const left = length % (this.cols - 1);
             const rows = left ? row + 1 : row;
             const realRow = rows > this.rows ? rows : this.rows;
+            this.getTextInput();
             // this.input.setAttribute('rows', realRow.toString());
-            // 输入cols 增加，遇到边界换行
-            if (
-                this.position.x + this.width + this.textWidth <
-                config.boxRect.endX
-            ) {
-                this.input.setAttribute('cols', length.toString());
-            } else {
-                this.rows++;
-                this.input.setAttribute('rows', this.rows.toString());
-            }
-            this.maxCols = this.cols;
+            // if (this.text[this.text.length - 1] === '\n') {
+            //     // 回车直接增加行数
+            //     this.rows++;
+            //     this.input.setAttribute('rows', this.rows.toString());
+            // } else if (
+            //     // 输入cols 增加，遇到边界换行
+            //     this.position.x + this.width + this.textWidth <
+            //     config.boxRect.endX
+            // ) {
+            //     this.input.setAttribute('cols', length.toString());
+            // }
             this.getSize();
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
