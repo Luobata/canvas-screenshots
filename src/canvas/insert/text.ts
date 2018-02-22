@@ -66,6 +66,7 @@ export default class {
         this.cols = 1;
         this.cols = 2;
         this.rows = 1;
+        this.txts = [];
         this.maxRows = this.rows;
         this.fontSize = '35px';
         this.fontFamily = 'monospace';
@@ -316,9 +317,9 @@ export default class {
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
         this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
-        for (let i = 0; i < txts.length; i++) {
+        for (let i = 0; i < this.txts.length; i++) {
             this.ctx.fillText(
-                txts[i],
+                this.txts[i],
                 this.position.x + 1 + 10,
                 this.position.y - 6 + getHeight() * (i + 1) + 10,
             );
