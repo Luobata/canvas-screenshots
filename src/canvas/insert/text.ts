@@ -237,23 +237,6 @@ export default class {
         config.emitter.on('mousedown', this.mouseDown);
         config.emitter.on('mousemove', this.mouseMove);
         config.emitter.on('mouseup', this.mouseUp);
-        // config.emitter.on('mousedown', e => {
-        //     if (this.isFocus && this.hasBox()) {
-        //         this.mouse.mouseDown(this.getCursor(e));
-        //     }
-        // });
-
-        // config.emitter.on('mousemove', e => {
-        //     if (this.isFocus && !this.isEditor) {
-        //         this.mouse.mouseMove(e);
-        //     }
-        // });
-
-        // config.emitter.on('mouseup', e => {
-        //     if (this.isFocus && this.hasBox()) {
-        //         this.mouse.mouseUp();
-        //     }
-        // });
     }
 
     getTextWidth(txt: string) {
