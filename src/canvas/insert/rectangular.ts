@@ -60,12 +60,19 @@ export default class {
     }
 
     save() {
-        this.saveArray.push(this.rectangular);
+        this.saveArray.push(JSON.parse(JSON.stringify(this.rectangular)));
         console.log(this.saveArray);
     }
 
     back() {
-        this.rectangular = this.saveArray.pop();
+        if (this.saveArray.length) {
+            this.saveArray.pop();
+            this.rectangular = this.saveArray[this.saveArray.length - 1];
+        }
+        if (!this.rectangular) {
+            config.emitter.emit('removeItem', this);
+        }
+        // config.emitter.emit('draw-all');
     }
 
     setPosition(rect: Rect, isDraw = false) {

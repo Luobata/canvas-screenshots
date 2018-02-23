@@ -80,7 +80,10 @@ export default class Box {
 
     back() {
         const item = this.childSaveArray.pop();
+
+        if (!item) return;
         item.back();
+        config.emitter.emit('draw-all');
     }
 
     events() {
