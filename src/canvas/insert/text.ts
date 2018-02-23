@@ -193,18 +193,6 @@ export default class {
             const rows = left ? row + 1 : row;
             const realRow = rows > this.Text.rows ? rows : this.Text.rows;
             this.getTextInput();
-            // this.input.setAttribute('rows', realRow.toString());
-            // if (this.text[this.text.length - 1] === '\n') {
-            //     // 回车直接增加行数
-            //     this.rows++;
-            //     this.input.setAttribute('rows', this.rows.toString());
-            // } else if (
-            //     // 输入cols 增加，遇到边界换行
-            //     this.position.x + this.width + this.textWidth <
-            //     config.boxRect.endX
-            // ) {
-            //     this.input.setAttribute('cols', length.toString());
-            // }
             this.getSize();
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
