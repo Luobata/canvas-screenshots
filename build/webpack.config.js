@@ -23,6 +23,7 @@ module.exports = {
         alias: {
             LIB: path.resolve(__dirname, '../src/canvas/lib'),
             INSERT: path.resolve(__dirname, '../src/canvas/insert'),
+            ASSETS: path.resolve(__dirname, '../asserts')
         },
     },
 
