@@ -23,12 +23,19 @@ module.exports = {
         alias: {
             LIB: path.resolve(__dirname, '../src/canvas/lib'),
             INSERT: path.resolve(__dirname, '../src/canvas/insert'),
-            ASSETS: path.resolve(__dirname, '../asserts')
+            ASSETS: path.resolve(__dirname, '../asserts'),
         },
     },
 
     module: {
         loaders: [
+            {
+                test: /\.(jpg|gif|png|svg)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 8192,
+                },
+            },
             {
                 test: /\.ts$/,
                 loader: 'ts-loader',
