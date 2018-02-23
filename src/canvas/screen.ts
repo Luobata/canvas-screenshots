@@ -79,6 +79,19 @@ export default class {
         this.maskCtx.restore();
     }
 
+    functionBoxPos() {
+        let left = 100;
+        const rightMargin = this.body.offsetWidth - this.box.rect.endX;
+        const min = 250;
+        console.log(min, rightMargin);
+        if (rightMargin < min) {
+            left += min - rightMargin;
+        }
+        this.functionBox.style.left = this.box.rect.endX - left + 'px';
+        this.functionBox.style.top = this.box.rect.endY + 10 + 'px';
+        this.functionBox.style.display = 'block';
+    }
+
     initEvent() {
         let hasTrajectory = false; // 移动轨迹 避免只点击没有移动的情况
         window.addEventListener('resize', e => {
@@ -105,6 +118,7 @@ export default class {
                 //this.cursorStyle = this.cursor.getCursor(e);
                 this.mask.style.cursor = this.cursorStyle;
                 emitter.emit('end-mousemove', e);
+                this.functionBoxPos();
             }
             emitter.emit('mousemove', e);
         });
@@ -113,9 +127,7 @@ export default class {
             if (hasTrajectory) {
                 this.box.isShowCircle = true;
                 this.box.draw();
-                this.functionBox.style.left = this.box.rect.endX - 100 + 'px';
-                this.functionBox.style.top = this.box.rect.endY + 10 + 'px';
-                this.functionBox.style.display = 'block';
+                this.functionBoxPos();
                 setConfig({
                     boxRect: this.box.rect,
                 });
