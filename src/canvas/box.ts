@@ -159,12 +159,9 @@ export default class Box {
     focusRectangular(e: MouseEvent) {
         let focusItem;
         for (let i of this.content) {
-            //if (i.inBox(e.clientX, e.clientY, 10)) {
             if (i.inBoxBorder(e.clientX, e.clientY)) {
-                //i.isFocus = true;
                 focusItem = i;
             } else {
-                //i.isFocus = false;
             }
         }
 

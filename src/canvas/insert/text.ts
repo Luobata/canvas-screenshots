@@ -266,7 +266,6 @@ export default class {
             txts.push(
                 this.Text.text.substring(
                     i * this.Text.cols,
-                    // this.Text.cols,
                     (i + 1) * this.Text.cols,
                 ),
             );
@@ -303,12 +302,16 @@ export default class {
         this.ctx.closePath();
         this.ctx.restore();
 
-        this.drawText();
+        console.log(this.Text.isEditor);
+        if (!this.Text.isEditor) {
+            this.drawText();
+        }
     }
 
     destroyed() {
         this.input.removeEventListener('input', this.inputListener);
         this.input.removeEventListener('blur', this.inputBlurListener);
+
         config.emitter.off('mousedown', this.mouseDown);
         config.emitter.off('mousemove', this.mouseMove);
         config.emitter.off('mouseup', this.mouseUp);
