@@ -6,19 +6,20 @@ import Mouse from './mouse-text';
 interface Text {
     position: Position;
     text: string;
-    width: number;
-    height: number;
+    txts: Array<string>;
+    width?: number;
+    height?: number;
     cols: number;
     rows: number;
-    maxCols: number;
-    maxRows: number;
+    maxCols?: number;
+    maxRows?: number;
     color: string;
     borderColor: string;
     borderWidth: number;
     fontSize: string;
     fontFamily: string;
-    isEditor: boolean;
-    textWidth: number;
+    isEditor?: boolean;
+    textWidth?: number;
 }
 
 export default class {
@@ -33,23 +34,6 @@ export default class {
     isFocus: boolean;
     mouse: Mouse;
 
-    position: Position;
-    text: string;
-    txts: Array<string>;
-    width: number;
-    height: number;
-    cols: number;
-    rows: number;
-    maxCols: number;
-    maxRows: number;
-    color: string;
-    borderColor: string;
-    borderWidth: number;
-    fontSize: string;
-    fontFamily: string;
-    isEditor: boolean;
-    textWidth: number;
-
     Text: Text;
     saveArray: Array<Text>;
 
@@ -58,19 +42,19 @@ export default class {
         this.isFocus = true;
         this.id = config.uid++;
 
-        this.position = pos;
-        this.color = (<any>window).color || 'red';
-        this.borderColor = '#fff';
-        this.borderWidth = 1;
-        this.text = '';
-        this.cols = 1;
-        this.cols = 2;
-        this.rows = 1;
-        this.txts = [];
-        this.maxRows = this.rows;
-        this.fontSize = '35px';
-        this.fontFamily = 'monospace';
-        this.textWidth = Math.floor(this.getTextWidth('1').width);
+        this.Text = {
+            position: pos,
+            color: (<any>window).color || 'red',
+            borderColor: '#fff',
+            borderWidth: 1,
+            text: '',
+            cols: 2,
+            rows: 1,
+            txts: [],
+            fontSize: '35px',
+            fontFamily: 'monospace',
+        };
+        this.Text.textWidth = Math.floor(this.getTextWidth('1').width);
         this.initTextArea();
         this.event();
         this.mouse = new Mouse(this);
@@ -87,17 +71,17 @@ export default class {
     }
 
     move(x: number, y: number) {
-        this.position.x += x;
-        this.position.y += y;
+        this.Text.position.x += x;
+        this.Text.position.y += y;
 
         config.emitter.emit('draw-all');
     }
 
     focus() {
-        this.isEditor = true;
-        this.text = '';
-        this.input.style.left = `${this.position.x}px`;
-        this.input.style.top = `${this.position.y}px`;
+        this.Text.isEditor = true;
+        this.Text.text = '';
+        this.input.style.left = `${this.Text.position.x}px`;
+        this.input.style.top = `${this.Text.position.y}px`;
         this.input.style.display = 'block';
         // 同时操作display 与input 会触发blur
         setTimeout(() => {
@@ -109,20 +93,20 @@ export default class {
 
     inBoxBorder(x: number, y: number) {
         const p1 = {
-            x: this.position.x,
-            y: this.position.y,
+            x: this.Text.position.x,
+            y: this.Text.position.y,
         };
         const p2 = {
-            x: this.position.x + this.width,
-            y: this.position.y,
+            x: this.Text.position.x + this.Text.width,
+            y: this.Text.position.y,
         };
         const p3 = {
-            x: this.position.x,
-            y: this.position.y + this.height,
+            x: this.Text.position.x,
+            y: this.Text.position.y + this.Text.height,
         };
         const p4 = {
-            x: this.position.x + this.width,
-            y: this.position.y + this.height,
+            x: this.Text.position.x + this.Text.width,
+            y: this.Text.position.y + this.Text.height,
         };
         const p = {
             x,
@@ -132,7 +116,7 @@ export default class {
     }
 
     setPosition(pos: Position, isDraw = false) {
-        this.position = pos;
+        this.Text.position = pos;
 
         if (isDraw) {
             config.emitter.emit('draw-all');
@@ -141,34 +125,35 @@ export default class {
 
     getSize() {
         setTimeout(() => {
-            this.width = this.input.offsetWidth;
-            this.height = this.input.offsetHeight;
+            this.Text.width = this.input.offsetWidth;
+            this.Text.height = this.input.offsetHeight;
         }, 0);
     }
 
     getMaxCols() {
         setTimeout(() => {
             const num =
-                (config.boxRect.endX - this.position.x - this.width) /
-                this.textWidth;
-            this.maxCols = Math.floor(num) + 1;
+                (config.boxRect.endX - this.Text.position.x - this.Text.width) /
+                this.Text.textWidth;
+            this.Text.maxCols = Math.floor(num) + 1;
         }, 0);
     }
 
     getMaxRows() {}
 
     getTextInput() {
-        const rows = this.text.split('\n');
+        const rows = this.Text.text.split('\n');
         const cols = [];
         let maxCols = 0;
         for (let i of rows) {
             if (i.length > maxCols) {
-                maxCols = i.length > this.maxCols ? this.maxCols : i.length;
-                if (i.length > this.maxCols) {
+                maxCols =
+                    i.length > this.Text.maxCols ? this.Text.maxCols : i.length;
+                if (i.length > this.Text.maxCols) {
                     let j = 0;
                     while (j < i.length) {
-                        cols.push(i.substr(j, this.maxCols));
-                        j += this.maxCols;
+                        cols.push(i.substr(j, this.Text.maxCols));
+                        j += this.Text.maxCols;
                     }
                 } else {
                     cols.push(i);
@@ -177,23 +162,23 @@ export default class {
                 cols.push(i);
             }
         }
-        this.txts = cols;
+        this.Text.txts = cols;
         this.input.setAttribute('cols', maxCols.toString());
         this.input.setAttribute('rows', cols.length.toString());
     }
 
     initTextArea() {
-        this.isEditor = true;
+        this.Text.isEditor = true;
         this.input = document.createElement('textArea');
         this.input.className = 'function-text';
-        this.input.style.left = `${this.position.x}px`;
-        this.input.style.top = `${this.position.y}px`;
-        this.input.style.color = this.color;
-        this.input.setAttribute('cols', this.cols.toString());
-        this.input.setAttribute('rows', this.rows.toString());
+        this.input.style.left = `${this.Text.position.x}px`;
+        this.input.style.top = `${this.Text.position.y}px`;
+        this.input.style.color = this.Text.color;
+        this.input.setAttribute('cols', this.Text.cols.toString());
+        this.input.setAttribute('rows', this.Text.rows.toString());
         setTimeout(() => {
-            this.width = this.input.offsetWidth;
-            this.height = this.input.offsetHeight;
+            this.Text.width = this.input.offsetWidth;
+            this.Text.height = this.input.offsetHeight;
             if (this.isFocus) {
                 this.input.setAttribute('tabIndex', '1');
                 this.input.setAttribute('autofocus', 'true');
@@ -201,12 +186,12 @@ export default class {
             }
         }, 0);
         this.inputListener = (e: KeyboardEvent) => {
-            this.text = (<HTMLInputElement>e.target).value;
-            const length = this.text.length;
-            const row = length / (this.cols - 1);
-            const left = length % (this.cols - 1);
+            this.Text.text = (<HTMLInputElement>e.target).value;
+            const length = this.Text.text.length;
+            const row = length / (this.Text.cols - 1);
+            const left = length % (this.Text.cols - 1);
             const rows = left ? row + 1 : row;
-            const realRow = rows > this.rows ? rows : this.rows;
+            const realRow = rows > this.Text.rows ? rows : this.Text.rows;
             this.getTextInput();
             // this.input.setAttribute('rows', realRow.toString());
             // if (this.text[this.text.length - 1] === '\n') {
@@ -223,14 +208,14 @@ export default class {
             this.getSize();
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
-            this.text = (<HTMLInputElement>e.target).value;
+            this.Text.text = (<HTMLInputElement>e.target).value;
             this.drawText();
-            this.width = this.input.offsetWidth;
-            this.height = this.input.offsetHeight;
+            this.Text.width = this.input.offsetWidth;
+            this.Text.height = this.input.offsetHeight;
             this.input.style.display = 'none';
-            this.isEditor = false;
+            this.Text.isEditor = false;
 
-            if (this.text === '') {
+            if (this.Text.text === '') {
                 this.destroyed();
             }
         };
@@ -241,7 +226,7 @@ export default class {
     }
 
     hasBox() {
-        return !!this.text;
+        return !!this.Text.text;
     }
 
     event() {
@@ -251,7 +236,7 @@ export default class {
             }
         };
         this.mouseMove = (e: MouseEvent) => {
-            if (this.isFocus && !this.isEditor) {
+            if (this.isFocus && !this.Text.isEditor) {
                 this.mouse.mouseMove(e);
             }
         };
@@ -285,7 +270,7 @@ export default class {
 
     getTextWidth(txt: string) {
         this.ctx.save();
-        this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
+        this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
         const width = this.ctx.measureText(txt);
         this.ctx.restore();
         return width;
@@ -294,34 +279,36 @@ export default class {
     drawText() {
         const getHeight = () => {
             this.ctx.save();
-            this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
+            this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
             const height = this.ctx.measureText('w');
             return 35;
         };
         let txts = [];
         const len =
-            this.text.length % (this.cols - 1)
-                ? parseInt((this.text.length / (this.cols - 1)).toFixed(), 10) +
-                  1
-                : this.text.length / (this.cols - 1);
+            this.Text.text.length % (this.Text.cols - 1)
+                ? parseInt(
+                      (this.Text.text.length / (this.Text.cols - 1)).toFixed(),
+                      10,
+                  ) + 1
+                : this.Text.text.length / (this.Text.cols - 1);
         for (let i = 0; i < len; i++) {
             txts.push(
-                this.text.substring(
-                    i * this.cols,
-                    // this.cols,
-                    (i + 1) * this.cols,
+                this.Text.text.substring(
+                    i * this.Text.cols,
+                    // this.Text.cols,
+                    (i + 1) * this.Text.cols,
                 ),
             );
         }
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.fillStyle = this.color;
-        this.ctx.font = `${this.fontSize} ${this.fontFamily}`;
-        for (let i = 0; i < this.txts.length; i++) {
+        this.ctx.fillStyle = this.Text.color;
+        this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
+        for (let i = 0; i < this.Text.txts.length; i++) {
             this.ctx.fillText(
-                this.txts[i],
-                this.position.x + 1 + 10,
-                this.position.y - 6 + getHeight() * (i + 1) + 10,
+                this.Text.txts[i],
+                this.Text.position.x + 1 + 10,
+                this.Text.position.y - 6 + getHeight() * (i + 1) + 10,
             );
         }
         this.ctx.restore();
@@ -330,14 +317,14 @@ export default class {
     draw() {
         this.ctx.save();
         this.ctx.beginPath();
-        if (this.isFocus && this.text) {
-            this.ctx.strokeStyle = this.borderColor;
-            this.ctx.lineWidth = this.borderWidth;
+        if (this.isFocus && this.Text.text) {
+            this.ctx.strokeStyle = this.Text.borderColor;
+            this.ctx.lineWidth = this.Text.borderWidth;
             this.ctx.strokeRect(
-                this.position.x,
-                this.position.y,
-                this.width,
-                this.height,
+                this.Text.position.x,
+                this.Text.position.y,
+                this.Text.width,
+                this.Text.height,
             );
         }
 
