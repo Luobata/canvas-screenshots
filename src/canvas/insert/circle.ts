@@ -54,6 +54,8 @@ export default class {
         this.event();
     }
 
+    save() {}
+
     initCircle() {
         this.circle.rect = {
             startX: undefined,

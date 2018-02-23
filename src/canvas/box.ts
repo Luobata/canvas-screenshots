@@ -330,6 +330,7 @@ export default class Box {
         config.emitter.on('mouseup', e => {
             if (this.isFocus) return;
             if (!this.inBox(e.clientX, e.clientY)) return;
+            if (newItem) newItem.save();
             position.startX = -1;
             newItem = null;
         });

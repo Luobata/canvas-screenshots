@@ -48,6 +48,8 @@ export default class {
         this.event();
     }
 
+    save() {}
+
     init() {
         this.arrow.rect = {
             startX: undefined,

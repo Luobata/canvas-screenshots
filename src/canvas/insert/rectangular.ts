@@ -58,6 +58,10 @@ export default class {
         this.event();
     }
 
+    save() {
+        this.saveArray.push(this.rectangular);
+    }
+
     setPosition(rect: Rect, isDraw = false) {
         Object.assign(this.rectangular.rect, rect);
 

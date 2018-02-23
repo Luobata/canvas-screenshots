@@ -61,6 +61,8 @@ export default class {
         this.getMaxCols();
     }
 
+    save() {}
+
     getCursor(e: MouseEvent) {
         let result = 'crosshair';
         if (this.inBoxBorder(e.clientX, e.clientY)) {
@@ -302,7 +304,6 @@ export default class {
         this.ctx.closePath();
         this.ctx.restore();
 
-        console.log(this.Text.isEditor);
         if (!this.Text.isEditor) {
             this.drawText();
         }
