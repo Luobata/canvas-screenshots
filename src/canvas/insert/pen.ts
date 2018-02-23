@@ -33,6 +33,8 @@ export default class {
 
     save() {}
 
+    back() {}
+
     inBoxBorder(x: number, y: number) {
         return pointInLine(this.pen.lines, { x, y }, 10 + this.pen.lineWidth);
     }

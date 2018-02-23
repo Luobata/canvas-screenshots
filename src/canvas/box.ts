@@ -37,6 +37,7 @@ export default class Box {
     mouse: Mouse;
     cursor: Cursor;
     functionBox: HTMLDivElement;
+    childSaveArray: Array<Content>;
 
     currentFun?: string;
 
@@ -61,16 +62,25 @@ export default class Box {
         this.content = new Set();
         this.drawAll();
         this.functionBox = functionBox;
+        this.childSaveArray = [];
 
         Array.prototype.forEach.call(
             this.functionBox.querySelectorAll('.box-item'),
             (v: HTMLElement) => {
                 v.addEventListener('click', function() {
                     that.currentFun = this.getAttribute('type');
+                    if (that.currentFun == 'back') {
+                        that.back();
+                    }
                     config.emitter.emit('blur');
                 });
             },
         );
+    }
+
+    back() {
+        const item = this.childSaveArray.pop();
+        item.back();
     }
 
     events() {
@@ -330,7 +340,10 @@ export default class Box {
         config.emitter.on('mouseup', e => {
             if (this.isFocus) return;
             if (!this.inBox(e.clientX, e.clientY)) return;
-            if (newItem) newItem.save();
+            if (newItem) {
+                newItem.save();
+                this.childSaveArray.push(newItem);
+            }
             position.startX = -1;
             newItem = null;
         });

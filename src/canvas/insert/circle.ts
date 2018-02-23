@@ -56,6 +56,8 @@ export default class {
 
     save() {}
 
+    back() {}
+
     initCircle() {
         this.circle.rect = {
             startX: undefined,

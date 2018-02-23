@@ -50,6 +50,8 @@ export default class {
 
     save() {}
 
+    back() {}
+
     init() {
         this.arrow.rect = {
             startX: undefined,

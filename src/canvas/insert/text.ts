@@ -63,6 +63,8 @@ export default class {
 
     save() {}
 
+    back() {}
+
     getCursor(e: MouseEvent) {
         let result = 'crosshair';
         if (this.inBoxBorder(e.clientX, e.clientY)) {

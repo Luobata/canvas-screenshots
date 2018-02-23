@@ -52,6 +52,7 @@ export default class {
             borderRadious: 1,
             circleWidth: 3,
         };
+        this.saveArray = [];
 
         this.initBox();
 
@@ -60,6 +61,11 @@ export default class {
 
     save() {
         this.saveArray.push(this.rectangular);
+        console.log(this.saveArray);
+    }
+
+    back() {
+        this.rectangular = this.saveArray.pop();
     }
 
     setPosition(rect: Rect, isDraw = false) {
