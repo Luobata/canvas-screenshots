@@ -1,6 +1,6 @@
 import { setConfig, config } from './config';
 import Box from './box';
-import functionBox from './function-box';
+import functionBox from './function-box/function-box';
 const ee = require('event-emitter');
 const emitter = new ee();
 
