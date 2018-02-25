@@ -65,26 +65,51 @@ export default class Box {
         this.childSaveArray = [];
 
         const items = this.functionBox.querySelectorAll('.box-item');
+        const childWrap = this.functionBox.querySelector(
+            '.function-box-child',
+        ) as HTMLElement;
+        const colorWrap = this.functionBox.querySelector(
+            '.color-wrap',
+        ) as HTMLElement;
+        const colorItem = colorWrap.querySelectorAll('.color-item');
 
         Array.prototype.forEach.call(items, (v: HTMLElement) => {
             v.addEventListener('click', function() {
                 that.currentFun = this.getAttribute('type');
+                Array.prototype.forEach.call(items, function(
+                    v: HTMLElement,
+                    i: number,
+                ) {
+                    items[i].className = items[i].className.replace(
+                        'active',
+                        '',
+                    );
+                });
                 if (that.currentFun !== 'back' && that.currentFun !== 'save') {
-                    Array.prototype.forEach.call(items, function(
-                        v: HTMLElement,
-                        i: number,
-                    ) {
-                        items[i].className = items[i].className.replace(
-                            'active',
-                            '',
-                        );
-                    });
                     this.className += ' active';
+                    childWrap.style.display = 'inline-block';
+                } else {
+                    childWrap.style.display = 'none';
                 }
                 if (that.currentFun === 'back') {
                     that.back();
                 }
                 config.emitter.emit('blur');
+            });
+        });
+
+        Array.prototype.forEach.call(colorItem, (v: HTMLElement) => {
+            v.addEventListener('click', function() {
+                Array.prototype.forEach.call(colorItem, function(
+                    v: HTMLElement,
+                    i: number,
+                ) {
+                    items[i].className = items[i].className.replace(
+                        'active',
+                        '',
+                    );
+                });
+                this.className += 'active';
             });
         });
     }

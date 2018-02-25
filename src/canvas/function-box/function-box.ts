@@ -33,9 +33,31 @@ export default (parent: HTMLElement) => {
             className: 'save',
         },
     ];
+
+    const colors = [
+        {
+            color: 'red',
+        },
+        {
+            color: 'blue',
+        },
+        {
+            color: 'green',
+        },
+        {
+            color: 'yellow',
+        },
+        {
+            color: 'gray',
+        },
+        {
+            color: 'white',
+        },
+    ];
     const prefix = 'screen-shoot';
     const tmpl = tpl({
         item,
+        colors,
         prefix,
     });
     div.id = `${prefix}`;
