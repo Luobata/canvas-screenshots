@@ -64,18 +64,29 @@ export default class Box {
         this.functionBox = functionBox;
         this.childSaveArray = [];
 
-        Array.prototype.forEach.call(
-            this.functionBox.querySelectorAll('.box-item'),
-            (v: HTMLElement) => {
-                v.addEventListener('click', function() {
-                    that.currentFun = this.getAttribute('type');
-                    if (that.currentFun == 'back') {
-                        that.back();
-                    }
-                    config.emitter.emit('blur');
-                });
-            },
-        );
+        const items = this.functionBox.querySelectorAll('.box-item');
+
+        Array.prototype.forEach.call(items, (v: HTMLElement) => {
+            v.addEventListener('click', function() {
+                that.currentFun = this.getAttribute('type');
+                if (that.currentFun !== 'back' && that.currentFun !== 'save') {
+                    Array.prototype.forEach.call(items, function(
+                        v: HTMLElement,
+                        i: number,
+                    ) {
+                        items[i].className = items[i].className.replace(
+                            'active',
+                            '',
+                        );
+                    });
+                    this.className += ' active';
+                }
+                if (that.currentFun === 'back') {
+                    that.back();
+                }
+                config.emitter.emit('blur');
+            });
+        });
     }
 
     back() {
