@@ -83,7 +83,6 @@ export default class {
         let left = 100;
         const rightMargin = this.body.offsetWidth - this.box.rect.endX;
         const min = 250;
-        console.log(min, rightMargin);
         if (rightMargin < min) {
             left += min - rightMargin;
         }

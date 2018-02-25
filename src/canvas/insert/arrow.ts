@@ -43,14 +43,25 @@ export default class {
             circles: [],
             circleWidth: 3,
         };
+        this.saveArray = [];
         this.mouse = new Mouse(this);
         this.init();
         this.event();
     }
 
-    save() {}
+    save() {
+        this.saveArray.push(JSON.parse(JSON.stringify(this.arrow)));
+    }
 
-    back() {}
+    back() {
+        if (this.saveArray.length) {
+            this.saveArray.pop();
+            this.arrow = this.saveArray[this.saveArray.length - 1];
+        }
+        if (!this.arrow) {
+            config.emitter.emit('removeItem', this);
+        }
+    }
 
     init() {
         this.arrow.rect = {

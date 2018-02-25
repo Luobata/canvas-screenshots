@@ -12,7 +12,6 @@ export default class {
         this.mouseEvent = cursorStyle;
     }
     mouseMove(e: MouseEvent) {
-        console.log(this.mouseEvent);
         let startX;
         let startY;
         let endX;

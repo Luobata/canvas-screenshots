@@ -47,6 +47,7 @@ export default class {
             auxLineColor: 'gray',
             circleWidth: 3,
         };
+        this.saveArray = [];
         this.id = config.uid++;
         this.mouse = new Mouse(this);
 
@@ -54,9 +55,19 @@ export default class {
         this.event();
     }
 
-    save() {}
+    save() {
+        this.saveArray.push(JSON.parse(JSON.stringify(this.circle)));
+    }
 
-    back() {}
+    back() {
+        if (this.saveArray.length) {
+            this.saveArray.pop();
+            this.circle = this.saveArray[this.saveArray.length - 1];
+        }
+        if (!this.circle) {
+            config.emitter.emit('removeItem', this);
+        }
+    }
 
     initCircle() {
         this.circle.rect = {
