@@ -9,6 +9,7 @@ import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
 import { Readable } from 'stream';
+import { domEach } from 'LIB/dom';
 
 type Content = Rectangular | Circle | Arrow | Pen | Text;
 
@@ -40,6 +41,7 @@ export default class Box {
     childSaveArray: Array<Content>;
 
     currentFun?: string;
+    colorFun?: string;
 
     constructor(
         ctx: CanvasRenderingContext2D,
@@ -100,18 +102,18 @@ export default class Box {
 
         Array.prototype.forEach.call(colorItem, (v: HTMLElement) => {
             v.addEventListener('click', function() {
-                Array.prototype.forEach.call(colorItem, function(
-                    v: HTMLElement,
-                    i: number,
-                ) {
-                    items[i].className = items[i].className.replace(
+                domEach(colorItem, (v: HTMLElement, i: number) => {
+                    colorItem[i].className = colorItem[i].className.replace(
                         'active',
                         '',
                     );
                 });
-                this.className += 'active';
+                this.className += ' active';
+                that.colorFun = this.getAttribute('color');
             });
         });
+        that.colorFun = colorItem[0].getAttribute('color');
+        colorItem[0].className += ' active';
     }
 
     back() {
