@@ -35,6 +35,9 @@ export default class {
     ctx: CanvasRenderingContext2D;
     mouse: Mouse;
     isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
+    mouseDown: EventListener;
+    mouseMove: EventListener;
+    mouseUp: EventListener;
 
     rectangular: rectangular;
     saveArray: Array<rectangular>;
@@ -70,9 +73,15 @@ export default class {
             this.rectangular = this.saveArray[this.saveArray.length - 1];
         }
         if (!this.rectangular) {
-            config.emitter.emit('removeItem', this);
+            this.destroyed();
         }
         // config.emitter.emit('draw-all');
+    }
+    destroyed() {
+        config.emitter.off('mousedown', this.mouseDown);
+        config.emitter.off('mousemove', this.mouseMove);
+        config.emitter.off('mouseup', this.mouseUp);
+        config.emitter.emit('removeItem', this);
     }
 
     setPosition(rect: Rect, isDraw = false) {
@@ -113,21 +122,25 @@ export default class {
     }
 
     event() {
-        config.emitter.on('mousedown', e => {
+        this.mouseDown = (e: MouseEvent) => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
-        });
-        config.emitter.on('mousemove', e => {
+        };
+        this.mouseMove = (e: MouseEvent) => {
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
-        });
-        config.emitter.on('mouseup', e => {
+        };
+        this.mouseUp = (e: MouseEvent) => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseUp(e);
             }
-        });
+        };
+
+        config.emitter.on('mousedown', this.mouseDown);
+        config.emitter.on('mousemove', this.mouseMove);
+        config.emitter.on('mouseup', this.mouseUp);
     }
 
     initBox() {
