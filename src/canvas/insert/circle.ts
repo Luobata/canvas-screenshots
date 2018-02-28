@@ -71,6 +71,7 @@ export default class {
 
     setColor(color: string) {
         this.circle.color = color;
+        this.circle.borderColor = color;
         this.save();
         config.emitter.emit('draw-all');
     }
