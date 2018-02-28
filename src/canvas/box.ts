@@ -42,6 +42,7 @@ export default class Box {
 
     currentFun?: string;
     colorFun?: string;
+    focusItem: Content | null;
 
     constructor(
         ctx: CanvasRenderingContext2D,
@@ -110,6 +111,8 @@ export default class Box {
                 });
                 this.className += ' active';
                 that.colorFun = this.getAttribute('color');
+                that.focusItem = that.findFocus();
+                if (that.focusItem) that.focusItem.setColor(that.colorFun);
             });
         });
         that.colorFun = colorItem[0].getAttribute('color');
@@ -239,6 +242,16 @@ export default class Box {
         config.emitter.emit('draw-all');
 
         return blurItem;
+    }
+
+    findFocus() {
+        for (let i of this.content) {
+            if (i.isFocus) {
+                return i;
+            }
+        }
+
+        return null;
     }
 
     cursorChange(e: MouseEvent) {

@@ -69,6 +69,8 @@ export default class {
         }
     }
 
+    setColor(color: string) {}
+
     initCircle() {
         this.circle.rect = {
             startX: undefined,

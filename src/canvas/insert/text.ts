@@ -66,6 +66,8 @@ export default class {
 
     back() {}
 
+    setColor(color: string) {}
+
     getCursor(e: MouseEvent) {
         let result = 'crosshair';
         if (this.inBoxBorder(e.clientX, e.clientY)) {

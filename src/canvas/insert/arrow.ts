@@ -63,6 +63,8 @@ export default class {
         }
     }
 
+    setColor(color: string) {}
+
     init() {
         this.arrow.rect = {
             startX: undefined,

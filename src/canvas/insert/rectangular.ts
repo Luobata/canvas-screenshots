@@ -84,8 +84,9 @@ export default class {
     }
 
     setColor(color: string) {
-        debugger;
-        Object.assign(this.rectangular.rect, color);
+        this.rectangular.color = color;
+        this.save();
+        config.emitter.emit('draw-all');
     }
 
     getCursor(e: MouseEvent, type?: string) {
