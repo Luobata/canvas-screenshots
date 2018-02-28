@@ -39,7 +39,7 @@ export default class {
     rectangular: rectangular;
     saveArray: Array<rectangular>;
 
-    constructor(ctx: CanvasRenderingContext2D) {
+    constructor(ctx: CanvasRenderingContext2D, color: string) {
         this.ctx = ctx;
         this.mouse = new Mouse(this, rectangularEmitter);
         this.id = config.uid++;
@@ -47,7 +47,7 @@ export default class {
         this.isFocus = true;
         this.rectangular = {
             isStroke: true,
-            color: (<any>window).color || 'red',
+            color,
             lineWidth: 3,
             borderRadious: 1,
             circleWidth: 3,
@@ -81,6 +81,11 @@ export default class {
         if (isDraw) {
             config.emitter.emit('draw-all');
         }
+    }
+
+    setColor(color: string) {
+        debugger;
+        Object.assign(this.rectangular.rect, color);
     }
 
     getCursor(e: MouseEvent, type?: string) {

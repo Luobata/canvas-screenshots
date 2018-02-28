@@ -327,7 +327,7 @@ export default class Box {
                 }
             } else if (position.startX !== -1) {
                 if (this.currentFun === 'rectangular') {
-                    newItem = new Rectangular(this.ctx);
+                    newItem = new Rectangular(this.ctx, this.colorFun);
                     this.content.add(newItem);
                     newItem.setPosition(
                         {
