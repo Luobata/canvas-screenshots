@@ -77,6 +77,7 @@ export default class {
         }
         // config.emitter.emit('draw-all');
     }
+
     destroyed() {
         config.emitter.off('mousedown', this.mouseDown);
         config.emitter.off('mousemove', this.mouseMove);

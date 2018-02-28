@@ -30,6 +30,9 @@ export default class {
     isFocus: boolean;
     mouse: Mouse;
 
+    mouseDown: EventListener;
+    mouseMove: EventListener;
+    mouseUp: EventListener;
     arrow: arrow;
     saveArray: Array<arrow>;
 
@@ -59,8 +62,15 @@ export default class {
             this.arrow = this.saveArray[this.saveArray.length - 1];
         }
         if (!this.arrow) {
-            config.emitter.emit('removeItem', this);
+            this.destroyed();
         }
+    }
+
+    destroyed() {
+        config.emitter.off('mousedown', this.mouseDown);
+        config.emitter.off('mousemove', this.mouseMove);
+        config.emitter.off('mouseup', this.mouseUp);
+        config.emitter.emit('removeItem', this);
     }
 
     setColor(color: string) {
@@ -88,21 +98,25 @@ export default class {
     }
 
     event() {
-        config.emitter.on('mousedown', e => {
+        this.mouseDown = (e: MouseEvent) => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
-        });
-        config.emitter.on('mousemove', e => {
+        };
+        this.mouseMove = (e: MouseEvent) => {
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
-        });
-        config.emitter.on('mouseup', e => {
+        };
+        this.mouseUp = (e: MouseEvent) => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseUp(e);
             }
-        });
+        };
+
+        config.emitter.on('mousedown', this.mouseDown);
+        config.emitter.on('mousemove', this.mouseMove);
+        config.emitter.on('mouseup', this.mouseUp);
     }
 
     inBoxBorder(x: number, y: number) {
