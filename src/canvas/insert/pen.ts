@@ -18,24 +18,39 @@ export default class {
     pen: pen;
     saveArray: Array<pen>;
 
-    constructor(ctx: CanvasRenderingContext2D) {
+    constructor(ctx: CanvasRenderingContext2D, color: string) {
         this.ctx = ctx;
         this.id = config.uid++;
         this.isFocus = true;
         this.pen = {
-            color: (<any>window).color || 'red',
+            color,
             lines: [],
             lineWidth: 3,
         };
+        this.saveArray = [];
         this.mouse = new Mouse(this);
         this.event();
     }
 
-    save() {}
+    save() {
+        this.saveArray.push(JSON.parse(JSON.stringify(this.pen)));
+    }
 
-    back() {}
+    back() {
+        if (this.saveArray.length) {
+            this.saveArray.pop();
+            this.pen = this.saveArray[this.saveArray.length - 1];
+        }
+        if (!this.pen) {
+            // this.destroyed();
+        }
+    }
 
-    setColor(color: string) {}
+    setColor(color: string) {
+        this.pen.color = color;
+        this.save();
+        config.emitter.emit('draw-all');
+    }
 
     inBoxBorder(x: number, y: number) {
         return pointInLine(this.pen.lines, { x, y }, 10 + this.pen.lineWidth);

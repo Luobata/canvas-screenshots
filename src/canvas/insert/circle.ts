@@ -37,13 +37,13 @@ export default class {
     circle: circle;
     saveArray: Array<circle>;
 
-    constructor(ctx: CanvasRenderingContext2D) {
+    constructor(ctx: CanvasRenderingContext2D, color: string) {
         this.ctx = ctx;
         this.isFocus = true;
         this.circle = {
-            borderColor: 'black',
+            borderColor: color,
             borderWidth: 1,
-            color: (<any>window).color || 'red',
+            color,
             auxLineColor: 'gray',
             circleWidth: 3,
         };
@@ -69,7 +69,11 @@ export default class {
         }
     }
 
-    setColor(color: string) {}
+    setColor(color: string) {
+        this.circle.color = color;
+        this.save();
+        config.emitter.emit('draw-all');
+    }
 
     initCircle() {
         this.circle.rect = {
@@ -228,9 +232,8 @@ export default class {
         this.circle.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.fillStyle = this.circle.borderColor;
+        this.ctx.strokeStyle = this.circle.color;
         this.ctx.lineWidth = this.circle.borderWidth;
-        this.ctx.stroke();
         const ellipse = (circle: Circle) => {
             const r =
                 circle.radiusX > circle.radiusY
@@ -238,10 +241,10 @@ export default class {
                     : circle.radiusY;
             var ratioX = circle.radiusX / r;
             var ratioY = circle.radiusY / r;
-            this.ctx.scale(ratioX, ratioY);
-            this.ctx.beginPath();
-            this.ctx.fillStyle = this.circle.borderColor;
+            this.ctx.strokeStyle = this.circle.borderColor;
             this.ctx.lineWidth = this.circle.borderWidth;
+            this.ctx.beginPath();
+            this.ctx.scale(ratioX, ratioY);
             this.ctx.arc(
                 circle.centerX / ratioX,
                 circle.centerY / ratioY,
@@ -250,19 +253,10 @@ export default class {
                 2 * Math.PI,
                 false,
             );
-            this.ctx.closePath();
-            this.ctx.restore();
             this.ctx.stroke();
+            this.ctx.restore();
         };
 
-        ellipse({
-            centerX: (this.circle.rect.startX + this.circle.rect.endX) / 2,
-            centerY: (this.circle.rect.startY + this.circle.rect.endY) / 2,
-            radiusX:
-                Math.abs(this.circle.rect.startX - this.circle.rect.endX) / 2,
-            radiusY:
-                Math.abs(this.circle.rect.startY - this.circle.rect.endY) / 2,
-        });
         // 画椭圆
         if (this.isFocus) {
             const startX = this.circle.rect.startX;
@@ -270,28 +264,14 @@ export default class {
             const endX = this.circle.rect.endX;
             const endY = this.circle.rect.endY;
 
-            this.ctx.moveTo(
-                startX - this.circle.borderWidth,
-                startY - this.circle.borderWidth,
-            );
-            this.ctx.lineTo(
-                endX + this.circle.borderWidth,
-                startY - this.circle.borderWidth,
-            );
-            this.ctx.lineTo(
-                endX + this.circle.borderWidth,
-                endY + this.circle.borderWidth,
-            );
-            this.ctx.lineTo(
-                startX - this.circle.borderWidth,
-                endY + this.circle.borderWidth,
-            );
-            this.ctx.lineTo(
-                startX - this.circle.borderWidth,
-                startY - this.circle.borderWidth,
-            );
             this.ctx.lineWidth = 1;
             this.ctx.strokeStyle = this.circle.auxLineColor;
+            this.ctx.strokeRect(
+                startX - this.circle.borderWidth,
+                startY - this.circle.borderWidth,
+                endX - startX + this.circle.borderWidth * 2,
+                endY - startY + this.circle.borderWidth * 2,
+            );
             this.ctx.stroke();
             for (let i of circleMap) {
                 this.ctx.beginPath();
@@ -308,8 +288,15 @@ export default class {
                 this.ctx.fillStyle = 'white';
                 this.ctx.fill();
             }
+            this.ctx.restore();
         }
-
-        this.ctx.restore();
+        ellipse({
+            centerX: (this.circle.rect.startX + this.circle.rect.endX) / 2,
+            centerY: (this.circle.rect.startY + this.circle.rect.endY) / 2,
+            radiusX:
+                Math.abs(this.circle.rect.startX - this.circle.rect.endX) / 2,
+            radiusY:
+                Math.abs(this.circle.rect.startY - this.circle.rect.endY) / 2,
+        });
     }
 }

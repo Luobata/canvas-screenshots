@@ -64,10 +64,10 @@ export default class {
 
     save() {
         this.saveArray.push(JSON.parse(JSON.stringify(this.rectangular)));
-        console.log(this.saveArray);
     }
 
     back() {
+        console.log(this.saveArray);
         if (this.saveArray.length) {
             this.saveArray.pop();
             this.rectangular = this.saveArray[this.saveArray.length - 1];

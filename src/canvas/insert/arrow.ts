@@ -33,12 +33,12 @@ export default class {
     arrow: arrow;
     saveArray: Array<arrow>;
 
-    constructor(ctx: CanvasRenderingContext2D) {
+    constructor(ctx: CanvasRenderingContext2D, color: string) {
         this.ctx = ctx;
         this.id = config.uid++;
         this.isFocus = true;
         this.arrow = {
-            color: (<any>window).color || 'red',
+            color,
             lines: [],
             circles: [],
             circleWidth: 3,
@@ -63,7 +63,11 @@ export default class {
         }
     }
 
-    setColor(color: string) {}
+    setColor(color: string) {
+        this.arrow.color = color;
+        this.save();
+        config.emitter.emit('draw-all');
+    }
 
     init() {
         this.arrow.rect = {

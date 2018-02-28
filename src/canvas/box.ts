@@ -112,7 +112,10 @@ export default class Box {
                 this.className += ' active';
                 that.colorFun = this.getAttribute('color');
                 that.focusItem = that.findFocus();
-                if (that.focusItem) that.focusItem.setColor(that.colorFun);
+                if (that.focusItem) {
+                    that.focusItem.setColor(that.colorFun);
+                    that.childSaveArray.push(that.focusItem);
+                }
             });
         });
         that.colorFun = colorItem[0].getAttribute('color');
@@ -352,7 +355,7 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'circle') {
-                    newItem = new Circle(this.ctx);
+                    newItem = new Circle(this.ctx, this.colorFun);
                     this.content.add(newItem);
                     newItem.setPosition(
                         {
@@ -364,7 +367,7 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'arrow') {
-                    newItem = new Arrow(this.ctx);
+                    newItem = new Arrow(this.ctx, this.colorFun);
                     this.content.add(newItem);
                     newItem.setPosition(
                         {
@@ -376,7 +379,7 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'pen') {
-                    newItem = new Pen(this.ctx);
+                    newItem = new Pen(this.ctx, this.colorFun);
                     this.content.add(newItem);
                     newItem.addPosition(
                         {
