@@ -77,9 +77,11 @@ global_prefix = '#screen-shoot'
     font-size 35px
     line-height 1
     font-family microsoft yahei
-    font-family Consolas
-    font-family monospace
     outline none
     padding 10px
     overflow hidden
     z-index 10000
+    &.windows
+        font-family Consolas
+    &.other
+        font-family monospace

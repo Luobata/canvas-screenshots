@@ -39,8 +39,21 @@ export default class {
         });
 
         this.initEvent();
+        this.platform();
         this.hackBody();
         this.drawAll();
+    }
+
+    platform() {
+        let platform = window.navigator.platform;
+        if (platform.indexOf('win') !== -1 || platform.indexOf('Win') !== -1) {
+            platform = 'windows';
+        } else {
+            platform = 'other';
+        }
+        setConfig({
+            platform,
+        });
     }
 
     hackBody() {

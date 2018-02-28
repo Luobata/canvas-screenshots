@@ -6,6 +6,7 @@ interface Config {
     uid?: number;
     wrap?: HTMLElement;
     boxRect?: Rect;
+    platform?: string;
 }
 
 export const config: Config = {

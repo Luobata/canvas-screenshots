@@ -52,7 +52,8 @@ export default class {
             rows: 1,
             txts: [],
             fontSize: '35px',
-            fontFamily: 'monospace',
+            fontFamily:
+                config.platform !== 'windows' ? 'monospace' : 'Consolas',
         };
         this.Text.textWidth = Math.floor(this.getTextWidth('1').width);
         this.initTextArea();
@@ -175,6 +176,7 @@ export default class {
         this.Text.isEditor = true;
         this.input = document.createElement('textArea');
         this.input.className = 'function-text';
+        this.input.className += ` ${config.platform}`;
         this.input.style.left = `${this.Text.position.x}px`;
         this.input.style.top = `${this.Text.position.y}px`;
         this.input.style.color = this.Text.color;
