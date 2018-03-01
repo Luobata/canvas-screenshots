@@ -25,7 +25,7 @@ interface Text {
 export default class {
     id: number;
     ctx: CanvasRenderingContext2D;
-    input: HTMLElement;
+    input: HTMLTextAreaElement;
     mouseDown: EventListener;
     mouseMove: EventListener;
     mouseUp: EventListener;
@@ -103,6 +103,8 @@ export default class {
         this.input.style.display = 'block';
         // 同时操作display 与input 会触发blur
         setTimeout(() => {
+            this.input.value = this.Text.txts.join('\n');
+            // this.input.setAttribute('value', this.Text.txts.join('\n'));
             this.input.focus();
         }, 0);
 
@@ -187,7 +189,7 @@ export default class {
 
     initTextArea() {
         this.Text.isEditor = true;
-        this.input = document.createElement('textArea');
+        this.input = <HTMLTextAreaElement>document.createElement('textArea');
         this.input.className = 'function-text';
         this.input.className += ` ${config.platform}`;
         this.input.style.left = `${this.Text.position.x}px`;
@@ -206,11 +208,6 @@ export default class {
         }, 0);
         this.inputListener = (e: KeyboardEvent) => {
             this.Text.text = (<HTMLInputElement>e.target).value;
-            const length = this.Text.text.length;
-            const row = length / (this.Text.cols - 1);
-            const left = length % (this.Text.cols - 1);
-            const rows = left ? row + 1 : row;
-            const realRow = rows > this.Text.rows ? rows : this.Text.rows;
             this.getTextInput();
             this.getSize();
         };
