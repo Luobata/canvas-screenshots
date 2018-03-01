@@ -208,7 +208,6 @@ export default class Box {
         Object.assign(this.rect, rect);
 
         if (isDraw) {
-            //this.draw();
             config.emitter.emit('draw-all');
         }
     }
@@ -406,7 +405,24 @@ export default class Box {
         });
     }
 
-    draw() {
+    getData() {
+        let data;
+        if (this.content.size) {
+            for (let i of this.content) {
+                i.draw();
+            }
+            data = this.ctx.getImageData(
+                this.rect.startX,
+                this.rect.startY,
+                this.rect.endX - this.rect.startX,
+                this.rect.endY - this.rect.startY,
+            );
+        }
+
+        return data;
+    }
+
+    draw(data?: ImageData) {
         if (this.hasBox()) {
             this.ctx.clearRect(
                 this.rect.startX,
@@ -420,8 +436,8 @@ export default class Box {
             this.drawCircle();
         }
 
-        for (let i of this.content) {
-            i.draw();
+        if (data) {
+            this.ctx.putImageData(data, this.rect.startX, this.rect.startY);
         }
     }
     drawAll() {

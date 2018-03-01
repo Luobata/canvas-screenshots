@@ -75,13 +75,19 @@ export default class {
         this.body.appendChild(this.mask);
     }
 
+    reset() {
+        const width = this.body.clientWidth;
+        const height = this.body.clientHeight;
+        this.mask.width = width;
+        this.mask.height = height;
+    }
+
     resize() {
         // TODO 防抖
         const width = this.body.clientWidth;
         const height = this.body.clientHeight;
 
-        this.mask.width = width;
-        this.mask.height = height;
+        this.reset();
         this.maskCtx.save();
         this.maskCtx.beginPath();
         this.maskCtx.globalAlpha = 0.7;
@@ -200,8 +206,10 @@ export default class {
     }
 
     globaldraw() {
+        this.reset();
+        const data = this.box.getData();
         this.resize();
-        this.box.draw();
+        this.box.draw(data);
     }
 
     drawAll() {
