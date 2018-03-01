@@ -32,6 +32,7 @@ export default class {
         switch (this.mouseEvent) {
             case 'all-scroll':
                 this.box.move(e.movementX, e.movementY);
+                this.box.getMaxCols();
                 break;
             default:
                 break;

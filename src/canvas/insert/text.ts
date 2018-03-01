@@ -55,6 +55,7 @@ export default class {
             fontFamily:
                 config.platform !== 'windows' ? 'monospace' : 'Consolas',
         };
+        this.saveArray = [];
         this.Text.textWidth = Math.floor(this.getTextWidth('1').width);
         this.initTextArea();
         this.event();
@@ -62,9 +63,19 @@ export default class {
         this.getMaxCols();
     }
 
-    save() {}
+    save() {
+        this.saveArray.push(JSON.parse(JSON.stringify(this.Text)));
+    }
 
-    back() {}
+    back() {
+        if (this.saveArray.length) {
+            this.saveArray.pop();
+            this.Text = this.saveArray[this.saveArray.length - 1];
+        }
+        if (!this.Text) {
+            this.destroyed();
+        }
+    }
 
     setColor(color: string) {}
 
