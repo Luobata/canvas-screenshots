@@ -1,5 +1,5 @@
 import { Position } from 'LIB/interface';
-import { config } from '../config';
+import { config, inBox } from '../config';
 import Mouse from './mouse-pen';
 import { pointInLine } from 'LIB/geometric';
 
@@ -81,7 +81,7 @@ export default class {
 
     event() {
         this.mouseDown = (e: MouseEvent) => {
-            if (this.isFocus && this.hasBox()) {
+            if (this.isFocus && this.hasBox() && inBox(e)) {
                 this.mouse.mouseDown(this.getCursor(e));
             }
         };

@@ -1,5 +1,5 @@
 import { Position, dragCircle, Rect } from 'LIB/interface';
-import { config } from '../config';
+import { config, inBox } from '../config';
 import { getArrowCircleMap } from 'LIB/help';
 import Mouse from './mouse-arrow';
 import { pointInArea } from 'LIB/geometric';
@@ -99,7 +99,7 @@ export default class {
 
     event() {
         this.mouseDown = (e: MouseEvent) => {
-            if (this.isFocus && this.hasBox()) {
+            if (this.isFocus && this.hasBox() && inBox(e)) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
         };

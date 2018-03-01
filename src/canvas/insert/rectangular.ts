@@ -1,7 +1,7 @@
 import { dragCircle, Rect } from 'LIB/interface';
 import { getCircleMap } from 'LIB/help';
 import { EventEmitter } from 'events';
-import { config } from '../config';
+import { config, inBox } from '../config';
 import Mouse from './mouse-rectangular';
 const ee = require('event-emitter');
 const rectangularEmitter = new ee();
@@ -124,7 +124,7 @@ export default class {
 
     event() {
         this.mouseDown = (e: MouseEvent) => {
-            if (this.isFocus && this.hasBox()) {
+            if (this.isFocus && this.hasBox() && inBox(e)) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
         };

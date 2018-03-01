@@ -77,9 +77,9 @@ export default class Box {
         const colorItem = colorWrap.querySelectorAll('.color-item');
 
         Array.prototype.forEach.call(items, (v: HTMLElement) => {
-            v.addEventListener('click', function() {
+            v.addEventListener('click', function () {
                 that.currentFun = this.getAttribute('type');
-                Array.prototype.forEach.call(items, function(
+                Array.prototype.forEach.call(items, function (
                     v: HTMLElement,
                     i: number,
                 ) {
@@ -102,7 +102,7 @@ export default class Box {
         });
 
         Array.prototype.forEach.call(colorItem, (v: HTMLElement) => {
-            v.addEventListener('click', function() {
+            v.addEventListener('click', function () {
                 domEach(colorItem, (v: HTMLElement, i: number) => {
                     colorItem[i].className = colorItem[i].className.replace(
                         'active',
@@ -154,7 +154,7 @@ export default class Box {
             this.content.delete(item);
         });
 
-        boxEmitter.on('draw', () => {});
+        boxEmitter.on('draw', () => { });
         boxEmitter.on('shot', () => {
             config.emitter.emit('shot');
         });
@@ -214,10 +214,12 @@ export default class Box {
 
     focusRectangular(e: MouseEvent) {
         let focusItem;
-        for (let i of this.content) {
-            if (i.inBoxBorder(e.clientX, e.clientY)) {
-                focusItem = i;
-            } else {
+        if (this.inBox(e.clientX, e.clientY)) {
+            for (let i of this.content) {
+                if (i.inBoxBorder(e.clientX, e.clientY)) {
+                    focusItem = i;
+                } else {
+                }
             }
         }
 
@@ -258,11 +260,13 @@ export default class Box {
 
     cursorChange(e: MouseEvent) {
         let cursor = 'crosshair';
-        for (let i of this.content) {
-            if (i.inBoxBorder(e.clientX, e.clientY)) {
-                cursor = i.getCursor(e);
+        if (this.inBox(e.clientX, e.clientY)) {
+            for (let i of this.content) {
+                if (i.inBoxBorder(e.clientX, e.clientY)) {
+                    cursor = i.getCursor(e);
+                }
             }
-        }
+        };
 
         config.emitter.emit('cursor-change', cursor);
 
@@ -275,9 +279,11 @@ export default class Box {
             startX: -1,
             startY: -1,
         };
-        config.emitter.on('mousedown', e => {
+        config.emitter.on('mousedown', (e: MouseEvent) => {
             if (this.isFocus) return;
-            if (!this.inBox(e.clientX, e.clientY)) return;
+            if (!this.inBox(e.clientX, e.clientY)) {
+                return;
+            }
             const setPosition = (hasBlur = false) => {
                 position = {
                     startX: e.clientX,
@@ -310,9 +316,9 @@ export default class Box {
                 }
             }
         });
-        config.emitter.on('mousemove', e => {
+        config.emitter.on('mousemove', (e: MouseEvent) => {
             if (this.isFocus) return;
-            if (!this.inBox(e.clientX, e.clientY)) return;
+            // if (!this.inBox(e.clientX, e.clientY)) return;
             this.cursorChange(e);
             if (newItem) {
                 if (
@@ -393,9 +399,9 @@ export default class Box {
                 // 不操作 等待元素自己监听mousemove
             }
         });
-        config.emitter.on('mouseup', e => {
+        config.emitter.on('mouseup', (e: MouseEvent) => {
             if (this.isFocus) return;
-            if (!this.inBox(e.clientX, e.clientY)) return;
+            // if (!this.inBox(e.clientX, e.clientY)) return;
             if (newItem) {
                 newItem.save();
                 this.childSaveArray.push(newItem);
