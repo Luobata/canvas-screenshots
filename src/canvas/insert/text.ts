@@ -1,7 +1,47 @@
 import { Position } from 'LIB/interface';
 import { config, inBox } from '../config';
 import { pointInRectangular } from 'LIB/geometric';
+import { isChinese } from 'LIB/reg';
 import Mouse from './mouse-text';
+
+const getStrLength = (str: string) => {
+    let len = 0;
+    for (let i of str) {
+        len += isChinese(i) ? 2 : 1;
+    }
+
+    return len;
+};
+
+const subStr = (str: string, index: number, length: number) => {
+    let len = 0;
+    let begin = -1;
+    let end = -1; // -1 用来标志是没有位移过
+    for (let i = 0; i < str.length; i++) {
+        len += getStrLength(str[i]);
+        // length += len;
+        if (len - 1 >= index && begin === -1) {
+            begin = i;
+            len = getStrLength(str[i]);
+        }
+
+        if (begin !== -1) {
+            if (len === length) {
+                end = i;
+                break;
+            } else if (len > length) {
+                end = i === 0 ? 0 : i - 1;
+                break;
+            }
+        }
+    }
+    if (end === -1) end = str.length - 1;
+
+    return {
+        str: str.substr(begin, end - begin + 1),
+        subLen: end - begin + 1,
+    };
+};
 
 interface Text {
     position: Position;
@@ -54,6 +94,7 @@ export default class {
             fontSize: '35px',
             fontFamily:
                 config.platform !== 'windows' ? 'monospace' : 'Consolas',
+            // fontFamily: 'monospace',
         };
         this.saveArray = [];
         this.Text.textWidth = Math.floor(this.getTextWidth('1').width);
@@ -168,14 +209,35 @@ export default class {
         const cols = [];
         let maxCols = 0;
         for (let i of rows) {
-            if (i.length > maxCols) {
+            // 用lenth判断不合适 因为 中文（可能也有其他字符）计算为2个cols长度
+            // if (i.length > maxCols) {
+            //     maxCols =
+            //         i.length > this.Text.maxCols ? this.Text.maxCols : i.length;
+            //     if (i.length > this.Text.maxCols) {
+            //         let j = 0;
+            //         while (j < i.length) {
+            //             cols.push(i.substr(j, this.Text.maxCols));
+            //             j += this.Text.maxCols;
+            //         }
+            //     } else {
+            //         cols.push(i);
+            //     }
+            // } else {
+            //     cols.push(i);
+            // }
+            const length = getStrLength(i);
+            console.log(length);
+            if (length > maxCols) {
                 maxCols =
-                    i.length > this.Text.maxCols ? this.Text.maxCols : i.length;
-                if (i.length > this.Text.maxCols) {
+                    length > this.Text.maxCols ? this.Text.maxCols : length;
+                if (length > this.Text.maxCols) {
                     let j = 0;
-                    while (j < i.length) {
-                        cols.push(i.substr(j, this.Text.maxCols));
-                        j += this.Text.maxCols;
+                    while (j < length) {
+                        // debugger;
+                        const strObj = subStr(i, j, this.Text.maxCols);
+                        console.log(i, j, this.Text.maxCols, strObj);
+                        cols.push(strObj.str);
+                        j += strObj.subLen;
                     }
                 } else {
                     cols.push(i);
@@ -187,6 +249,7 @@ export default class {
         this.Text.txts = cols;
         this.input.setAttribute('cols', maxCols.toString());
         this.input.setAttribute('rows', cols.length.toString());
+        console.log(cols);
     }
 
     initTextArea() {
