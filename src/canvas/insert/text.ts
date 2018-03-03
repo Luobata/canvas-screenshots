@@ -104,6 +104,7 @@ export default class {
         // 同时操作display 与input 会触发blur
         setTimeout(() => {
             this.input.value = this.Text.txts.join('\n');
+            this.getMaxCols();
             // this.input.setAttribute('value', this.Text.txts.join('\n'));
             this.input.focus();
         }, 0);
@@ -153,7 +154,7 @@ export default class {
     getMaxCols() {
         setTimeout(() => {
             const num =
-                (config.boxRect.endX - this.Text.position.x - this.Text.width) /
+                (config.boxRect.endX - this.Text.position.x - 20) /
                 this.Text.textWidth;
             this.Text.maxCols = Math.floor(num) + 1;
         }, 0);
