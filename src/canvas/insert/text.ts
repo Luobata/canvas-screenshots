@@ -153,6 +153,7 @@ export default class {
 
     getMaxCols() {
         setTimeout(() => {
+            // 20 = padding-left + paddin-right
             const num =
                 (config.boxRect.endX - this.Text.position.x - 20) /
                 this.Text.textWidth;
@@ -214,11 +215,11 @@ export default class {
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
             this.Text.text = (<HTMLInputElement>e.target).value;
-            this.drawText();
             this.Text.width = this.input.offsetWidth;
             this.Text.height = this.input.offsetHeight;
             this.input.style.display = 'none';
             this.Text.isEditor = false;
+            config.emitter.emit('draw-all');
 
             if (this.Text.text === '') {
                 this.destroyed();
@@ -271,22 +272,6 @@ export default class {
             const height = this.ctx.measureText('w');
             return 35;
         };
-        let txts = [];
-        const len =
-            this.Text.text.length % (this.Text.cols - 1)
-                ? parseInt(
-                      (this.Text.text.length / (this.Text.cols - 1)).toFixed(),
-                      10,
-                  ) + 1
-                : this.Text.text.length / (this.Text.cols - 1);
-        for (let i = 0; i < len; i++) {
-            txts.push(
-                this.Text.text.substring(
-                    i * this.Text.cols,
-                    (i + 1) * this.Text.cols,
-                ),
-            );
-        }
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.Text.color;
