@@ -245,7 +245,6 @@ export default class {
             }
         }
         this.Text.txts = cols;
-        // this.input.setAttribute('cols', maxCols.toString());
         this.input.style.width =
             maxCols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', cols.length.toString());
@@ -259,7 +258,6 @@ export default class {
         this.input.style.left = `${this.Text.position.x}px`;
         this.input.style.top = `${this.Text.position.y}px`;
         this.input.style.color = this.Text.color;
-        // this.input.setAttribute('cols', this.Text.cols.toString());
         this.input.style.width =
             this.Text.cols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', this.Text.rows.toString());
@@ -333,8 +331,8 @@ export default class {
         const getHeight = () => {
             this.ctx.save();
             this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
-            const height = this.ctx.measureText('w');
-            return 36;
+            const height = this.ctx.measureText('w').width * 2;
+            return height;
         };
         this.ctx.save();
         this.ctx.beginPath();
@@ -344,7 +342,8 @@ export default class {
             this.ctx.fillText(
                 this.Text.txts[i],
                 this.Text.position.x + 1 + 10,
-                this.Text.position.y - 6 + getHeight() * (i + 1) + 10,
+                // this.Text.position.y - 6 + getHeight() * (i + 1) + 10,
+                this.Text.position.y - 4 + getHeight() * (i + 1) + 10,
             );
         }
         this.ctx.restore();
