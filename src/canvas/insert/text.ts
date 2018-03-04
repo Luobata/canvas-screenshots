@@ -36,10 +36,11 @@ const subStr = (str: string, index: number, length: number) => {
         }
     }
     if (end === -1) end = str.length - 1;
+    const resultStr = str.substr(begin, end - begin + 1);
 
     return {
-        str: str.substr(begin, end - begin + 1),
-        subLen: end - begin + 1,
+        str: resultStr,
+        subLen: getStrLength(resultStr),
     };
 };
 
@@ -88,7 +89,7 @@ export default class {
             borderColor: '#fff',
             borderWidth: 1,
             text: '',
-            cols: 2,
+            cols: 1,
             rows: 1,
             txts: [],
             fontSize: '36px',
@@ -225,16 +226,14 @@ export default class {
             //     cols.push(i);
             // }
             const length = getStrLength(i);
-            console.log(length);
             if (length > maxCols) {
                 maxCols =
                     length > this.Text.maxCols ? this.Text.maxCols : length;
                 if (length > this.Text.maxCols) {
                     let j = 0;
                     while (j < length) {
-                        // debugger;
                         const strObj = subStr(i, j, this.Text.maxCols);
-                        console.log(i, j, this.Text.maxCols, strObj);
+                        // console.log(i, j, this.Text.maxCols, strObj);
                         cols.push(strObj.str);
                         j += strObj.subLen;
                     }
@@ -250,7 +249,6 @@ export default class {
         this.input.style.width =
             maxCols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', cols.length.toString());
-        console.log(cols);
     }
 
     initTextArea() {
