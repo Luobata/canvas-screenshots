@@ -91,10 +91,10 @@ export default class {
             cols: 2,
             rows: 1,
             txts: [],
-            fontSize: '35px',
-            fontFamily:
-                config.platform !== 'windows' ? 'monospace' : 'Consolas',
-            // fontFamily: 'monospace',
+            fontSize: '36px',
+            // fontFamily:
+            //     config.platform !== 'windows' ? 'monospace' : 'Consolas',
+            fontFamily: 'monospace',
         };
         this.saveArray = [];
         this.Text.textWidth = Math.floor(this.getTextWidth('1').width);
@@ -146,7 +146,6 @@ export default class {
         setTimeout(() => {
             this.input.value = this.Text.txts.join('\n');
             this.getMaxCols();
-            // this.input.setAttribute('value', this.Text.txts.join('\n'));
             this.input.focus();
         }, 0);
 
@@ -247,7 +246,9 @@ export default class {
             }
         }
         this.Text.txts = cols;
-        this.input.setAttribute('cols', maxCols.toString());
+        // this.input.setAttribute('cols', maxCols.toString());
+        this.input.style.width =
+            maxCols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', cols.length.toString());
         console.log(cols);
     }
@@ -260,7 +261,9 @@ export default class {
         this.input.style.left = `${this.Text.position.x}px`;
         this.input.style.top = `${this.Text.position.y}px`;
         this.input.style.color = this.Text.color;
-        this.input.setAttribute('cols', this.Text.cols.toString());
+        // this.input.setAttribute('cols', this.Text.cols.toString());
+        this.input.style.width =
+            this.Text.cols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', this.Text.rows.toString());
         setTimeout(() => {
             this.Text.width = this.input.offsetWidth;
@@ -333,7 +336,7 @@ export default class {
             this.ctx.save();
             this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
             const height = this.ctx.measureText('w');
-            return 35;
+            return 36;
         };
         this.ctx.save();
         this.ctx.beginPath();
