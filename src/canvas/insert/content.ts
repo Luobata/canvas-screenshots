@@ -3,16 +3,6 @@ import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
 import { EventEmitter } from 'events';
 
-interface property {
-    rect?: Rect;
-    circles?: Array<dragCircle>;
-    isStroke: boolean; // 是否是是空心的
-    color: string;
-    lineWidth: number;
-    borderRadious: number;
-    circleWidth: number;
-}
-
 export default class {
     id: number;
     ctx: CanvasRenderingContext2D;
@@ -22,8 +12,8 @@ export default class {
     mouseMove: EventListener;
     mouseUp: EventListener;
 
-    property: property;
-    saveArray: Array<property>;
+    property: any;
+    saveArray: Array<any>;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;

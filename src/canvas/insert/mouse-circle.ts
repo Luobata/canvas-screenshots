@@ -23,10 +23,10 @@ export default class {
             case 'all-scroll':
                 this.box.setPosition(
                     {
-                        startX: this.box.circle.rect.startX + e.movementX,
-                        startY: this.box.circle.rect.startY + e.movementY,
-                        endX: this.box.circle.rect.endX + e.movementX,
-                        endY: this.box.circle.rect.endY + e.movementY,
+                        startX: this.box.property.rect.startX + e.movementX,
+                        startY: this.box.property.rect.startY + e.movementY,
+                        endX: this.box.property.rect.endX + e.movementX,
+                        endY: this.box.property.rect.endY + e.movementY,
                     },
                     true,
                 );
