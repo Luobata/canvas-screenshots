@@ -1,7 +1,48 @@
 import { Position } from 'LIB/interface';
 import { config, inBox } from '../config';
 import { pointInRectangular } from 'LIB/geometric';
+import { isChinese } from 'LIB/reg';
 import Mouse from './mouse-text';
+
+const getStrLength = (str: string) => {
+    let len = 0;
+    for (let i of str) {
+        len += isChinese(i) ? 2 : 1;
+    }
+
+    return len;
+};
+
+const subStr = (str: string, index: number, length: number) => {
+    let len = 0;
+    let begin = -1;
+    let end = -1; // -1 用来标志是没有位移过
+    for (let i = 0; i < str.length; i++) {
+        len += getStrLength(str[i]);
+        // length += len;
+        if (len - 1 >= index && begin === -1) {
+            begin = i;
+            len = getStrLength(str[i]);
+        }
+
+        if (begin !== -1) {
+            if (len === length) {
+                end = i;
+                break;
+            } else if (len > length) {
+                end = i === 0 ? 0 : i - 1;
+                break;
+            }
+        }
+    }
+    if (end === -1) end = str.length - 1;
+    const resultStr = str.substr(begin, end - begin + 1);
+
+    return {
+        str: resultStr,
+        subLen: getStrLength(resultStr),
+    };
+};
 
 interface Text {
     position: Position;
@@ -48,12 +89,13 @@ export default class {
             borderColor: '#fff',
             borderWidth: 1,
             text: '',
-            cols: 2,
+            cols: 1,
             rows: 1,
             txts: [],
-            fontSize: '35px',
-            fontFamily:
-                config.platform !== 'windows' ? 'monospace' : 'Consolas',
+            fontSize: '36px',
+            // fontFamily:
+            //     config.platform !== 'windows' ? 'monospace' : 'Consolas',
+            fontFamily: 'monospace',
         };
         this.saveArray = [];
         this.Text.textWidth = Math.floor(this.getTextWidth('1').width);
@@ -104,7 +146,7 @@ export default class {
         // 同时操作display 与input 会触发blur
         setTimeout(() => {
             this.input.value = this.Text.txts.join('\n');
-            // this.input.setAttribute('value', this.Text.txts.join('\n'));
+            this.getMaxCols();
             this.input.focus();
         }, 0);
 
@@ -152,8 +194,9 @@ export default class {
 
     getMaxCols() {
         setTimeout(() => {
+            // 20 = padding-left + paddin-right
             const num =
-                (config.boxRect.endX - this.Text.position.x - this.Text.width) /
+                (config.boxRect.endX - this.Text.position.x - 20) /
                 this.Text.textWidth;
             this.Text.maxCols = Math.floor(num) + 1;
         }, 0);
@@ -166,14 +209,33 @@ export default class {
         const cols = [];
         let maxCols = 0;
         for (let i of rows) {
-            if (i.length > maxCols) {
+            // 用lenth判断不合适 因为 中文（可能也有其他字符）计算为2个cols长度
+            // if (i.length > maxCols) {
+            //     maxCols =
+            //         i.length > this.Text.maxCols ? this.Text.maxCols : i.length;
+            //     if (i.length > this.Text.maxCols) {
+            //         let j = 0;
+            //         while (j < i.length) {
+            //             cols.push(i.substr(j, this.Text.maxCols));
+            //             j += this.Text.maxCols;
+            //         }
+            //     } else {
+            //         cols.push(i);
+            //     }
+            // } else {
+            //     cols.push(i);
+            // }
+            const length = getStrLength(i);
+            if (length > maxCols) {
                 maxCols =
-                    i.length > this.Text.maxCols ? this.Text.maxCols : i.length;
-                if (i.length > this.Text.maxCols) {
+                    length > this.Text.maxCols ? this.Text.maxCols : length;
+                if (length > this.Text.maxCols) {
                     let j = 0;
-                    while (j < i.length) {
-                        cols.push(i.substr(j, this.Text.maxCols));
-                        j += this.Text.maxCols;
+                    while (j < length) {
+                        const strObj = subStr(i, j, this.Text.maxCols);
+                        // console.log(i, j, this.Text.maxCols, strObj);
+                        cols.push(strObj.str);
+                        j += strObj.subLen;
                     }
                 } else {
                     cols.push(i);
@@ -183,7 +245,8 @@ export default class {
             }
         }
         this.Text.txts = cols;
-        this.input.setAttribute('cols', maxCols.toString());
+        this.input.style.width =
+            maxCols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', cols.length.toString());
     }
 
@@ -195,7 +258,8 @@ export default class {
         this.input.style.left = `${this.Text.position.x}px`;
         this.input.style.top = `${this.Text.position.y}px`;
         this.input.style.color = this.Text.color;
-        this.input.setAttribute('cols', this.Text.cols.toString());
+        this.input.style.width =
+            this.Text.cols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', this.Text.rows.toString());
         setTimeout(() => {
             this.Text.width = this.input.offsetWidth;
@@ -213,11 +277,11 @@ export default class {
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
             this.Text.text = (<HTMLInputElement>e.target).value;
-            this.drawText();
             this.Text.width = this.input.offsetWidth;
             this.Text.height = this.input.offsetHeight;
             this.input.style.display = 'none';
             this.Text.isEditor = false;
+            config.emitter.emit('draw-all');
 
             if (this.Text.text === '') {
                 this.destroyed();
@@ -267,25 +331,9 @@ export default class {
         const getHeight = () => {
             this.ctx.save();
             this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
-            const height = this.ctx.measureText('w');
-            return 35;
+            const height = this.ctx.measureText('w').width * 2;
+            return height;
         };
-        let txts = [];
-        const len =
-            this.Text.text.length % (this.Text.cols - 1)
-                ? parseInt(
-                      (this.Text.text.length / (this.Text.cols - 1)).toFixed(),
-                      10,
-                  ) + 1
-                : this.Text.text.length / (this.Text.cols - 1);
-        for (let i = 0; i < len; i++) {
-            txts.push(
-                this.Text.text.substring(
-                    i * this.Text.cols,
-                    (i + 1) * this.Text.cols,
-                ),
-            );
-        }
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.Text.color;
@@ -294,7 +342,8 @@ export default class {
             this.ctx.fillText(
                 this.Text.txts[i],
                 this.Text.position.x + 1 + 10,
-                this.Text.position.y - 6 + getHeight() * (i + 1) + 10,
+                // this.Text.position.y - 6 + getHeight() * (i + 1) + 10,
+                this.Text.position.y - 4 + getHeight() * (i + 1) + 10,
             );
         }
         this.ctx.restore();
