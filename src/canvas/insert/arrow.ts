@@ -27,7 +27,6 @@ interface arrow {
 
 export default class extends Content {
     mouse: Mouse;
-
     property: arrow;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
@@ -41,12 +40,6 @@ export default class extends Content {
         this.mouse = new Mouse(this);
         this.init();
         this.event();
-    }
-
-    setColor(color: string) {
-        this.property.color = color;
-        this.save();
-        config.emitter.emit('draw-all');
     }
 
     init() {

@@ -31,7 +31,6 @@ interface circle {
 
 export default class extends Content {
     mouse: Mouse;
-
     property: circle;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
@@ -47,13 +46,6 @@ export default class extends Content {
 
         this.init();
         this.event();
-    }
-
-    setColor(color: string) {
-        this.property.color = color;
-        this.property.borderColor = color;
-        this.save();
-        config.emitter.emit('draw-all');
     }
 
     init() {

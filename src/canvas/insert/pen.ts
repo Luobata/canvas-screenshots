@@ -12,9 +12,7 @@ interface pen {
 
 export default class extends Content {
     mouse: Mouse;
-
     property: pen;
-    saveArray: Array<pen>;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
         super(ctx);
@@ -46,12 +44,6 @@ export default class extends Content {
         config.emitter.off('mousemove', this.mouseMove);
         config.emitter.off('mouseup', this.mouseUp);
         config.emitter.emit('removeItem', this);
-    }
-
-    setColor(color: string) {
-        this.property.color = color;
-        this.save();
-        config.emitter.emit('draw-all');
     }
 
     inBoxBorder(x: number, y: number) {
