@@ -50,6 +50,15 @@ export default class {
         config.emitter.emit('draw-all');
     }
 
+    setPosition(rect: Rect, isDraw = false) {
+        // Rectangular circle arrow
+        Object.assign(this.property.rect, rect);
+
+        if (isDraw) {
+            config.emitter.emit('draw-all');
+        }
+    }
+
     getCursor(e: MouseEvent, type?: string) {}
 
     init() {}

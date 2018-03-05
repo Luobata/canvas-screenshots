@@ -109,13 +109,6 @@ export default class extends Content {
         return result;
     }
 
-    setPosition(rect: Rect, isDraw = false) {
-        Object.assign(this.property.rect, rect);
-        if (isDraw) {
-            config.emitter.emit('draw-all');
-        }
-    }
-
     draw() {
         const circleMap = getArrowCircleMap(this.property.rect);
         this.property.circles = circleMap;

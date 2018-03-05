@@ -47,14 +47,6 @@ export default class extends Content {
         this.event();
     }
 
-    setPosition(rect: Rect, isDraw = false) {
-        Object.assign(this.property.rect, rect);
-
-        if (isDraw) {
-            config.emitter.emit('draw-all');
-        }
-    }
-
     getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
         for (let i of this.property.circles) {
