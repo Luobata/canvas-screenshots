@@ -2,6 +2,7 @@ import { Position } from 'LIB/interface';
 import { config, inBox } from '../config';
 import Mouse from './mouse-pen';
 import { pointInLine } from 'LIB/geometric';
+import Content from './content';
 
 interface pen {
     lines: Array<Position>;
@@ -9,42 +10,33 @@ interface pen {
     lineWidth: number;
 }
 
-export default class {
-    id: number;
-    ctx: CanvasRenderingContext2D;
-    isFocus: boolean;
+export default class extends Content {
     mouse: Mouse;
 
-    mouseDown: EventListener;
-    mouseMove: EventListener;
-    mouseUp: EventListener;
-    pen: pen;
+    property: pen;
     saveArray: Array<pen>;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
-        this.ctx = ctx;
-        this.id = config.uid++;
-        this.isFocus = true;
-        this.pen = {
+        super(ctx);
+        this.property = {
             color,
             lines: [],
             lineWidth: 3,
         };
-        this.saveArray = [];
         this.mouse = new Mouse(this);
         this.event();
     }
 
     save() {
-        this.saveArray.push(JSON.parse(JSON.stringify(this.pen)));
+        this.saveArray.push(JSON.parse(JSON.stringify(this.property)));
     }
 
     back() {
         if (this.saveArray.length) {
             this.saveArray.pop();
-            this.pen = this.saveArray[this.saveArray.length - 1];
+            this.property = this.saveArray[this.saveArray.length - 1];
         }
-        if (!this.pen) {
+        if (!this.property) {
             this.destroyed();
         }
     }
@@ -57,13 +49,17 @@ export default class {
     }
 
     setColor(color: string) {
-        this.pen.color = color;
+        this.property.color = color;
         this.save();
         config.emitter.emit('draw-all');
     }
 
     inBoxBorder(x: number, y: number) {
-        return pointInLine(this.pen.lines, { x, y }, 10 + this.pen.lineWidth);
+        return pointInLine(
+            this.property.lines,
+            { x, y },
+            10 + this.property.lineWidth,
+        );
     }
 
     getCursor(e: MouseEvent) {
@@ -76,7 +72,7 @@ export default class {
     }
 
     hasBox(): boolean {
-        return this.pen.lines.length > 1;
+        return this.property.lines.length > 1;
     }
 
     event() {
@@ -102,7 +98,7 @@ export default class {
     }
 
     addPosition(pos: Position, isDraw = false) {
-        this.pen.lines.push(pos);
+        this.property.lines.push(pos);
 
         if (isDraw) {
             config.emitter.emit('draw-all');
@@ -110,7 +106,7 @@ export default class {
     }
 
     move(x: number, y: number) {
-        for (let i of this.pen.lines) {
+        for (let i of this.property.lines) {
             i.x += x;
             i.y += y;
         }
@@ -121,13 +117,13 @@ export default class {
     draw() {
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.strokeStyle = this.pen.color;
-        this.ctx.lineWidth = this.pen.lineWidth;
+        this.ctx.strokeStyle = this.property.color;
+        this.ctx.lineWidth = this.property.lineWidth;
         // this.ctx.lineJoin = 'round';
-        this.ctx.moveTo(this.pen.lines[0].x, this.pen.lines[0].y);
+        this.ctx.moveTo(this.property.lines[0].x, this.property.lines[0].y);
 
-        for (let i = 1; i < this.pen.lines.length; i++) {
-            this.ctx.lineTo(this.pen.lines[i].x, this.pen.lines[i].y);
+        for (let i = 1; i < this.property.lines.length; i++) {
+            this.ctx.lineTo(this.property.lines[i].x, this.property.lines[i].y);
         }
 
         this.ctx.stroke();

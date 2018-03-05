@@ -36,7 +36,6 @@ export default class extends Content {
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
         super(ctx);
-        this.isFocus = true;
         this.property = {
             borderColor: color,
             borderWidth: 1,
@@ -44,11 +43,9 @@ export default class extends Content {
             auxLineColor: 'gray',
             circleWidth: 3,
         };
-        this.saveArray = [];
-        this.id = config.uid++;
         this.mouse = new Mouse(this);
 
-        this.initCircle();
+        this.init();
         this.event();
     }
 
@@ -59,7 +56,7 @@ export default class extends Content {
         config.emitter.emit('draw-all');
     }
 
-    initCircle() {
+    init() {
         this.property.rect = {
             startX: undefined,
             startY: undefined,

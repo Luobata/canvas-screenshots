@@ -43,7 +43,7 @@ export default class extends Content {
         };
         this.mouse = new Mouse(this);
 
-        this.initBox();
+        this.init();
         this.event();
     }
 
@@ -106,7 +106,7 @@ export default class extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    initBox() {
+    init() {
         this.property.rect = {
             startX: undefined,
             startY: undefined,

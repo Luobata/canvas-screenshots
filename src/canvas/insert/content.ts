@@ -52,6 +52,8 @@ export default class {
 
     getCursor(e: MouseEvent, type?: string) {}
 
+    init() {}
+
     event() {}
 
     initBox() {}
