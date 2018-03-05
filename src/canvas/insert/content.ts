@@ -25,23 +25,12 @@ export default class {
     property: property;
     saveArray: Array<property>;
 
-    constructor(ctx: CanvasRenderingContext2D, color: string) {
+    constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
         this.id = config.uid++;
 
         this.isFocus = true;
-        this.property = {
-            isStroke: true,
-            color,
-            lineWidth: 3,
-            borderRadious: 1,
-            circleWidth: 3,
-        };
         this.saveArray = [];
-
-        this.initBox();
-
-        this.event();
     }
 
     save() {

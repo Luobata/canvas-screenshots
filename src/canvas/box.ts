@@ -77,9 +77,9 @@ export default class Box {
         const colorItem = colorWrap.querySelectorAll('.color-item');
 
         Array.prototype.forEach.call(items, (v: HTMLElement) => {
-            v.addEventListener('click', function () {
+            v.addEventListener('click', function() {
                 that.currentFun = this.getAttribute('type');
-                Array.prototype.forEach.call(items, function (
+                Array.prototype.forEach.call(items, function(
                     v: HTMLElement,
                     i: number,
                 ) {
@@ -102,7 +102,7 @@ export default class Box {
         });
 
         Array.prototype.forEach.call(colorItem, (v: HTMLElement) => {
-            v.addEventListener('click', function () {
+            v.addEventListener('click', function() {
                 domEach(colorItem, (v: HTMLElement, i: number) => {
                     colorItem[i].className = colorItem[i].className.replace(
                         'active',
@@ -154,7 +154,7 @@ export default class Box {
             this.content.delete(item);
         });
 
-        boxEmitter.on('draw', () => { });
+        boxEmitter.on('draw', () => {});
         boxEmitter.on('shot', () => {
             config.emitter.emit('shot');
         });
@@ -266,7 +266,7 @@ export default class Box {
                     cursor = i.getCursor(e);
                 }
             }
-        };
+        }
 
         config.emitter.emit('cursor-change', cursor);
 

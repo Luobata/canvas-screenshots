@@ -1,8 +1,10 @@
 import { dragCircle, Rect } from 'LIB/interface';
-import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
-import Content from './content';
+import { EventEmitter } from 'events';
+import { config, inBox } from '../config';
 import Mouse from './mouse-rectangular';
+const ee = require('event-emitter');
+const rectangularEmitter = new ee();
 
 const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
 
@@ -28,27 +30,63 @@ interface rectangular {
     circleWidth: number;
 }
 
-export default class extends Content {
-    property: rectangular;
+export default class {
+    id: number;
+    ctx: CanvasRenderingContext2D;
     mouse: Mouse;
+    isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
+    mouseDown: EventListener;
+    mouseMove: EventListener;
+    mouseUp: EventListener;
+
+    rectangular: rectangular;
+    saveArray: Array<rectangular>;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
-        super(ctx);
-        this.property = {
+        this.ctx = ctx;
+        // this.mouse = new Mouse(this);
+        this.id = config.uid++;
+
+        this.isFocus = true;
+        this.rectangular = {
             isStroke: true,
             color,
             lineWidth: 3,
             borderRadious: 1,
             circleWidth: 3,
         };
-        this.mouse = new Mouse(this);
+        this.saveArray = [];
 
         this.initBox();
+
         this.event();
     }
 
+    save() {
+        this.saveArray.push(JSON.parse(JSON.stringify(this.rectangular)));
+    }
+
+    back() {
+        console.log(this.saveArray);
+        if (this.saveArray.length) {
+            this.saveArray.pop();
+            this.rectangular = this.saveArray[this.saveArray.length - 1];
+        }
+        if (!this.rectangular) {
+            this.destroyed();
+        }
+        // config.emitter.emit('draw-all');
+    }
+
+    destroyed() {
+        config.emitter.off('mousedown', this.mouseDown);
+        config.emitter.off('mousemove', this.mouseMove);
+        config.emitter.off('mouseup', this.mouseUp);
+        config.emitter.emit('removeItem', this);
+    }
+
     setPosition(rect: Rect, isDraw = false) {
-        Object.assign(this.property.rect, rect);
+        Object.assign(this.rectangular.rect, rect);
 
         if (isDraw) {
             config.emitter.emit('draw-all');
@@ -56,14 +94,14 @@ export default class extends Content {
     }
 
     setColor(color: string) {
-        this.property.color = color;
+        this.rectangular.color = color;
         this.save();
         config.emitter.emit('draw-all');
     }
 
     getCursor(e: MouseEvent, type?: string) {
         let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
-        for (let i of this.property.circles) {
+        for (let i of this.rectangular.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
                 //result = `${i.cssPosition}-resize`;
@@ -107,7 +145,7 @@ export default class extends Content {
     }
 
     initBox() {
-        this.property.rect = {
+        this.rectangular.rect = {
             startX: undefined,
             startY: undefined,
             endX: undefined,
@@ -117,42 +155,42 @@ export default class extends Content {
 
     hasBox() {
         return !!(
-            this.property.rect.startX !== undefined &&
-            this.property.rect.startY !== undefined &&
-            this.property.rect.endX !== undefined &&
-            this.property.rect.endY !== undefined
+            this.rectangular.rect.startX !== undefined &&
+            this.rectangular.rect.startY !== undefined &&
+            this.rectangular.rect.endX !== undefined &&
+            this.rectangular.rect.endY !== undefined
         );
     }
 
     inBoxBorder(positionX: number, positionY: number): boolean {
         const centerX =
-            this.property.rect.startX +
-            (this.property.rect.endX - this.property.rect.startX) / 2;
+            this.rectangular.rect.startX +
+            (this.rectangular.rect.endX - this.rectangular.rect.startX) / 2;
         const centerY =
-            this.property.rect.startY +
-            (this.property.rect.endY - this.property.rect.startY) / 2;
+            this.rectangular.rect.startY +
+            (this.rectangular.rect.endY - this.rectangular.rect.startY) / 2;
         const inLength = Math.abs(
-            (this.property.rect.endY - this.property.rect.startY) / 2,
+            (this.rectangular.rect.endY - this.rectangular.rect.startY) / 2,
         );
-        const outLength = inLength + this.property.lineWidth;
+        const outLength = inLength + this.rectangular.lineWidth;
         const margin = 5;
-        const borderWidth = this.property.lineWidth + margin * 2;
+        const borderWidth = this.rectangular.lineWidth + margin * 2;
         const sX =
-            this.property.rect.startX < this.property.rect.endX
-                ? this.property.rect.startX
-                : this.property.rect.endX + margin;
+            this.rectangular.rect.startX < this.rectangular.rect.endX
+                ? this.rectangular.rect.startX
+                : this.rectangular.rect.endX + margin;
         const bX =
-            this.property.rect.startX >= this.property.rect.endX
-                ? this.property.rect.startX
-                : this.property.rect.endX - margin;
+            this.rectangular.rect.startX >= this.rectangular.rect.endX
+                ? this.rectangular.rect.startX
+                : this.rectangular.rect.endX - margin;
         const sY =
-            this.property.rect.startY < this.property.rect.endY
-                ? this.property.rect.startY
-                : this.property.rect.endY + margin;
+            this.rectangular.rect.startY < this.rectangular.rect.endY
+                ? this.rectangular.rect.startY
+                : this.rectangular.rect.endY + margin;
         const bY =
-            this.property.rect.startY >= this.property.rect.endY
-                ? this.property.rect.startY
-                : this.property.rect.endY - margin;
+            this.rectangular.rect.startY >= this.rectangular.rect.endY
+                ? this.rectangular.rect.startY
+                : this.rectangular.rect.endY - margin;
         const inRow = (): boolean => {
             return (
                 positionX >= sX - borderWidth &&
@@ -176,28 +214,28 @@ export default class extends Content {
 
     inBox(positionX: number, positionY: number, circlePath = 0): boolean {
         const inX = (): boolean => {
-            if (this.property.rect.startX < this.property.rect.endX) {
+            if (this.rectangular.rect.startX < this.rectangular.rect.endX) {
                 return (
-                    positionX + circlePath >= this.property.rect.startX &&
-                    positionX - circlePath <= this.property.rect.endX
+                    positionX + circlePath >= this.rectangular.rect.startX &&
+                    positionX - circlePath <= this.rectangular.rect.endX
                 );
             } else {
                 return (
-                    positionX + circlePath <= this.property.rect.startX &&
-                    positionX - circlePath >= this.property.rect.endX
+                    positionX + circlePath <= this.rectangular.rect.startX &&
+                    positionX - circlePath >= this.rectangular.rect.endX
                 );
             }
         };
         const inY = (): boolean => {
-            if (this.property.rect.startY < this.property.rect.endY) {
+            if (this.rectangular.rect.startY < this.rectangular.rect.endY) {
                 return (
-                    positionY + circlePath >= this.property.rect.startY &&
-                    positionY - circlePath <= this.property.rect.endY
+                    positionY + circlePath >= this.rectangular.rect.startY &&
+                    positionY - circlePath <= this.rectangular.rect.endY
                 );
             } else {
                 return (
-                    positionY + circlePath <= this.property.rect.startY &&
-                    positionY - circlePath >= this.property.rect.endY
+                    positionY + circlePath <= this.rectangular.rect.startY &&
+                    positionY - circlePath >= this.rectangular.rect.endY
                 );
             }
         };
@@ -206,40 +244,49 @@ export default class extends Content {
 
     draw() {
         const circleMap = getCircleMap(
-            this.property.rect,
-            this.property.lineWidth,
+            this.rectangular.rect,
+            this.rectangular.lineWidth,
         );
-        this.property.circles = circleMap;
+        this.rectangular.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.lineWidth = this.property.lineWidth;
-        this.ctx.strokeStyle = this.property.color;
+        this.ctx.lineWidth = this.rectangular.lineWidth;
         // 画圆角
-        this.ctx.strokeRect(
-            this.property.rect.startX - this.property.lineWidth,
-            this.property.rect.startY - this.property.lineWidth,
-            this.property.rect.endX -
-                this.property.rect.startX +
-                this.property.lineWidth * 2,
-            this.property.rect.endY -
-                this.property.rect.startY +
-                this.property.lineWidth * 2,
+        this.ctx.moveTo(
+            this.rectangular.rect.startX - this.rectangular.lineWidth,
+            this.rectangular.rect.startY - this.rectangular.lineWidth,
         );
-        if (this.property.isStroke) {
-            this.ctx.strokeStyle = this.property.color;
+        this.ctx.lineTo(
+            this.rectangular.rect.endX + this.rectangular.lineWidth,
+            this.rectangular.rect.startY - this.rectangular.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rectangular.rect.endX + this.rectangular.lineWidth,
+            this.rectangular.rect.endY + this.rectangular.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rectangular.rect.startX - this.rectangular.lineWidth,
+            this.rectangular.rect.endY + this.rectangular.lineWidth,
+        );
+        this.ctx.lineTo(
+            this.rectangular.rect.startX - this.rectangular.lineWidth,
+            this.rectangular.rect.startY - this.rectangular.lineWidth,
+        );
+        if (this.rectangular.isStroke) {
+            this.ctx.strokeStyle = this.rectangular.color;
             this.ctx.stroke();
         } else {
-            this.ctx.fillStyle = this.property.color;
+            this.ctx.fillStyle = this.rectangular.color;
             this.ctx.fill();
         }
         if (this.isFocus) {
             for (let i of circleMap) {
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.property.color;
+                this.ctx.fillStyle = this.rectangular.color;
                 this.ctx.arc(
                     i.x,
                     i.y,
-                    this.property.circleWidth,
+                    this.rectangular.circleWidth,
                     0,
                     Math.PI * 2,
                     true,

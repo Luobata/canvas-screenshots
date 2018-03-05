@@ -8,11 +8,11 @@ export default class {
     box: Box;
     mouseEvent: string; // 处理后续move事件逻辑
     clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否生成截图
-    emitter: EventEmitter;
+    // emitter: EventEmitter;
 
-    constructor(box: Box, emitter: EventEmitter) {
+    constructor(box: Box) {
         this.box = box;
-        this.emitter = emitter;
+        // this.emitter = emitter;
         this.mouseEvent = 'crosshair'; // 鼠标点击状态 代表后续事件
         this.clickTime = 0;
     }
@@ -24,7 +24,7 @@ export default class {
         } else if (this.clickTime === 1) {
             if (now - timer <= tick) {
                 // 双击事件
-                this.emitter.emit('double-click');
+                // this.emitter.emit('double-click');
                 this.clickTime = 0;
             }
         }
@@ -41,10 +41,10 @@ export default class {
             case 'all-scroll':
                 this.box.setPosition(
                     {
-                        startX: this.box.rectangular.rect.startX + e.movementX,
-                        startY: this.box.rectangular.rect.startY + e.movementY,
-                        endX: this.box.rectangular.rect.endX + e.movementX,
-                        endY: this.box.rectangular.rect.endY + e.movementY,
+                        startX: this.box.property.rect.startX + e.movementX,
+                        startY: this.box.property.rect.startY + e.movementY,
+                        endX: this.box.property.rect.endX + e.movementX,
+                        endY: this.box.property.rect.endY + e.movementY,
                     },
                     true,
                 );
