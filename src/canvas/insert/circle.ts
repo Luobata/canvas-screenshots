@@ -48,6 +48,11 @@ export default class extends Content {
         this.event();
     }
 
+    setColor(color: string) {
+        this.property.borderColor = color;
+        super.setColor(color);
+    }
+
     init() {
         this.property.rect = {
             startX: undefined,
