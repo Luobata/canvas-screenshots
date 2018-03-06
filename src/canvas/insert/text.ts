@@ -45,7 +45,7 @@ const subStr = (str: string, index: number, length: number) => {
     };
 };
 
-interface Text {
+interface property {
     position: Position;
     text: string;
     txts: Array<string>;
@@ -64,27 +64,17 @@ interface Text {
     textWidth?: number;
 }
 
-export default class {
-    id: number;
-    ctx: CanvasRenderingContext2D;
+export default class extends Content {
     input: HTMLTextAreaElement;
-    mouseDown: EventListener;
-    mouseMove: EventListener;
-    mouseUp: EventListener;
     inputListener: EventListener;
     inputBlurListener: EventListener;
-    isFocus: boolean;
     mouse: Mouse;
 
-    Text: Text;
-    saveArray: Array<Text>;
+    property: property;
 
     constructor(ctx: CanvasRenderingContext2D, pos: Position) {
-        this.ctx = ctx;
-        this.isFocus = true;
-        this.id = config.uid++;
-
-        this.Text = {
+        super(ctx);
+        this.property = {
             position: pos,
             color: (<any>window).color || 'red',
             borderColor: '#fff',
@@ -98,26 +88,11 @@ export default class {
             //     config.platform !== 'windows' ? 'monospace' : 'Consolas',
             fontFamily: 'monospace',
         };
-        this.saveArray = [];
-        this.Text.textWidth = Math.floor(this.getTextWidth('1').width);
+        this.property.textWidth = Math.floor(this.getTextWidth('1').width);
         this.initTextArea();
         this.event();
         this.mouse = new Mouse(this);
         this.getMaxCols();
-    }
-
-    save() {
-        this.saveArray.push(JSON.parse(JSON.stringify(this.Text)));
-    }
-
-    back() {
-        if (this.saveArray.length) {
-            this.saveArray.pop();
-            this.Text = this.saveArray[this.saveArray.length - 1];
-        }
-        if (!this.Text) {
-            this.destroyed();
-        }
     }
 
     setColor(color: string) {}
@@ -132,21 +107,21 @@ export default class {
     }
 
     move(x: number, y: number) {
-        this.Text.position.x += x;
-        this.Text.position.y += y;
+        this.property.position.x += x;
+        this.property.position.y += y;
 
         config.emitter.emit('draw-all');
     }
 
     focus() {
-        this.Text.isEditor = true;
-        this.Text.text = '';
-        this.input.style.left = `${this.Text.position.x}px`;
-        this.input.style.top = `${this.Text.position.y}px`;
+        this.property.isEditor = true;
+        this.property.text = '';
+        this.input.style.left = `${this.property.position.x}px`;
+        this.input.style.top = `${this.property.position.y}px`;
         this.input.style.display = 'block';
         // 同时操作display 与input 会触发blur
         setTimeout(() => {
-            this.input.value = this.Text.txts.join('\n');
+            this.input.value = this.property.txts.join('\n');
             this.getMaxCols();
             this.input.focus();
         }, 0);
@@ -156,20 +131,20 @@ export default class {
 
     inBoxBorder(x: number, y: number) {
         const p1 = {
-            x: this.Text.position.x,
-            y: this.Text.position.y,
+            x: this.property.position.x,
+            y: this.property.position.y,
         };
         const p2 = {
-            x: this.Text.position.x + this.Text.width,
-            y: this.Text.position.y,
+            x: this.property.position.x + this.property.width,
+            y: this.property.position.y,
         };
         const p3 = {
-            x: this.Text.position.x,
-            y: this.Text.position.y + this.Text.height,
+            x: this.property.position.x,
+            y: this.property.position.y + this.property.height,
         };
         const p4 = {
-            x: this.Text.position.x + this.Text.width,
-            y: this.Text.position.y + this.Text.height,
+            x: this.property.position.x + this.property.width,
+            y: this.property.position.y + this.property.height,
         };
         const p = {
             x,
@@ -178,18 +153,10 @@ export default class {
         return pointInRectangular(p1, p2, p3, p4, p);
     }
 
-    setPosition(pos: Position, isDraw = false) {
-        this.Text.position = pos;
-
-        if (isDraw) {
-            config.emitter.emit('draw-all');
-        }
-    }
-
     getSize() {
         setTimeout(() => {
-            this.Text.width = this.input.offsetWidth;
-            this.Text.height = this.input.offsetHeight;
+            this.property.width = this.input.offsetWidth;
+            this.property.height = this.input.offsetHeight;
         }, 0);
     }
 
@@ -197,44 +164,29 @@ export default class {
         setTimeout(() => {
             // 20 = padding-left + paddin-right
             const num =
-                (config.boxRect.endX - this.Text.position.x - 20) /
-                this.Text.textWidth;
-            this.Text.maxCols = Math.floor(num) + 1;
+                (config.boxRect.endX - this.property.position.x - 20) /
+                this.property.textWidth;
+            this.property.maxCols = Math.floor(num) + 1;
         }, 0);
     }
 
-    getMaxRows() {}
-
     getTextInput() {
-        const rows = this.Text.text.split('\n');
+        const rows = this.property.text.split('\n');
         const cols = [];
         let maxCols = 0;
         for (let i of rows) {
             // 用lenth判断不合适 因为 中文（可能也有其他字符）计算为2个cols长度
-            // if (i.length > maxCols) {
-            //     maxCols =
-            //         i.length > this.Text.maxCols ? this.Text.maxCols : i.length;
-            //     if (i.length > this.Text.maxCols) {
-            //         let j = 0;
-            //         while (j < i.length) {
-            //             cols.push(i.substr(j, this.Text.maxCols));
-            //             j += this.Text.maxCols;
-            //         }
-            //     } else {
-            //         cols.push(i);
-            //     }
-            // } else {
-            //     cols.push(i);
-            // }
             const length = getStrLength(i);
             if (length > maxCols) {
                 maxCols =
-                    length > this.Text.maxCols ? this.Text.maxCols : length;
-                if (length > this.Text.maxCols) {
+                    length > this.property.maxCols
+                        ? this.property.maxCols
+                        : length;
+                if (length > this.property.maxCols) {
                     let j = 0;
                     while (j < length) {
-                        const strObj = subStr(i, j, this.Text.maxCols);
-                        // console.log(i, j, this.Text.maxCols, strObj);
+                        const strObj = subStr(i, j, this.property.maxCols);
+                        // console.log(i, j, this.property.maxCols, strObj);
                         cols.push(strObj.str);
                         j += strObj.subLen;
                     }
@@ -245,26 +197,27 @@ export default class {
                 cols.push(i);
             }
         }
-        this.Text.txts = cols;
+        this.property.txts = cols;
         this.input.style.width =
-            maxCols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
+            maxCols * parseInt(this.property.fontSize, 10) / 2 + 'px';
         this.input.setAttribute('rows', cols.length.toString());
     }
 
     initTextArea() {
-        this.Text.isEditor = true;
+        this.property.isEditor = true;
         this.input = <HTMLTextAreaElement>document.createElement('textArea');
         this.input.className = 'function-text';
         this.input.className += ` ${config.platform}`;
-        this.input.style.left = `${this.Text.position.x}px`;
-        this.input.style.top = `${this.Text.position.y}px`;
-        this.input.style.color = this.Text.color;
+        this.input.style.left = `${this.property.position.x}px`;
+        this.input.style.top = `${this.property.position.y}px`;
+        this.input.style.color = this.property.color;
         this.input.style.width =
-            this.Text.cols * parseInt(this.Text.fontSize, 10) / 2 + 'px';
-        this.input.setAttribute('rows', this.Text.rows.toString());
+            this.property.cols * parseInt(this.property.fontSize, 10) / 2 +
+            'px';
+        this.input.setAttribute('rows', this.property.rows.toString());
         setTimeout(() => {
-            this.Text.width = this.input.offsetWidth;
-            this.Text.height = this.input.offsetHeight;
+            this.property.width = this.input.offsetWidth;
+            this.property.height = this.input.offsetHeight;
             if (this.isFocus) {
                 this.input.setAttribute('tabIndex', '1');
                 this.input.setAttribute('autofocus', 'true');
@@ -272,19 +225,19 @@ export default class {
             }
         }, 0);
         this.inputListener = (e: KeyboardEvent) => {
-            this.Text.text = (<HTMLInputElement>e.target).value;
+            this.property.text = (<HTMLInputElement>e.target).value;
             this.getTextInput();
             this.getSize();
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
-            this.Text.text = (<HTMLInputElement>e.target).value;
-            this.Text.width = this.input.offsetWidth;
-            this.Text.height = this.input.offsetHeight;
+            this.property.text = (<HTMLInputElement>e.target).value;
+            this.property.width = this.input.offsetWidth;
+            this.property.height = this.input.offsetHeight;
             this.input.style.display = 'none';
-            this.Text.isEditor = false;
+            this.property.isEditor = false;
             config.emitter.emit('draw-all');
 
-            if (this.Text.text === '') {
+            if (this.property.text === '') {
                 this.destroyed();
             }
         };
@@ -295,7 +248,7 @@ export default class {
     }
 
     hasBox() {
-        return !!this.Text.text;
+        return !!this.property.text;
     }
 
     event() {
@@ -305,7 +258,7 @@ export default class {
             }
         };
         this.mouseMove = (e: MouseEvent) => {
-            if (this.isFocus && !this.Text.isEditor) {
+            if (this.isFocus && !this.property.isEditor) {
                 this.mouse.mouseMove(e);
             }
         };
@@ -322,7 +275,7 @@ export default class {
 
     getTextWidth(txt: string) {
         this.ctx.save();
-        this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
+        this.ctx.font = `${this.property.fontSize} ${this.property.fontFamily}`;
         const width = this.ctx.measureText(txt);
         this.ctx.restore();
         return width;
@@ -331,20 +284,22 @@ export default class {
     drawText() {
         const getHeight = () => {
             this.ctx.save();
-            this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
+            this.ctx.font = `${this.property.fontSize} ${
+                this.property.fontFamily
+            }`;
             const height = this.ctx.measureText('w').width * 2;
             return height;
         };
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.fillStyle = this.Text.color;
-        this.ctx.font = `${this.Text.fontSize} ${this.Text.fontFamily}`;
-        for (let i = 0; i < this.Text.txts.length; i++) {
+        this.ctx.fillStyle = this.property.color;
+        this.ctx.font = `${this.property.fontSize} ${this.property.fontFamily}`;
+        for (let i = 0; i < this.property.txts.length; i++) {
             this.ctx.fillText(
-                this.Text.txts[i],
-                this.Text.position.x + 1 + 10,
-                // this.Text.position.y - 6 + getHeight() * (i + 1) + 10,
-                this.Text.position.y - 4 + getHeight() * (i + 1) + 10,
+                this.property.txts[i],
+                this.property.position.x + 1 + 10,
+                // this.property.position.y - 6 + getHeight() * (i + 1) + 10,
+                this.property.position.y - 4 + getHeight() * (i + 1) + 10,
             );
         }
         this.ctx.restore();
@@ -353,33 +308,28 @@ export default class {
     draw() {
         this.ctx.save();
         this.ctx.beginPath();
-        if (this.isFocus && this.Text.text) {
-            this.ctx.lineWidth = this.Text.borderWidth;
-            this.ctx.strokeStyle = this.Text.borderColor;
+        if (this.isFocus && this.property.text) {
+            this.ctx.lineWidth = this.property.borderWidth;
+            this.ctx.strokeStyle = this.property.borderColor;
             this.ctx.strokeRect(
-                this.Text.position.x,
-                this.Text.position.y,
-                this.Text.width,
-                this.Text.height,
+                this.property.position.x,
+                this.property.position.y,
+                this.property.width,
+                this.property.height,
             );
         }
 
         this.ctx.closePath();
         this.ctx.restore();
 
-        if (!this.Text.isEditor) {
+        if (!this.property.isEditor) {
             this.drawText();
         }
     }
 
     destroyed() {
+        super.destroyed();
         this.input.removeEventListener('input', this.inputListener);
         this.input.removeEventListener('blur', this.inputBlurListener);
-
-        config.emitter.off('mousedown', this.mouseDown);
-        config.emitter.off('mousemove', this.mouseMove);
-        config.emitter.off('mouseup', this.mouseUp);
-
-        config.emitter.emit('removeItem', this);
     }
 }
