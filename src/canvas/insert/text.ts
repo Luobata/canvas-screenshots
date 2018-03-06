@@ -3,6 +3,7 @@ import { config, inBox } from '../config';
 import { pointInRectangular } from 'LIB/geometric';
 import { isChinese } from 'LIB/reg';
 import Mouse from './mouse-text';
+import Content from './content';
 
 const getStrLength = (str: string) => {
     let len = 0;
@@ -87,7 +88,7 @@ export default class {
             position: pos,
             color: (<any>window).color || 'red',
             borderColor: '#fff',
-            borderWidth: 1,
+            borderWidth: 2,
             text: '',
             cols: 1,
             rows: 1,
@@ -353,8 +354,8 @@ export default class {
         this.ctx.save();
         this.ctx.beginPath();
         if (this.isFocus && this.Text.text) {
-            this.ctx.strokeStyle = this.Text.borderColor;
             this.ctx.lineWidth = this.Text.borderWidth;
+            this.ctx.strokeStyle = this.Text.borderColor;
             this.ctx.strokeRect(
                 this.Text.position.x,
                 this.Text.position.y,
@@ -363,7 +364,6 @@ export default class {
             );
         }
 
-        this.ctx.stroke();
         this.ctx.closePath();
         this.ctx.restore();
 
