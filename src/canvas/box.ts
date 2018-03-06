@@ -152,6 +152,14 @@ export default class Box {
 
         config.emitter.on('removeItem', (item: Content) => {
             this.content.delete(item);
+            for (let i = 0; i < this.childSaveArray.length; ) {
+                const child = this.childSaveArray[i];
+                if (child === item) {
+                    this.childSaveArray.splice(i, 1);
+                } else {
+                    i++;
+                }
+            }
         });
 
         boxEmitter.on('draw', () => {});

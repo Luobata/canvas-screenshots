@@ -156,6 +156,9 @@ export default class {
             }
             emitter.emit('mouseup', e);
         });
+        document.addEventListener('keyup', e => {
+            emitter.emit('keyup', e);
+        });
 
         emitter.on('draw', () => {
             this.resize();

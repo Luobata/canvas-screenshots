@@ -24,6 +24,7 @@ export default class {
     mouseDown: EventListener;
     mouseMove: EventListener;
     mouseUp: EventListener;
+    keyUp: EventListener;
 
     property: any;
     saveArray: Array<any>;
@@ -34,6 +35,8 @@ export default class {
 
         this.isFocus = true;
         this.saveArray = [];
+
+        this.keyCodeListener();
     }
 
     save() {
@@ -54,7 +57,21 @@ export default class {
         config.emitter.off('mousedown', this.mouseDown);
         config.emitter.off('mousemove', this.mouseMove);
         config.emitter.off('mouseup', this.mouseUp);
+        config.emitter.off('keyup', this.keyUp);
         config.emitter.emit('removeItem', this);
+    }
+
+    keyCodeListener() {
+        this.keyUp = (e: KeyboardEvent) => {
+            if (e.keyCode === 8) {
+                // 删除
+                if (this.isFocus) {
+                    this.destroyed();
+                    config.emitter.emit('draw-all');
+                }
+            }
+        };
+        config.emitter.on('keyup', this.keyUp);
     }
 
     setColor(color: string) {
