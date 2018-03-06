@@ -101,7 +101,14 @@ export default class {
 
     initBox() {}
 
-    hasBox() {}
+    hasBox() {
+        return !!(
+            this.property.rect.startX !== undefined &&
+            this.property.rect.startY !== undefined &&
+            this.property.rect.endX !== undefined &&
+            this.property.rect.endY !== undefined
+        );
+    }
 
     inBoxBorder(positionX: number, positionY: number) {}
 

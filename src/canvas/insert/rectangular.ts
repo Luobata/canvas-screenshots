@@ -64,15 +64,6 @@ export default class extends Content {
         };
     }
 
-    hasBox() {
-        return !!(
-            this.property.rect.startX !== undefined &&
-            this.property.rect.startY !== undefined &&
-            this.property.rect.endX !== undefined &&
-            this.property.rect.endY !== undefined
-        );
-    }
-
     inBoxBorder(positionX: number, positionY: number): boolean {
         const centerX =
             this.property.rect.startX +

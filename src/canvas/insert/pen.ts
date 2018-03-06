@@ -25,27 +25,6 @@ export default class extends Content {
         this.event();
     }
 
-    save() {
-        this.saveArray.push(JSON.parse(JSON.stringify(this.property)));
-    }
-
-    back() {
-        if (this.saveArray.length) {
-            this.saveArray.pop();
-            this.property = this.saveArray[this.saveArray.length - 1];
-        }
-        if (!this.property) {
-            this.destroyed();
-        }
-    }
-
-    destroyed() {
-        config.emitter.off('mousedown', this.mouseDown);
-        config.emitter.off('mousemove', this.mouseMove);
-        config.emitter.off('mouseup', this.mouseUp);
-        config.emitter.emit('removeItem', this);
-    }
-
     inBoxBorder(x: number, y: number) {
         return pointInLine(
             this.property.lines,

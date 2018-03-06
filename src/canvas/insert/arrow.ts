@@ -41,15 +41,6 @@ export default class extends Content {
         };
     }
 
-    hasBox() {
-        return !!(
-            this.property.rect.startX !== undefined &&
-            this.property.rect.startY !== undefined &&
-            this.property.rect.endX !== undefined &&
-            this.property.rect.endY !== undefined
-        );
-    }
-
     event() {
         this.mouseDown = (e: MouseEvent) => {
             if (this.isFocus && this.hasBox() && inBox(e)) {
