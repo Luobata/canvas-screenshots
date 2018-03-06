@@ -4,20 +4,6 @@ import { getCircleMap } from 'LIB/help';
 import Content from './content';
 import Mouse from './mouse-rectangular';
 
-const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
-
-const inCircle = (
-    x: number,
-    y: number,
-    positionX: number,
-    positinY: number,
-): boolean => {
-    return !!(
-        Math.pow(x - positionX, 2) + Math.pow(y - positinY, 2) <=
-        Math.pow(circlePath, 2)
-    );
-};
-
 interface rectangular {
     rect?: Rect;
     circles?: Array<dragCircle>;
@@ -45,29 +31,6 @@ export default class extends Content {
 
         this.init();
         this.event();
-    }
-
-    getCursor(e: MouseEvent, type?: string) {
-        let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
-        for (let i of this.property.circles) {
-            if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
-                // 在这个范围内 对应的手势图标
-                //result = `${i.cssPosition}-resize`;
-                if (type === 'eve') {
-                    result = `${i.cssPositionEve}-resize`;
-                } else {
-                    result = `${i.cssPosition}-resize`;
-                }
-            }
-        }
-        if (result === 'crosshair') {
-            // 如果还是十字 如果在边上 则可以拖动
-            if (this.inBoxBorder(e.clientX, e.clientY)) {
-                result = 'all-scroll';
-            }
-        }
-
-        return result;
     }
 
     event() {
