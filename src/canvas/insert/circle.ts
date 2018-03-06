@@ -23,7 +23,7 @@ export default class extends Content {
         super(ctx);
         this.property = {
             borderColor: color,
-            borderWidth: 1,
+            borderWidth: 3,
             color,
             auxLineColor: 'gray',
             circleWidth: 3,
@@ -163,6 +163,7 @@ export default class extends Content {
                     : property.radiusY;
             var ratioX = property.radiusX / r;
             var ratioY = property.radiusY / r;
+            this.ctx.save();
             this.ctx.strokeStyle = this.property.borderColor;
             this.ctx.lineWidth = this.property.borderWidth;
             this.ctx.beginPath();
@@ -186,7 +187,7 @@ export default class extends Content {
             const endX = this.property.rect.endX;
             const endY = this.property.rect.endY;
 
-            this.ctx.lineWidth = 1;
+            this.ctx.lineWidth = this.property.borderWidth;
             this.ctx.strokeStyle = this.property.auxLineColor;
             this.ctx.strokeRect(
                 startX - this.property.borderWidth,
@@ -195,6 +196,21 @@ export default class extends Content {
                 endY - startY + this.property.borderWidth * 2,
             );
             this.ctx.stroke();
+            this.ctx.restore();
+        }
+        ellipse({
+            centerX: (this.property.rect.startX + this.property.rect.endX) / 2,
+            centerY: (this.property.rect.startY + this.property.rect.endY) / 2,
+            radiusX:
+                Math.abs(this.property.rect.startX - this.property.rect.endX) /
+                2,
+            radiusY:
+                Math.abs(this.property.rect.startY - this.property.rect.endY) /
+                2,
+        });
+
+        if (this.isFocus) {
+            this.ctx.save();
             for (let i of propertyMap) {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.property.color;
@@ -212,15 +228,5 @@ export default class extends Content {
             }
             this.ctx.restore();
         }
-        ellipse({
-            centerX: (this.property.rect.startX + this.property.rect.endX) / 2,
-            centerY: (this.property.rect.startY + this.property.rect.endY) / 2,
-            radiusX:
-                Math.abs(this.property.rect.startX - this.property.rect.endX) /
-                2,
-            radiusY:
-                Math.abs(this.property.rect.startY - this.property.rect.endY) /
-                2,
-        });
     }
 }
