@@ -105,36 +105,6 @@ export default class extends Content {
         return inRow() || inColumn();
     }
 
-    inBox(positionX: number, positionY: number, circlePath = 0): boolean {
-        const inX = (): boolean => {
-            if (this.property.rect.startX < this.property.rect.endX) {
-                return (
-                    positionX + circlePath >= this.property.rect.startX &&
-                    positionX - circlePath <= this.property.rect.endX
-                );
-            } else {
-                return (
-                    positionX + circlePath <= this.property.rect.startX &&
-                    positionX - circlePath >= this.property.rect.endX
-                );
-            }
-        };
-        const inY = (): boolean => {
-            if (this.property.rect.startY < this.property.rect.endY) {
-                return (
-                    positionY + circlePath >= this.property.rect.startY &&
-                    positionY - circlePath <= this.property.rect.endY
-                );
-            } else {
-                return (
-                    positionY + circlePath <= this.property.rect.startY &&
-                    positionY - circlePath >= this.property.rect.endY
-                );
-            }
-        };
-        return inX() && inY();
-    }
-
     draw() {
         const circleMap = getCircleMap(
             this.property.rect,
