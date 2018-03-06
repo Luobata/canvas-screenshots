@@ -32,15 +32,6 @@ export default class extends Content {
         this.event();
     }
 
-    init() {
-        this.property.rect = {
-            startX: undefined,
-            startY: undefined,
-            endX: undefined,
-            endY: undefined,
-        };
-    }
-
     event() {
         this.mouseDown = (e: MouseEvent) => {
             if (this.isFocus && this.hasBox() && inBox(e)) {

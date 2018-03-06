@@ -55,15 +55,6 @@ export default class extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    init() {
-        this.property.rect = {
-            startX: undefined,
-            startY: undefined,
-            endX: undefined,
-            endY: undefined,
-        };
-    }
-
     inBoxBorder(positionX: number, positionY: number): boolean {
         const centerX =
             this.property.rect.startX +

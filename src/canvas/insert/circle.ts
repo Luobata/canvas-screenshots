@@ -39,15 +39,6 @@ export default class extends Content {
         super.setColor(color);
     }
 
-    init() {
-        this.property.rect = {
-            startX: undefined,
-            startY: undefined,
-            endX: undefined,
-            endY: undefined,
-        };
-    }
-
     inBoxBorder(positionX: number, positionY: number) {
         const inCircle = () => {
             const margin = 0.1;

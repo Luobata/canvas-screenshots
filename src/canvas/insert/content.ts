@@ -95,7 +95,14 @@ export default class {
         return result;
     }
 
-    init() {}
+    init() {
+        this.property.rect = {
+            startX: undefined,
+            startY: undefined,
+            endX: undefined,
+            endY: undefined,
+        };
+    }
 
     event() {}
 
