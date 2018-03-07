@@ -186,7 +186,7 @@ export default class extends Content {
                     let j = 0;
                     while (j < length) {
                         const strObj = subStr(i, j, this.property.maxCols);
-                        // console.log(i, j, this.property.maxCols, strObj);
+                        console.log(i, j, this.property.maxCols, strObj);
                         cols.push(strObj.str);
                         j += strObj.subLen;
                     }
