@@ -327,6 +327,19 @@ export default class extends Content {
         }
     }
 
+    keyCodeListener() {
+        this.keyUp = (e: KeyboardEvent) => {
+            if (e.keyCode === 8) {
+                // 删除
+                if (this.isFocus && !this.property.isEditor) {
+                    this.destroyed();
+                    config.emitter.emit('draw-all');
+                }
+            }
+        };
+        config.emitter.on('keyup', this.keyUp);
+    }
+
     destroyed() {
         super.destroyed();
         this.input.removeEventListener('input', this.inputListener);
