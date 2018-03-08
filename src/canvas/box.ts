@@ -88,7 +88,11 @@ export default class Box {
                         '',
                     );
                 });
-                if (that.currentFun !== 'back' && that.currentFun !== 'save') {
+                if (
+                    that.currentFun !== 'back' &&
+                    that.currentFun !== 'save' &&
+                    that.currentFun !== 'close'
+                ) {
                     this.className += ' active';
                     childWrap.style.display = 'inline-block';
                 } else {
@@ -96,6 +100,10 @@ export default class Box {
                 }
                 if (that.currentFun === 'back') {
                     that.back();
+                }
+                if (that.currentFun === 'close') {
+                    that.destroyed();
+                    config.emitter.emit('destoryed');
                 }
                 config.emitter.emit('blur');
             });
@@ -516,5 +524,9 @@ export default class Box {
             this.ctx.fillStyle = 'white';
             this.ctx.fill();
         }
+    }
+
+    destroyed() {
+        this.functionBox.remove();
     }
 }

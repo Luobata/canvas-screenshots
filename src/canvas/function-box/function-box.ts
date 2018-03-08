@@ -29,6 +29,10 @@ export default (parent: HTMLElement) => {
             className: 'back',
         },
         {
+            text: 'X',
+            className: 'close',
+        },
+        {
             text: 'S',
             className: 'save',
         },
