@@ -95,7 +95,10 @@ export default class extends Content {
         this.getMaxCols();
     }
 
-    setColor(color: string) {}
+    setColor(color: string) {
+        this.input.style.color = color;
+        super.setColor(color);
+    }
 
     getCursor(e: MouseEvent) {
         let result = 'crosshair';
@@ -344,5 +347,6 @@ export default class extends Content {
         super.destroyed();
         this.input.removeEventListener('input', this.inputListener);
         this.input.removeEventListener('blur', this.inputBlurListener);
+        this.input.remove();
     }
 }
