@@ -164,6 +164,10 @@ export default class {
             this.resize();
         });
 
+        emitter.on('destoryed', () => {
+            this.destroyed();
+        });
+
         emitter.on('shot', () => {
             this.screenShots();
         });
@@ -200,6 +204,11 @@ export default class {
     screenShots() {
         console.log('begin shots');
         // 开始截图
+    }
+
+    destroyed() {
+        // TODO 事件移除
+        this.mask.remove();
     }
 
     blur() {

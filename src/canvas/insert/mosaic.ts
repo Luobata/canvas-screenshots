@@ -45,8 +45,21 @@ export default class extends Content {
             config.boxRect.startY,
             config.boxRect.endX - config.boxRect.startX,
             config.boxRect.endY - config.boxRect.startY,
-        );
+        ).data;
         for (let i of this.property.lines) {
+            for (
+                let j = i.y - this.property.circleWidth;
+                j <= i.y + this.property.circleWidth;
+                j++
+            ) {
+                for (
+                    let k = i.x - this.property.circleWidth;
+                    k <= i.x + this.property.circleWidth;
+                    k++
+                ) {
+                    // data[k, j]
+                }
+            }
         }
     }
 }

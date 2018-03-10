@@ -96,7 +96,6 @@ export default class Box {
                         '',
                     );
                 });
-                // if (that.currentFun !== 'back' && that.currentFun !== 'save') {
                 if (childBoxContent.indexOf(that.currentFun) !== -1) {
                     this.className += ' active';
                     childWrap.style.display = 'inline-block';
@@ -105,6 +104,10 @@ export default class Box {
                 }
                 if (that.currentFun === 'back') {
                     that.back();
+                }
+                if (that.currentFun === 'close') {
+                    that.destroyed();
+                    config.emitter.emit('destoryed');
                 }
                 config.emitter.emit('blur');
             });
@@ -436,9 +439,26 @@ export default class Box {
         config.emitter.on('mouseup', (e: MouseEvent) => {
             if (this.isFocus) return;
             // if (!this.inBox(e.clientX, e.clientY)) return;
-            if (newItem) {
+            const add = () => {
                 newItem.save();
                 this.childSaveArray.push(newItem);
+            };
+            if (newItem) {
+                if (newItem instanceof Text) {
+                    // 没有即增加
+                    if (!newItem.saveArray.length) {
+                        add();
+                    } else {
+                        // 如果有的话 输入内容和上一次不一样的即增加
+                        const last =
+                            newItem.saveArray[newItem.saveArray.length - 1];
+                        if (last.text !== newItem.property.text) {
+                            add();
+                        }
+                    }
+                } else {
+                    add();
+                }
             }
             position.startX = -1;
             newItem = null;
@@ -525,5 +545,9 @@ export default class Box {
             this.ctx.fillStyle = 'white';
             this.ctx.fill();
         }
+    }
+
+    destroyed() {
+        this.functionBox.remove();
     }
 }

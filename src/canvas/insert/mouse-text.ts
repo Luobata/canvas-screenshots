@@ -22,6 +22,9 @@ export default class {
                 // 双击事件
                 this.box.focus();
                 this.clickTime = 0;
+                this.mouseEvent = 'crosshair';
+                timer = now;
+                return;
             }
         }
         timer = now;
