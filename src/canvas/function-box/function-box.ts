@@ -25,6 +25,10 @@ export default (parent: HTMLElement) => {
             className: 'text',
         },
         {
+            text: 'M',
+            className: 'mosaic',
+        },
+        {
             text: 'B',
             className: 'back',
         },

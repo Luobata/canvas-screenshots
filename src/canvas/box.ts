@@ -4,6 +4,7 @@ import Circle from 'INSERT/circle';
 import Arrow from 'INSERT/arrow';
 import Pen from 'INSERT/pen';
 import Text from 'INSERT/text';
+import Mosaic from 'INSERT/mosaic';
 import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
@@ -11,7 +12,7 @@ import Cursor from './cursor';
 import { Readable } from 'stream';
 import { domEach } from 'LIB/dom';
 
-type Content = Rectangular | Circle | Arrow | Pen | Text;
+type Content = Rectangular | Circle | Arrow | Pen | Text | Mosaic;
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
@@ -75,6 +76,13 @@ export default class Box {
             '.color-wrap',
         ) as HTMLElement;
         const colorItem = colorWrap.querySelectorAll('.color-item');
+        const childBoxContent = [
+            'rectangular',
+            'circle',
+            'arrow',
+            'pen',
+            'text',
+        ];
 
         Array.prototype.forEach.call(items, (v: HTMLElement) => {
             v.addEventListener('click', function() {
@@ -88,7 +96,8 @@ export default class Box {
                         '',
                     );
                 });
-                if (that.currentFun !== 'back' && that.currentFun !== 'save') {
+                // if (that.currentFun !== 'back' && that.currentFun !== 'save') {
+                if (childBoxContent.indexOf(that.currentFun) !== -1) {
                     this.className += ' active';
                     childWrap.style.display = 'inline-block';
                 } else {
@@ -305,6 +314,13 @@ export default class Box {
                         });
                         this.content.add(newItem);
                         config.emitter.emit('draw-all');
+                    } else if (this.currentFun === 'mosaic') {
+                        newItem = new Mosaic(this.ctx, {
+                            x: position.startX,
+                            y: position.startY,
+                        });
+                        this.content.add(newItem);
+                        config.emitter.emit('draw-all');
                     }
                 }
             };
@@ -344,6 +360,16 @@ export default class Box {
                         );
                     }
                 } else if (newItem instanceof Pen) {
+                    if (position.startX !== -1) {
+                        newItem.addPosition(
+                            {
+                                x: e.clientX,
+                                y: e.clientY,
+                            },
+                            true,
+                        );
+                    }
+                } else if (newItem instanceof Mosaic) {
                     if (position.startX !== -1) {
                         newItem.addPosition(
                             {
