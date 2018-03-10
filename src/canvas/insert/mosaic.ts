@@ -4,7 +4,8 @@ import { config, inBox } from '../config';
 
 interface mosaic {
     lines: Array<Position>;
-    circleWidth: number;
+    width: number; // 单个马赛克大小
+    num: number; // 一次操作生成马赛克数量(一个方向上)
 }
 
 export default class extends Content {
@@ -14,7 +15,8 @@ export default class extends Content {
         this.event();
         this.property = {
             lines: [pos],
-            circleWidth: 3,
+            width: 3,
+            num: 3,
         };
     }
 
@@ -46,15 +48,26 @@ export default class extends Content {
             config.boxRect.endX - config.boxRect.startX,
             config.boxRect.endY - config.boxRect.startY,
         ).data;
+        console.log(data);
+        // https://www.jianshu.com/p/3d2a8bd83191
         for (let i of this.property.lines) {
             for (
-                let j = i.y - this.property.circleWidth;
-                j <= i.y + this.property.circleWidth;
-                j++
+                let x = i.x - this.property.width * this.property.num;
+                x < i.x + this.property.width + this.property.num;
+                x = x + this.property.width
             ) {
                 for (
-                    let k = i.x - this.property.circleWidth;
-                    k <= i.x + this.property.circleWidth;
+                    let y = i.y - this.property.width * this.property.num;
+                    y < i.y + this.property.width + this.property.num;
+                    y = y + this.property.width
+                ) {
+                    // 遍历以 (i.x, i.y)为中心的width*num个像素点
+                }
+            }
+            for (let j = -this.property.width; j <= this.property.width; j++) {
+                for (
+                    let k = -this.property.width;
+                    k <= this.property.width;
                     k++
                 ) {
                     // data[k, j]
