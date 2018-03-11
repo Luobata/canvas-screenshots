@@ -58,14 +58,32 @@ export default class extends Content {
         // https://www.jianshu.com/p/3d2a8bd83191
         for (let i of this.property.lines) {
             // 遍历所有点
+            // for (
+            //     let x = i.x - this.property.width * this.property.num;
+            //     x < i.x + this.property.width * this.property.num;
+            //     x = x + 2 * this.property.width + 1
+            // ) {
+            //     for (
+            //         let y = i.y - this.property.width * this.property.num;
+            //         y < i.y + this.property.width * this.property.num;
+            //         y = y + 2 * this.property.width + 1
+            //     ) {
+            //         let r = 0;
+            //         let g = 0;
+            //         let b = 0;
+            //         const total = Math.pow(this.property.width * 2 + 1, 2);
+            //         for (let j = -this.property.width; j <=this.property.width;j++) {
+            //         }
+            //     }
+            // }
             for (
                 let x = i.x - this.property.width * this.property.num;
-                x <= i.x + this.property.width * this.property.num;
+                x < i.x + this.property.width * this.property.num;
                 x = x + this.property.width
             ) {
                 for (
                     let y = i.y - this.property.width * this.property.num;
-                    y <= i.y + this.property.width * this.property.num;
+                    y < i.y + this.property.width * this.property.num;
                     y = y + this.property.width
                 ) {
                     // 遍历以 (i.x, i.y)为中心的width*num个像素点
@@ -78,10 +96,10 @@ export default class extends Content {
                             const pX = x + j - config.boxRect.startX;
                             const pY = y + k - config.boxRect.startY;
                             const unitIndex =
-                                pX *
+                                pY *
                                     (config.boxRect.endX -
                                         config.boxRect.startX) +
-                                pY;
+                                pX;
                             r += data[unitIndex * 4 + 0];
                             g += data[unitIndex * 4 + 1];
                             b += data[unitIndex * 4 + 2];
@@ -91,29 +109,15 @@ export default class extends Content {
                     r = r / total;
                     g = g / total;
                     b = b / total;
-                    for (
-                        let j = -this.property.width;
-                        j <= this.property.width;
-                        j++
-                    ) {
-                        for (
-                            let k = -this.property.width;
-                            k <= this.property.width;
-                            k++
-                        ) {
+                    for (let j = 0; j <= this.property.width; j++) {
+                        for (let k = 0; k <= this.property.width; k++) {
                             const pX = x + j - config.boxRect.startX;
                             const pY = y + k - config.boxRect.startY;
-                            console.log(
-                                i.x - config.boxRect.startX,
-                                i.y - config.boxRect.startY,
-                            );
-                            console.log(pX, pY);
-                            debugger;
                             const unitIndex =
-                                pX *
+                                pY *
                                     (config.boxRect.endX -
                                         config.boxRect.startX) +
-                                pY;
+                                pX;
                             data[unitIndex * 4 + 0] = r;
                             data[unitIndex * 4 + 1] = g;
                             data[unitIndex * 4 + 2] = b;
