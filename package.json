@@ -11,6 +11,7 @@
     "lint": "eslint --fix src/"
   },
   "devDependencies": {
+    "@types/html2canvas": "^0.5.35",
     "@types/node": "^9.3.0",
     "babel-core": "^6.24.0",
     "babel-eslint": "^8.0.1",
