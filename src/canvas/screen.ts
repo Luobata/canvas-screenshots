@@ -10,6 +10,8 @@ setConfig({
 
 export default class {
     body: HTMLElement;
+    transMask: HTMLCanvasElement;
+    transMaskCtx: CanvasRenderingContext2D;
     mask: HTMLCanvasElement;
     maskCtx: CanvasRenderingContext2D;
     shootBox: HTMLElement;
@@ -26,6 +28,8 @@ export default class {
         this.body = body;
         this.mask = document.createElement('canvas');
         this.maskCtx = this.mask.getContext('2d');
+        this.transMask = document.createElement('canvas');
+        this.transMaskCtx = this.transMask.getContext('2d');
         this.shootBox = document.createElement('div');
         this.show = true;
         this.beginMove = false;
@@ -33,7 +37,12 @@ export default class {
         this.clickTime = 0;
         this.initBackGround();
         this.functionBox = functionBox(this.body);
-        this.box = new Box(this.maskCtx, this.cursorStyle, this.functionBox);
+        this.box = new Box(
+            this.maskCtx,
+            this.transMaskCtx,
+            this.cursorStyle,
+            this.functionBox,
+        );
         setConfig({
             wrap: this.body,
         });
@@ -72,6 +81,11 @@ export default class {
         this.mask.style.zIndex = '100';
         this.resize();
 
+        this.transMask.style.position = 'fixed';
+        this.transMask.style.top = '0';
+        this.transMask.style.left = '0';
+
+        this.body.appendChild(this.transMask);
         this.body.appendChild(this.mask);
     }
 
@@ -80,6 +94,9 @@ export default class {
         const height = this.body.clientHeight;
         this.mask.width = width;
         this.mask.height = height;
+
+        this.transMask.width = width;
+        this.transMask.height = height;
     }
 
     resize() {
@@ -88,6 +105,14 @@ export default class {
         const height = this.body.clientHeight;
 
         this.reset();
+
+        this.transMaskCtx.save();
+        this.transMaskCtx.beginPath();
+        this.transMaskCtx.globalAlpha = 0;
+        this.transMaskCtx.fillRect(0, 0, width, height);
+        this.transMaskCtx.stroke();
+        this.transMaskCtx.restore();
+
         this.maskCtx.save();
         this.maskCtx.beginPath();
         this.maskCtx.globalAlpha = 0.7;
@@ -209,6 +234,7 @@ export default class {
     destroyed() {
         // TODO 事件移除
         this.mask.remove();
+        this.transMask.remove();
     }
 
     blur() {

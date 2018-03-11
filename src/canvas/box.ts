@@ -27,6 +27,7 @@ enum insertFunction {
 }
 export default class Box {
     ctx: CanvasRenderingContext2D;
+    transctx: CanvasRenderingContext2D;
     circles: Array<dragCircle>;
     content: Set<Content>;
     rect?: Rect;
@@ -47,11 +48,13 @@ export default class Box {
 
     constructor(
         ctx: CanvasRenderingContext2D,
+        transctx: CanvasRenderingContext2D,
         cursorStyle: string,
         functionBox: HTMLDivElement,
     ) {
         const that = this;
         this.ctx = ctx;
+        this.transctx = transctx;
         this.cursorStyle = cursorStyle;
         this.isFocus = true;
         this.isShowCircle = false;
@@ -318,7 +321,7 @@ export default class Box {
                         this.content.add(newItem);
                         config.emitter.emit('draw-all');
                     } else if (this.currentFun === 'mosaic') {
-                        newItem = new Mosaic(this.ctx, {
+                        newItem = new Mosaic(this.ctx, this.transctx, {
                             x: position.startX,
                             y: position.startY,
                         });
@@ -373,15 +376,15 @@ export default class Box {
                         );
                     }
                 } else if (newItem instanceof Mosaic) {
-                    if (position.startX !== -1) {
-                        newItem.addPosition(
-                            {
-                                x: e.clientX,
-                                y: e.clientY,
-                            },
-                            true,
-                        );
-                    }
+                    // if (position.startX !== -1) {
+                    //     newItem.addPosition(
+                    //         {
+                    //             x: e.clientX,
+                    //             y: e.clientY,
+                    //         },
+                    //         true,
+                    //     );
+                    // }
                 }
             } else if (position.startX !== -1) {
                 if (this.currentFun === 'rectangular') {
