@@ -1,6 +1,7 @@
 import { setConfig, config } from './config';
 import Box from './box';
 import functionBox from './function-box/function-box';
+const html2canvas = require('html2canvas');
 const ee = require('event-emitter');
 const emitter = new ee();
 
@@ -35,22 +36,23 @@ export default class {
         this.beginMove = false;
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
-        this.initBackGround();
-        this.functionBox = functionBox(this.body);
-        this.box = new Box(
-            this.maskCtx,
-            this.transMaskCtx,
-            this.cursorStyle,
-            this.functionBox,
-        );
-        setConfig({
-            wrap: this.body,
-        });
+        this.initBackGround(() => {
+            this.functionBox = functionBox(this.body);
+            this.box = new Box(
+                this.maskCtx,
+                this.transMaskCtx,
+                this.cursorStyle,
+                this.functionBox,
+            );
+            setConfig({
+                wrap: this.body,
+            });
 
-        this.initEvent();
-        this.platform();
-        this.hackBody();
-        this.drawAll();
+            this.initEvent();
+            this.platform();
+            this.hackBody();
+            this.drawAll();
+        });
     }
 
     platform() {
@@ -70,7 +72,7 @@ export default class {
         this.mask.style['userSelect'] = 'none';
     }
 
-    initBackGround() {
+    initBackGround(fn: Function) {
         const width = this.body.clientWidth;
         const height = this.body.clientHeight;
 
@@ -85,8 +87,13 @@ export default class {
         this.transMask.style.top = '0';
         this.transMask.style.left = '0';
 
-        this.body.appendChild(this.transMask);
-        this.body.appendChild(this.mask);
+        html2canvas(document.body).then((canvas: HTMLCanvasElement) => {
+            console.log('finished');
+            this.transMask = canvas;
+            this.body.appendChild(canvas);
+            this.body.appendChild(this.mask);
+            fn();
+        });
     }
 
     reset() {

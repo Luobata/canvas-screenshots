@@ -66,6 +66,7 @@
   },
   "homepage": "https://github.com/Luobata/canvas-screenshots#readme",
   "dependencies": {
-    "@types/event-emitter": "^0.3.2"
+    "@types/event-emitter": "^0.3.2",
+    "html2canvas": "^1.0.0-alpha.10"
   }
 }

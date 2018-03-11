@@ -1,5 +1,7 @@
 import ScreenShoot from './canvas/screen';
 
 export default () => {
-    new ScreenShoot();
+    window.onload = () => {
+        new ScreenShoot();
+    };
 };
