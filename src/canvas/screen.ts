@@ -29,8 +29,6 @@ export default class {
         this.body = body;
         this.mask = document.createElement('canvas');
         this.maskCtx = this.mask.getContext('2d');
-        this.transMask = document.createElement('canvas');
-        this.transMaskCtx = this.transMask.getContext('2d');
         this.shootBox = document.createElement('div');
         this.show = true;
         this.beginMove = false;
@@ -70,6 +68,7 @@ export default class {
     hackBody() {
         // TODO 浏览器前缀
         this.mask.style['userSelect'] = 'none';
+        this.transMask.style['userSelect'] = 'none';
     }
 
     initBackGround(fn: Function) {
@@ -83,13 +82,13 @@ export default class {
         this.mask.style.zIndex = '100';
         this.resize();
 
-        this.transMask.style.position = 'fixed';
-        this.transMask.style.top = '0';
-        this.transMask.style.left = '0';
-
         html2canvas(document.body).then((canvas: HTMLCanvasElement) => {
             console.log('finished');
             this.transMask = canvas;
+            this.transMaskCtx = canvas.getContext('2d');
+            this.transMask.style.position = 'fixed';
+            this.transMask.style.top = '0';
+            this.transMask.style.left = '0';
             this.body.appendChild(canvas);
             this.body.appendChild(this.mask);
             fn();
@@ -102,8 +101,8 @@ export default class {
         this.mask.width = width;
         this.mask.height = height;
 
-        this.transMask.width = width;
-        this.transMask.height = height;
+        // this.transMask.width = width;
+        // this.transMask.height = height;
     }
 
     resize() {
@@ -112,13 +111,6 @@ export default class {
         const height = this.body.clientHeight;
 
         this.reset();
-
-        this.transMaskCtx.save();
-        this.transMaskCtx.beginPath();
-        this.transMaskCtx.globalAlpha = 0;
-        this.transMaskCtx.fillRect(0, 0, width, height);
-        this.transMaskCtx.stroke();
-        this.transMaskCtx.restore();
 
         this.maskCtx.save();
         this.maskCtx.beginPath();

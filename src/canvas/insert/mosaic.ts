@@ -60,12 +60,12 @@ export default class extends Content {
             // 遍历所有点
             for (
                 let x = i.x - this.property.width * this.property.num;
-                x < i.x + this.property.width * this.property.num;
+                x <= i.x + this.property.width * this.property.num;
                 x = x + this.property.width
             ) {
                 for (
                     let y = i.y - this.property.width * this.property.num;
-                    y < i.y + this.property.width * this.property.num;
+                    y <= i.y + this.property.width * this.property.num;
                     y = y + this.property.width
                 ) {
                     // 遍历以 (i.x, i.y)为中心的width*num个像素点
@@ -83,12 +83,8 @@ export default class extends Content {
                                         config.boxRect.startX) +
                                 pY;
                             r += data[unitIndex * 4 + 0];
-                            if (isNaN(r)) {
-                                // debugger;
-                            }
                             g += data[unitIndex * 4 + 1];
                             b += data[unitIndex * 4 + 2];
-                            // data[k, j]
                         }
                     }
 
@@ -107,6 +103,12 @@ export default class extends Content {
                         ) {
                             const pX = x + j - config.boxRect.startX;
                             const pY = y + k - config.boxRect.startY;
+                            console.log(
+                                i.x - config.boxRect.startX,
+                                i.y - config.boxRect.startY,
+                            );
+                            console.log(pX, pY);
+                            debugger;
                             const unitIndex =
                                 pX *
                                     (config.boxRect.endX -
