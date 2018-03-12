@@ -15,6 +15,8 @@ export default class {
     transMaskCtx: CanvasRenderingContext2D;
     mask: HTMLCanvasElement;
     maskCtx: CanvasRenderingContext2D;
+    offMask: HTMLCanvasElement;
+    offMaskCtx: CanvasRenderingContext2D;
     shootBox: HTMLElement;
     show: Boolean;
     beginMove: Boolean;
@@ -29,6 +31,8 @@ export default class {
         this.body = body;
         this.mask = document.createElement('canvas');
         this.maskCtx = this.mask.getContext('2d');
+        this.offMask = document.createElement('canvas');
+        this.offMaskCtx = this.offMask.getContext('2d');
         this.shootBox = document.createElement('div');
         this.show = true;
         this.beginMove = false;
@@ -38,6 +42,7 @@ export default class {
             this.functionBox = functionBox(this.body);
             this.box = new Box(
                 this.maskCtx,
+                this.offMaskCtx,
                 this.transMaskCtx,
                 this.cursorStyle,
                 this.functionBox,
@@ -80,6 +85,7 @@ export default class {
         this.mask.style.left = '0';
         this.mask.style.cursor = this.cursorStyle;
         this.mask.style.zIndex = '100';
+        this.reset();
         this.resize();
 
         html2canvas(document.body).then((canvas: HTMLCanvasElement) => {
@@ -101,8 +107,8 @@ export default class {
         this.mask.width = width;
         this.mask.height = height;
 
-        // this.transMask.width = width;
-        // this.transMask.height = height;
+        this.offMask.width = width;
+        this.offMask.height = height;
     }
 
     resize() {
@@ -110,7 +116,7 @@ export default class {
         const width = this.body.clientWidth;
         const height = this.body.clientHeight;
 
-        this.reset();
+        // this.reset();
 
         this.maskCtx.save();
         this.maskCtx.beginPath();

@@ -54,19 +54,15 @@ export default class Box {
 
     constructor(
         ctx: CanvasRenderingContext2D,
+        offCtx: CanvasRenderingContext2D,
         transctx: CanvasRenderingContext2D,
         cursorStyle: string,
         functionBox: HTMLDivElement,
     ) {
         const that = this;
-        const offCanvas = document.createElement('canvas');
-        const width = document.body.clientWidth;
-        const height = document.body.clientHeight;
-        offCanvas.width = width;
-        offCanvas.height = height;
         this.ctx = ctx;
         this.transctx = transctx;
-        this.offCtx = offCanvas.getContext('2d');
+        this.offCtx = offCtx;
         this.cursorStyle = cursorStyle;
         this.isFocus = true;
         this.isShowCircle = false;
@@ -496,21 +492,20 @@ export default class Box {
         let data;
         // 要等i.draw之后才会回写ctx 所以ctx还是空的
         if (this.content.size || this.sContent.length) {
-            window.requestAnimationFrame(() => {
-                for (let i of this.sContent) {
-                    i.draw();
-                }
-                for (let i of this.content) {
-                    i.draw();
-                }
-            });
+            // window.requestAnimationFrame(() => {
+            for (let i of this.sContent) {
+                i.draw();
+            }
+            for (let i of this.content) {
+                i.draw();
+            }
+            // });
             data = this.offCtx.getImageData(
                 this.rect.startX,
                 this.rect.startY,
                 this.rect.endX - this.rect.startX,
                 this.rect.endY - this.rect.startY,
             );
-            console.log(data);
         }
 
         return data;
