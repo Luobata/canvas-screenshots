@@ -32,6 +32,7 @@ enum insertFunction {
 export default class Box {
     ctx: CanvasRenderingContext2D;
     transctx: CanvasRenderingContext2D;
+    offCtx: CanvasRenderingContext2D; //离屏canvas
     circles: Array<dragCircle>;
     content: Set<Content>;
     sContent: Array<sContent>;
@@ -58,8 +59,14 @@ export default class Box {
         functionBox: HTMLDivElement,
     ) {
         const that = this;
+        const offCanvas = document.createElement('canvas');
+        const width = document.body.clientWidth;
+        const height = document.body.clientHeight;
+        offCanvas.width = width;
+        offCanvas.height = height;
         this.ctx = ctx;
         this.transctx = transctx;
+        this.offCtx = offCanvas.getContext('2d');
         this.cursorStyle = cursorStyle;
         this.isFocus = true;
         this.isShowCircle = false;
@@ -336,7 +343,8 @@ export default class Box {
                                 true,
                             );
                         } else {
-                            newItem = new Mosaic(this.ctx, this.transctx, {
+                            // newItem = new Mosaic(this.ctx, this.transctx, {
+                            newItem = new Mosaic(this.offCtx, this.transctx, {
                                 x: position.startX,
                                 y: position.startY,
                             });
@@ -405,7 +413,7 @@ export default class Box {
                 }
             } else if (position.startX !== -1) {
                 if (this.currentFun === 'rectangular') {
-                    newItem = new Rectangular(this.ctx, this.colorFun);
+                    newItem = new Rectangular(this.offCtx, this.colorFun);
                     this.content.add(newItem);
                     newItem.setPosition(
                         {
@@ -496,12 +504,13 @@ export default class Box {
                     i.draw();
                 }
             });
-            data = this.ctx.getImageData(
+            data = this.offCtx.getImageData(
                 this.rect.startX,
                 this.rect.startY,
                 this.rect.endX - this.rect.startX,
                 this.rect.endY - this.rect.startY,
             );
+            console.log(data);
         }
 
         return data;
