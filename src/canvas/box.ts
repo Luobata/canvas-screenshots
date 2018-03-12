@@ -12,10 +12,14 @@ import Cursor from './cursor';
 import { Readable } from 'stream';
 import { domEach } from 'LIB/dom';
 
-type Content = Rectangular | Circle | Arrow | Pen | Text | Mosaic;
+// Content 为基础类型集合 sContent为优先渲染的集合
+type Content = Rectangular | Circle | Arrow | Pen | Text;
+type sContent = Mosaic;
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
+
+let globalMosaic: Mosaic;
 
 // 插入功能
 enum insertFunction {
@@ -30,6 +34,7 @@ export default class Box {
     transctx: CanvasRenderingContext2D;
     circles: Array<dragCircle>;
     content: Set<Content>;
+    sContent: Array<sContent>;
     rect?: Rect;
     cursorStyle: string;
     isFocus: Boolean;
@@ -40,7 +45,7 @@ export default class Box {
     mouse: Mouse;
     cursor: Cursor;
     functionBox: HTMLDivElement;
-    childSaveArray: Array<Content>;
+    childSaveArray: Array<Content | sContent>;
 
     currentFun?: string;
     colorFun?: string;
@@ -67,6 +72,7 @@ export default class Box {
         this.mouse = new Mouse(this, boxEmitter);
         this.cursor = new Cursor(this);
         this.content = new Set();
+        this.sContent = [];
         this.drawAll();
         this.functionBox = functionBox;
         this.childSaveArray = [];
@@ -177,7 +183,6 @@ export default class Box {
             }
         });
 
-        boxEmitter.on('draw', () => {});
         boxEmitter.on('shot', () => {
             config.emitter.emit('shot');
         });
@@ -297,7 +302,7 @@ export default class Box {
     }
 
     listenMouse() {
-        let newItem: Content | null;
+        let newItem: Content | sContent | null;
         let position = {
             startX: -1,
             startY: -1,
@@ -321,12 +326,24 @@ export default class Box {
                         this.content.add(newItem);
                         config.emitter.emit('draw-all');
                     } else if (this.currentFun === 'mosaic') {
-                        newItem = new Mosaic(this.ctx, this.transctx, {
-                            x: position.startX,
-                            y: position.startY,
-                        });
-                        this.content.add(newItem);
-                        config.emitter.emit('draw-all');
+                        if (globalMosaic) {
+                            newItem = globalMosaic;
+                            newItem.addPosition(
+                                {
+                                    x: position.startX,
+                                    y: position.startY,
+                                },
+                                true,
+                            );
+                        } else {
+                            newItem = new Mosaic(this.ctx, this.transctx, {
+                                x: position.startX,
+                                y: position.startY,
+                            });
+                            globalMosaic = newItem;
+                            this.sContent.push(newItem);
+                            config.emitter.emit('draw-all');
+                        }
                     }
                 }
             };
@@ -469,10 +486,16 @@ export default class Box {
 
     getData() {
         let data;
-        if (this.content.size) {
+        // 要等i.draw之后才会回写ctx 所以ctx还是空的
+        if (this.content.size || this.sContent.length) {
+            // window.requestAnimationFrame(() => {
+            for (let i of this.sContent) {
+                i.draw();
+            }
             for (let i of this.content) {
                 i.draw();
             }
+            // });
             data = this.ctx.getImageData(
                 this.rect.startX,
                 this.rect.startY,
