@@ -488,14 +488,14 @@ export default class Box {
         let data;
         // 要等i.draw之后才会回写ctx 所以ctx还是空的
         if (this.content.size || this.sContent.length) {
-            // window.requestAnimationFrame(() => {
-            for (let i of this.sContent) {
-                i.draw();
-            }
-            for (let i of this.content) {
-                i.draw();
-            }
-            // });
+            window.requestAnimationFrame(() => {
+                for (let i of this.sContent) {
+                    i.draw();
+                }
+                for (let i of this.content) {
+                    i.draw();
+                }
+            });
             data = this.ctx.getImageData(
                 this.rect.startX,
                 this.rect.startY,
