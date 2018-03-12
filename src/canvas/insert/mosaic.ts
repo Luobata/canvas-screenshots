@@ -78,19 +78,19 @@ export default class extends Content {
             // }
             for (
                 let x = i.x - this.property.width * this.property.num;
-                x < i.x + this.property.width * this.property.num;
+                x <= i.x + this.property.width * this.property.num;
                 x = x + this.property.width
             ) {
                 for (
                     let y = i.y - this.property.width * this.property.num;
-                    y < i.y + this.property.width * this.property.num;
+                    y <= i.y + this.property.width * this.property.num;
                     y = y + this.property.width
                 ) {
                     // 遍历以 (i.x, i.y)为中心的width*num个像素点
                     let r = 0;
                     let g = 0;
                     let b = 0;
-                    const total = Math.pow(this.property.width, 2);
+                    const total = Math.pow(this.property.width + 1, 2);
                     for (let j = 0; j <= this.property.width; j++) {
                         for (let k = 0; k <= this.property.width; k++) {
                             const pX = x + j - config.boxRect.startX;
