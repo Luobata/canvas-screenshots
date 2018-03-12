@@ -322,7 +322,7 @@ export default class Box {
                 };
                 if (!hasBlur) {
                     if (this.currentFun === 'text') {
-                        newItem = new Text(this.ctx, {
+                        newItem = new Text(this.offCtx, {
                             x: position.startX,
                             y: position.startY,
                         });
@@ -421,7 +421,7 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'circle') {
-                    newItem = new Circle(this.ctx, this.colorFun);
+                    newItem = new Circle(this.offCtx, this.colorFun);
                     this.content.add(newItem);
                     newItem.setPosition(
                         {
@@ -433,7 +433,7 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'arrow') {
-                    newItem = new Arrow(this.ctx, this.colorFun);
+                    newItem = new Arrow(this.offCtx, this.colorFun);
                     this.content.add(newItem);
                     newItem.setPosition(
                         {
@@ -445,7 +445,7 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'pen') {
-                    newItem = new Pen(this.ctx, this.colorFun);
+                    newItem = new Pen(this.offCtx, this.colorFun);
                     this.content.add(newItem);
                     newItem.addPosition(
                         {
