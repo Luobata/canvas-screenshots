@@ -120,10 +120,12 @@ export default class extends Content {
             }
         }
 
-        this.ctx.putImageData(
-            boxData,
-            config.boxRect.startX,
-            config.boxRect.startY,
-        );
+        window.requestAnimationFrame(() => {
+            this.ctx.putImageData(
+                boxData,
+                config.boxRect.startX,
+                config.boxRect.startY,
+            );
+        });
     }
 }
