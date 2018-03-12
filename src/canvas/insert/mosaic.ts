@@ -47,6 +47,10 @@ export default class extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
+    inBoxBorder(x: number, y: number) {
+        return false;
+    }
+
     draw() {
         const boxData = this.transctx.getImageData(
             config.boxRect.startX,
@@ -55,27 +59,14 @@ export default class extends Content {
             config.boxRect.endY - config.boxRect.startY,
         );
         const data = boxData.data;
-        // https://www.jianshu.com/p/3d2a8bd83191
+        const original = this.transctx.getImageData(
+            config.boxRect.startX,
+            config.boxRect.startY,
+            config.boxRect.endX - config.boxRect.startX,
+            config.boxRect.endY - config.boxRect.startY,
+        ).data;
         for (let i of this.property.lines) {
             // 遍历所有点
-            // for (
-            //     let x = i.x - this.property.width * this.property.num;
-            //     x < i.x + this.property.width * this.property.num;
-            //     x = x + 2 * this.property.width + 1
-            // ) {
-            //     for (
-            //         let y = i.y - this.property.width * this.property.num;
-            //         y < i.y + this.property.width * this.property.num;
-            //         y = y + 2 * this.property.width + 1
-            //     ) {
-            //         let r = 0;
-            //         let g = 0;
-            //         let b = 0;
-            //         const total = Math.pow(this.property.width * 2 + 1, 2);
-            //         for (let j = -this.property.width; j <=this.property.width;j++) {
-            //         }
-            //     }
-            // }
             for (
                 let x = i.x - this.property.width * this.property.num;
                 x <= i.x + this.property.width * this.property.num;
@@ -100,9 +91,9 @@ export default class extends Content {
                                     (config.boxRect.endX -
                                         config.boxRect.startX) +
                                 pX;
-                            r += data[unitIndex * 4 + 0];
-                            g += data[unitIndex * 4 + 1];
-                            b += data[unitIndex * 4 + 2];
+                            r += original[unitIndex * 4 + 0];
+                            g += original[unitIndex * 4 + 1];
+                            b += original[unitIndex * 4 + 2];
                         }
                     }
 
@@ -131,8 +122,6 @@ export default class extends Content {
             boxData,
             config.boxRect.startX,
             config.boxRect.startY,
-            // config.boxRect.endX - config.boxRect.startX,
-            // config.boxRect.endY - config.boxRect.startY,
         );
     }
 }
