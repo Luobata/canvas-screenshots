@@ -17,6 +17,8 @@ export default class extends Content {
         pos: Position,
     ) {
         super(ctx);
+        // 马赛克没有focus状态
+        this.isFocus = false;
         this.transctx = transctx;
         this.event();
         this.property = {

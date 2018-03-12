@@ -424,7 +424,6 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'pen') {
-                    console.log(1);
                     newItem = new Pen(this.ctx, this.colorFun);
                     this.content.add(newItem);
                     newItem.addPosition(
@@ -434,8 +433,6 @@ export default class Box {
                         },
                         true,
                     );
-                } else if (this.currentFun === 'mosaic') {
-                    console.log(2);
                 }
             } else {
                 // 不操作 等待元素自己监听mousemove
