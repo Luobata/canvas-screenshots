@@ -32,6 +32,7 @@ enum insertFunction {
 export default class Box {
     ctx: CanvasRenderingContext2D;
     transctx: CanvasRenderingContext2D;
+    offCanvas: HTMLCanvasElement;
     offCtx: CanvasRenderingContext2D; //离屏canvas
     circles: Array<dragCircle>;
     content: Set<Content>;
@@ -54,6 +55,7 @@ export default class Box {
 
     constructor(
         ctx: CanvasRenderingContext2D,
+        offCanvas: HTMLCanvasElement,
         offCtx: CanvasRenderingContext2D,
         transctx: CanvasRenderingContext2D,
         cursorStyle: string,
@@ -62,6 +64,7 @@ export default class Box {
         const that = this;
         this.ctx = ctx;
         this.transctx = transctx;
+        this.offCanvas = offCanvas;
         this.offCtx = offCtx;
         this.cursorStyle = cursorStyle;
         this.isFocus = true;
@@ -492,26 +495,19 @@ export default class Box {
         let data;
         // 要等i.draw之后才会回写ctx 所以ctx还是空的
         if (this.content.size || this.sContent.length) {
-            // window.requestAnimationFrame(() => {
             for (let i of this.sContent) {
                 i.draw();
             }
             for (let i of this.content) {
                 i.draw();
             }
-            // });
-            data = this.offCtx.getImageData(
-                this.rect.startX,
-                this.rect.startY,
-                this.rect.endX - this.rect.startX,
-                this.rect.endY - this.rect.startY,
-            );
+            data = this.offCanvas;
         }
 
         return data;
     }
 
-    draw(data?: ImageData) {
+    draw(data?: HTMLCanvasElement) {
         if (this.hasBox()) {
             this.ctx.clearRect(
                 this.rect.startX,
@@ -526,7 +522,9 @@ export default class Box {
         }
 
         if (data) {
-            this.ctx.putImageData(data, this.rect.startX, this.rect.startY);
+            window.requestAnimationFrame(() => {
+                this.ctx.drawImage(data, 0, 0);
+            });
         }
     }
     drawAll() {

@@ -42,6 +42,7 @@ export default class {
             this.functionBox = functionBox(this.body);
             this.box = new Box(
                 this.maskCtx,
+                this.offMask,
                 this.offMaskCtx,
                 this.transMaskCtx,
                 this.cursorStyle,
