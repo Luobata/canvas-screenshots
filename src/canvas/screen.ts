@@ -146,7 +146,7 @@ export default class {
         window.addEventListener('resize', e => {
             if (this.show) {
                 // TODO resize box bug
-                this.resize();
+                // this.resize();
             }
         });
         this.mask.addEventListener('mousedown', e => {
