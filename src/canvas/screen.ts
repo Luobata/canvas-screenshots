@@ -132,7 +132,7 @@ export default class {
     functionBoxPos() {
         let left = 100;
         const rightMargin = this.body.offsetWidth - this.box.rect.endX;
-        const min = 250;
+        const min = 350;
         if (rightMargin < min) {
             left += min - rightMargin;
         }
