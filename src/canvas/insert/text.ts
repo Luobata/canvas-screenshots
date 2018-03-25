@@ -66,6 +66,7 @@ interface property {
 
 export default class extends Content {
     input: HTMLTextAreaElement;
+    inputDiv: HTMLDivElement;
     inputListener: EventListener;
     inputBlurListener: EventListener;
     mouse: Mouse;
@@ -200,15 +201,24 @@ export default class extends Content {
                 cols.push(i);
             }
         }
+        this.inputDiv.innerText = new Array(maxCols).fill(1).join('');
         this.property.txts = cols;
+        // this.input.style.width =
+        //     maxCols * parseInt(this.property.fontSize, 10) / 2 + 'px';
         this.input.style.width =
-            maxCols * parseInt(this.property.fontSize, 10) / 2 + 'px';
+            this.inputDiv.getBoundingClientRect().width + 'px';
         this.input.setAttribute('rows', cols.length.toString());
     }
 
     initTextArea() {
         this.property.isEditor = true;
         this.input = <HTMLTextAreaElement>document.createElement('textArea');
+        this.inputDiv = document.createElement('div');
+        this.inputDiv.style.position = 'absolute';
+        this.inputDiv.style.display = 'inline-block';
+        this.inputDiv.style.visibility = 'hidden';
+        this.inputDiv.style.fontSize = this.property.fontSize;
+        this.inputDiv.style.fontFamily = this.property.fontFamily;
         this.input.className = 'function-text';
         this.input.className += ` ${config.platform}`;
         this.input.style.left = `${this.property.position.x}px`;
@@ -248,6 +258,7 @@ export default class extends Content {
         this.input.addEventListener('blur', this.inputBlurListener);
 
         config.wrap.appendChild(this.input);
+        config.wrap.appendChild(this.inputDiv);
     }
 
     hasBox() {
@@ -297,12 +308,13 @@ export default class extends Content {
         this.ctx.beginPath();
         this.ctx.fillStyle = this.property.color;
         this.ctx.font = `${this.property.fontSize} ${this.property.fontFamily}`;
+        this.ctx.textBaseline = 'top';
         for (let i = 0; i < this.property.txts.length; i++) {
             this.ctx.fillText(
                 this.property.txts[i],
                 this.property.position.x + 1 + 10,
                 // this.property.position.y - 6 + getHeight() * (i + 1) + 10,
-                this.property.position.y - 4 + getHeight() * (i + 1) + 10,
+                this.property.position.y - 2 + getHeight() * i + 10,
             );
         }
         this.ctx.restore();
@@ -348,5 +360,6 @@ export default class extends Content {
         this.input.removeEventListener('input', this.inputListener);
         this.input.removeEventListener('blur', this.inputBlurListener);
         this.input.remove();
+        this.inputDiv.remove();
     }
 }
