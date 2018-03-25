@@ -4,14 +4,29 @@ import { pointInRectangular } from 'LIB/geometric';
 import { isChinese } from 'LIB/reg';
 import Mouse from './mouse-text';
 import Content from './content';
+let inputDiv: HTMLDivElement;
 
 const getStrLength = (str: string) => {
+    inputDiv.innerText = <string>new String(str);
     let len = 0;
     for (let i of str) {
         len += isChinese(i) ? 2 : 1;
     }
 
-    return len;
+    return inputDiv.getBoundingClientRect().width;
+};
+
+const getMaxStrIndex = (str: string, begin: number, max: number): number => {
+    let num = 0;
+    for (let i = begin; i <= str.length; i++) {
+        if (getStrLength(str.slice(begin, i)) <= max) {
+            num = i - begin;
+        } else {
+            break;
+        }
+    }
+
+    return num;
 };
 
 const subStr = (str: string, index: number, length: number) => {
@@ -66,7 +81,6 @@ interface property {
 
 export default class extends Content {
     input: HTMLTextAreaElement;
-    inputDiv: HTMLDivElement;
     inputListener: EventListener;
     inputBlurListener: EventListener;
     mouse: Mouse;
@@ -167,10 +181,8 @@ export default class extends Content {
     getMaxCols() {
         setTimeout(() => {
             // 20 = padding-left + paddin-right
-            const num =
-                (config.boxRect.endX - this.property.position.x - 20) /
-                this.property.textWidth;
-            this.property.maxCols = Math.floor(num) + 1;
+            const num = config.boxRect.endX - this.property.position.x - 20;
+            this.property.maxCols = num;
         }, 0);
     }
 
@@ -187,12 +199,15 @@ export default class extends Content {
                         ? this.property.maxCols
                         : length;
                 if (length > this.property.maxCols) {
+                    // 当前行超过最大宽度
+                    let k = 0;
                     let j = 0;
-                    while (j < length) {
-                        const strObj = subStr(i, j, this.property.maxCols);
-                        console.log(i, j, this.property.maxCols, strObj);
-                        cols.push(strObj.str);
-                        j += strObj.subLen;
+                    while (k < i.length) {
+                        j = getMaxStrIndex(i, k, this.property.maxCols);
+                        const strObj = i.substr(k, j);
+                        cols.push(strObj);
+                        k += j;
+                        console.log(k, j);
                     }
                 } else {
                     cols.push(i);
@@ -201,24 +216,23 @@ export default class extends Content {
                 cols.push(i);
             }
         }
-        this.inputDiv.innerText = new Array(maxCols).fill(1).join('');
         this.property.txts = cols;
-        // this.input.style.width =
-        //     maxCols * parseInt(this.property.fontSize, 10) / 2 + 'px';
-        this.input.style.width =
-            this.inputDiv.getBoundingClientRect().width + 'px';
+        this.input.style.width = maxCols + 'px';
         this.input.setAttribute('rows', cols.length.toString());
     }
 
     initTextArea() {
         this.property.isEditor = true;
         this.input = <HTMLTextAreaElement>document.createElement('textArea');
-        this.inputDiv = document.createElement('div');
-        this.inputDiv.style.position = 'absolute';
-        this.inputDiv.style.display = 'inline-block';
-        this.inputDiv.style.visibility = 'hidden';
-        this.inputDiv.style.fontSize = this.property.fontSize;
-        this.inputDiv.style.fontFamily = this.property.fontFamily;
+        if (!inputDiv) {
+            inputDiv = <HTMLDivElement>document.createElement('div');
+            inputDiv.style.position = 'absolute';
+            inputDiv.style.display = 'inline-block';
+            inputDiv.style.visibility = 'hidden';
+            inputDiv.style.fontSize = this.property.fontSize;
+            inputDiv.style.fontFamily = this.property.fontFamily;
+            config.wrap.appendChild(inputDiv);
+        }
         this.input.className = 'function-text';
         this.input.className += ` ${config.platform}`;
         this.input.style.left = `${this.property.position.x}px`;
@@ -258,7 +272,6 @@ export default class extends Content {
         this.input.addEventListener('blur', this.inputBlurListener);
 
         config.wrap.appendChild(this.input);
-        config.wrap.appendChild(this.inputDiv);
     }
 
     hasBox() {
@@ -314,7 +327,7 @@ export default class extends Content {
                 this.property.txts[i],
                 this.property.position.x + 1 + 10,
                 // this.property.position.y - 6 + getHeight() * (i + 1) + 10,
-                this.property.position.y - 2 + getHeight() * i + 10,
+                this.property.position.y + getHeight() * i + 10 + 2,
             );
         }
         this.ctx.restore();
@@ -360,6 +373,6 @@ export default class extends Content {
         this.input.removeEventListener('input', this.inputListener);
         this.input.removeEventListener('blur', this.inputBlurListener);
         this.input.remove();
-        this.inputDiv.remove();
+        // inputDiv.remove();
     }
 }
