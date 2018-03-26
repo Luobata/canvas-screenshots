@@ -282,13 +282,14 @@ export default class extends Content {
     }
 
     drawText() {
-        const getHeight = () => {
+        const getLineHeight = () => {
             this.ctx.save();
             this.ctx.font = `${this.property.fontSize} ${
                 this.property.fontFamily
             }`;
-            const height = this.ctx.measureText('m').width;
-            return height;
+            const height = this.ctx.measureText('w').width * 1.7;
+            return parseInt(this.property.fontSize, 10);
+            // return height;
         };
         this.ctx.save();
         this.ctx.beginPath();
@@ -300,7 +301,7 @@ export default class extends Content {
                 this.property.txts[i],
                 this.property.position.x + 1 + 10,
                 // this.property.position.y - 6 + getHeight() * (i + 1) + 10,
-                this.property.position.y + getHeight() * i * 1.2 + 10,
+                this.property.position.y + getLineHeight() * i + 10 - 1,
             );
         }
         this.ctx.restore();
