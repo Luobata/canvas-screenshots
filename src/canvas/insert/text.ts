@@ -7,7 +7,8 @@ import Content from './content';
 let inputDiv: HTMLDivElement;
 
 const getStrLength = (str: string) => {
-    inputDiv.innerText = <string>new String(str);
+    // innerText 头尾空格无法被html计算宽度
+    inputDiv.innerText = <string>new String(str.replace(/[ ]/g, '1'));
     let len = 0;
     for (let i of str) {
         len += isChinese(i) ? 2 : 1;
@@ -27,37 +28,6 @@ const getMaxStrIndex = (str: string, begin: number, max: number): number => {
     }
 
     return num;
-};
-
-const subStr = (str: string, index: number, length: number) => {
-    let len = 0;
-    let begin = -1;
-    let end = -1; // -1 用来标志是没有位移过
-    for (let i = 0; i < str.length; i++) {
-        len += getStrLength(str[i]);
-        // length += len;
-        if (len - 1 >= index && begin === -1) {
-            begin = i;
-            len = getStrLength(str[i]);
-        }
-
-        if (begin !== -1) {
-            if (len === length) {
-                end = i;
-                break;
-            } else if (len > length) {
-                end = i === 0 ? 0 : i - 1;
-                break;
-            }
-        }
-    }
-    if (end === -1) end = str.length - 1;
-    const resultStr = str.substr(begin, end - begin + 1);
-
-    return {
-        str: resultStr,
-        subLen: getStrLength(resultStr),
-    };
 };
 
 interface property {
@@ -98,9 +68,7 @@ export default class extends Content {
             cols: 1,
             rows: 1,
             txts: [],
-            fontSize: '36px',
-            // fontFamily:
-            //     config.platform !== 'windows' ? 'monospace' : 'Consolas',
+            fontSize: '20px',
             fontFamily: 'monospace',
         };
         this.property.textWidth = Math.floor(this.getTextWidth('1').width);
@@ -133,13 +101,12 @@ export default class extends Content {
 
     focus() {
         this.property.isEditor = true;
-        this.property.text = '';
         this.input.style.left = `${this.property.position.x}px`;
         this.input.style.top = `${this.property.position.y}px`;
         this.input.style.display = 'block';
         // 同时操作display 与input 会触发blur
         setTimeout(() => {
-            this.input.value = this.property.txts.join('\n');
+            this.input.value = this.property.text;
             this.getMaxCols();
             this.input.focus();
         }, 0);
@@ -193,6 +160,7 @@ export default class extends Content {
         for (let i of rows) {
             // 用lenth判断不合适 因为 中文（可能也有其他字符）计算为2个cols长度
             const length = getStrLength(i);
+            console.log(length);
             if (length > maxCols) {
                 maxCols =
                     length > this.property.maxCols
@@ -238,6 +206,11 @@ export default class extends Content {
         this.input.style.left = `${this.property.position.x}px`;
         this.input.style.top = `${this.property.position.y}px`;
         this.input.style.color = this.property.color;
+        this.input.style.fontSize = this.property.fontSize;
+        this.input.style.fontFamily = this.property.fontFamily;
+        this.input.style.border = `${this.property.borderWidth} solid ${
+            this.property.borderColor
+        }`;
         this.input.style.width =
             this.property.cols * parseInt(this.property.fontSize, 10) / 2 +
             'px';
@@ -314,7 +287,7 @@ export default class extends Content {
             this.ctx.font = `${this.property.fontSize} ${
                 this.property.fontFamily
             }`;
-            const height = this.ctx.measureText('w').width * 2;
+            const height = this.ctx.measureText('m').width;
             return height;
         };
         this.ctx.save();
@@ -327,7 +300,7 @@ export default class extends Content {
                 this.property.txts[i],
                 this.property.position.x + 1 + 10,
                 // this.property.position.y - 6 + getHeight() * (i + 1) + 10,
-                this.property.position.y + getHeight() * i + 10 + 2,
+                this.property.position.y + getHeight() * i * 1.2 + 10,
             );
         }
         this.ctx.restore();
@@ -336,7 +309,7 @@ export default class extends Content {
     draw() {
         this.ctx.save();
         this.ctx.beginPath();
-        if (this.isFocus && this.property.text) {
+        if (this.isFocus && !this.property.isEditor) {
             this.ctx.lineWidth = this.property.borderWidth;
             this.ctx.strokeStyle = this.property.borderColor;
             this.ctx.strokeRect(
