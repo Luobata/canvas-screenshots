@@ -98,6 +98,15 @@ export default class Box {
             'pen',
             'text',
         ];
+        const activeBox = [
+            'rectangular',
+            'circle',
+            'arrow',
+            'pen',
+            'text',
+            'mosaic',
+            'image',
+        ];
 
         Array.prototype.forEach.call(items, (v: HTMLElement) => {
             v.addEventListener('click', function() {
@@ -111,8 +120,10 @@ export default class Box {
                         '',
                     );
                 });
-                if (childBoxContent.indexOf(that.currentFun) !== -1) {
+                if (activeBox.indexOf(that.currentFun) !== -1) {
                     this.className += ' active';
+                }
+                if (childBoxContent.indexOf(that.currentFun) !== -1) {
                     childWrap.style.display = 'inline-block';
                 } else {
                     childWrap.style.display = 'none';

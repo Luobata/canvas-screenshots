@@ -29,6 +29,10 @@ export default (parent: HTMLElement) => {
             className: 'mosaic',
         },
         {
+            text: 'I',
+            className: 'image',
+        },
+        {
             text: 'B',
             className: 'back',
         },
