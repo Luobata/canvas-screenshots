@@ -213,7 +213,7 @@ export default class extends Content {
             this.ctx.save();
             for (let i of propertyMap) {
                 this.ctx.beginPath();
-                this.ctx.fillStyle = this.property.color;
+                this.ctx.strokeStyle = this.property.color;
                 this.ctx.arc(
                     i.x,
                     i.y,

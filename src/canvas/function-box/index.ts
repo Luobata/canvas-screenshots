@@ -15,6 +15,10 @@ const activeBox = [
 export default class FunctionBox {
     box: HTMLDivElement;
     wrapBox: Box;
+    items: Array<HTMLElement>;
+    colorItems: Array<HTMLElement>;
+    activeFun: string;
+    activeColor: string;
     constructor(box: HTMLDivElement, wrapBox: Box) {
         this.box = box;
         this.wrapBox = wrapBox;
@@ -28,39 +32,39 @@ export default class FunctionBox {
         ) as HTMLElement;
         const colorWrap = this.box.querySelector('.color-wrap') as HTMLElement;
         const colorItem = colorWrap.querySelectorAll('.color-item');
-        const that = this.wrapBox;
-        Array.prototype.forEach.call(items, (v: HTMLElement) => {
+        this.items = Array.prototype.slice.call(items);
+        this.colorItems = Array.prototype.slice.call(colorItem);
+        const that = this;
+        this.items.forEach((v: HTMLElement) => {
             v.addEventListener('click', function() {
-                that.currentFun = this.getAttribute('type');
-                Array.prototype.forEach.call(items, function(
-                    v: HTMLElement,
-                    i: number,
-                ) {
+                that.activeFun = this.getAttribute('type');
+                that.wrapBox.currentFun = this.getAttribute('type');
+                that.items.forEach((v: HTMLElement, i: number) => {
                     items[i].className = items[i].className.replace(
                         'active',
                         '',
                     );
                 });
-                if (activeBox.indexOf(that.currentFun) !== -1) {
+                if (activeBox.indexOf(that.wrapBox.currentFun) !== -1) {
                     this.className += ' active';
                 }
-                if (childBoxContent.indexOf(that.currentFun) !== -1) {
+                if (childBoxContent.indexOf(that.wrapBox.currentFun) !== -1) {
                     childWrap.style.display = 'inline-block';
                 } else {
                     childWrap.style.display = 'none';
                 }
-                if (that.currentFun === 'back') {
-                    that.back();
+                if (that.wrapBox.currentFun === 'back') {
+                    that.wrapBox.back();
                 }
-                if (that.currentFun === 'close') {
-                    that.destroyed();
+                if (that.wrapBox.currentFun === 'close') {
+                    that.wrapBox.destroyed();
                     config.emitter.emit('destoryed');
                 }
                 config.emitter.emit('blur');
             });
         });
 
-        Array.prototype.forEach.call(colorItem, (v: HTMLElement) => {
+        this.colorItems.forEach((v: HTMLElement) => {
             v.addEventListener('click', function() {
                 domEach(colorItem, (v: HTMLElement, i: number) => {
                     colorItem[i].className = colorItem[i].className.replace(
@@ -69,16 +73,28 @@ export default class FunctionBox {
                     );
                 });
                 this.className += ' active';
-                that.colorFun = this.getAttribute('color');
-                that.focusItem = that.findFocus();
-                if (that.focusItem) {
-                    that.focusItem.setColor(that.colorFun);
-                    that.childSaveArray.push(that.focusItem);
+                that.activeColor = this.getAttribute('color');
+                that.wrapBox.colorFun = this.getAttribute('color');
+                that.wrapBox.focusItem = that.wrapBox.findFocus();
+                if (that.wrapBox.focusItem) {
+                    that.wrapBox.focusItem.setColor(that.wrapBox.colorFun);
+                    that.wrapBox.childSaveArray.push(that.wrapBox.focusItem);
                 }
             });
         });
-        that.colorFun = colorItem[0].getAttribute('color');
+        that.wrapBox.colorFun = colorItem[0].getAttribute('color');
         colorItem[0].className += ' active';
+    }
+
+    setColor(color: string) {
+        this.activeColor = color;
+        this.colorItems.forEach((v: HTMLElement, i: number) => {
+            const item = this.colorItems[i];
+            item.className = item.className.replace('active', '');
+            if (item.getAttribute('color') === color) {
+                item.className += 'active';
+            }
+        });
     }
 
     remove() {

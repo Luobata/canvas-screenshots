@@ -20,14 +20,6 @@ const boxEmitter = new ee();
 
 let globalMosaic: Mosaic;
 
-// 插入功能
-enum insertFunction {
-    rectangular,
-    circle,
-    arrow,
-    pen,
-    text,
-}
 export default class Box {
     ctx: CanvasRenderingContext2D;
     transctx: CanvasRenderingContext2D;
@@ -186,6 +178,8 @@ export default class Box {
             for (let i of this.content) {
                 if (i.inBoxBorder(e.clientX, e.clientY)) {
                     focusItem = i;
+                    this.colorFun = i.property.color;
+                    this.functionBox.setColor(this.colorFun);
                 } else {
                 }
             }
@@ -305,7 +299,6 @@ export default class Box {
         });
         config.emitter.on('mousemove', (e: MouseEvent) => {
             if (this.isFocus) return;
-            // if (!this.inBox(e.clientX, e.clientY)) return;
             this.cursorChange(e);
             if (newItem) {
                 if (
@@ -322,17 +315,10 @@ export default class Box {
                             true,
                         );
                     }
-                } else if (newItem instanceof Pen) {
-                    if (position.startX !== -1) {
-                        newItem.addPosition(
-                            {
-                                x: e.clientX,
-                                y: e.clientY,
-                            },
-                            true,
-                        );
-                    }
-                } else if (newItem instanceof Mosaic) {
+                } else if (
+                    newItem instanceof Pen ||
+                    newItem instanceof Mosaic
+                ) {
                     if (position.startX !== -1) {
                         newItem.addPosition(
                             {
@@ -344,33 +330,18 @@ export default class Box {
                     }
                 }
             } else if (position.startX !== -1) {
-                if (this.currentFun === 'rectangular') {
-                    newItem = new Rectangular(this.offCtx, this.colorFun);
-                    this.content.add(newItem);
-                    newItem.setPosition(
-                        {
-                            startX: position.startX,
-                            startY: position.startY,
-                            endX: e.clientX,
-                            endY: e.clientY,
-                        },
-                        true,
-                    );
-                } else if (this.currentFun === 'circle') {
-                    newItem = new Circle(this.offCtx, this.colorFun);
-                    this.content.add(newItem);
-                    newItem.setPosition(
-                        {
-                            startX: position.startX,
-                            startY: position.startY,
-                            endX: e.clientX,
-                            endY: e.clientY,
-                        },
-                        true,
-                    );
-                } else if (this.currentFun === 'arrow') {
-                    newItem = new Arrow(this.offCtx, this.colorFun);
-                    this.content.add(newItem);
+                const list = ['rectangular', 'circle', 'arrow'];
+                if (list.indexOf(this.currentFun) !== -1) {
+                    // 统一setPosition
+                    if (this.currentFun === 'rectangular') {
+                        newItem = new Rectangular(this.offCtx, this.colorFun);
+                    } else if (this.currentFun === 'circle') {
+                        newItem = new Circle(this.offCtx, this.colorFun);
+                        console.log(newItem);
+                    } else if (this.currentFun === 'arrow') {
+                        newItem = new Arrow(this.offCtx, this.colorFun);
+                    }
+                    this.content.add(<Content>newItem);
                     newItem.setPosition(
                         {
                             startX: position.startX,
@@ -381,6 +352,7 @@ export default class Box {
                         true,
                     );
                 } else if (this.currentFun === 'pen') {
+                    // addPosition
                     newItem = new Pen(this.offCtx, this.colorFun);
                     this.content.add(newItem);
                     newItem.addPosition(
@@ -482,7 +454,7 @@ export default class Box {
 
         for (let i of circleMap) {
             this.ctx.beginPath();
-            this.ctx.fillStyle = 'black';
+            this.ctx.strokeStyle = 'black';
             this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
             this.ctx.stroke();
             this.ctx.fillStyle = 'white';
