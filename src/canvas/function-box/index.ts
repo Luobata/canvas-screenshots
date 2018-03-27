@@ -37,28 +37,33 @@ export default class FunctionBox {
         const that = this;
         this.items.forEach((v: HTMLElement) => {
             v.addEventListener('click', function() {
-                that.activeFun = this.getAttribute('type');
-                that.wrapBox.currentFun = this.getAttribute('type');
+                const type = this.getAttribute('type');
+                console.log(type);
+                that.activeFun = type;
+                that.wrapBox.currentFun = type;
                 that.items.forEach((v: HTMLElement, i: number) => {
                     items[i].className = items[i].className.replace(
                         'active',
                         '',
                     );
                 });
-                if (activeBox.indexOf(that.wrapBox.currentFun) !== -1) {
+                if (activeBox.indexOf(type) !== -1) {
                     this.className += ' active';
                 }
-                if (childBoxContent.indexOf(that.wrapBox.currentFun) !== -1) {
+                if (childBoxContent.indexOf(type) !== -1) {
                     childWrap.style.display = 'inline-block';
                 } else {
                     childWrap.style.display = 'none';
                 }
-                if (that.wrapBox.currentFun === 'back') {
+                if (type === 'back') {
                     that.wrapBox.back();
                 }
-                if (that.wrapBox.currentFun === 'close') {
+                if (type === 'close') {
                     that.wrapBox.destroyed();
                     config.emitter.emit('destoryed');
+                }
+                if (type === 'image') {
+                    that.wrapBox.uploadImage();
                 }
                 config.emitter.emit('blur');
             });

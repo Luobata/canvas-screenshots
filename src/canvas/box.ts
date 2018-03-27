@@ -337,7 +337,6 @@ export default class Box {
                         newItem = new Rectangular(this.offCtx, this.colorFun);
                     } else if (this.currentFun === 'circle') {
                         newItem = new Circle(this.offCtx, this.colorFun);
-                        console.log(newItem);
                     } else if (this.currentFun === 'arrow') {
                         newItem = new Arrow(this.offCtx, this.colorFun);
                     }
@@ -394,6 +393,8 @@ export default class Box {
             newItem = null;
         });
     }
+
+    uploadImage() {}
 
     getData() {
         let data;
