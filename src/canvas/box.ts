@@ -1,4 +1,5 @@
 import { dragCircle, Rect } from 'LIB/interface';
+import FunctionBox from './function-box/';
 import Rectangular from 'INSERT/rectangular';
 import Circle from 'INSERT/circle';
 import Arrow from 'INSERT/arrow';
@@ -9,8 +10,6 @@ import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
-import { Readable } from 'stream';
-import { domEach } from 'LIB/dom';
 
 // Content 为基础类型集合 sContent为优先渲染的集合
 type Content = Rectangular | Circle | Arrow | Pen | Text;
@@ -46,7 +45,8 @@ export default class Box {
     circleWidth: number;
     mouse: Mouse;
     cursor: Cursor;
-    functionBox: HTMLDivElement;
+    // functionBox: HTMLDivElement;
+    functionBox: FunctionBox;
     childSaveArray: Array<Content | sContent>;
 
     currentFun?: string;
@@ -61,7 +61,6 @@ export default class Box {
         cursorStyle: string,
         functionBox: HTMLDivElement,
     ) {
-        const that = this;
         this.ctx = ctx;
         this.transctx = transctx;
         this.offCanvas = offCanvas;
@@ -80,84 +79,8 @@ export default class Box {
         this.content = new Set();
         this.sContent = [];
         this.drawAll();
-        this.functionBox = functionBox;
+        this.functionBox = new FunctionBox(functionBox, this);
         this.childSaveArray = [];
-
-        const items = this.functionBox.querySelectorAll('.box-item');
-        const childWrap = this.functionBox.querySelector(
-            '.function-box-child',
-        ) as HTMLElement;
-        const colorWrap = this.functionBox.querySelector(
-            '.color-wrap',
-        ) as HTMLElement;
-        const colorItem = colorWrap.querySelectorAll('.color-item');
-        const childBoxContent = [
-            'rectangular',
-            'circle',
-            'arrow',
-            'pen',
-            'text',
-        ];
-        const activeBox = [
-            'rectangular',
-            'circle',
-            'arrow',
-            'pen',
-            'text',
-            'mosaic',
-            'image',
-        ];
-
-        Array.prototype.forEach.call(items, (v: HTMLElement) => {
-            v.addEventListener('click', function() {
-                that.currentFun = this.getAttribute('type');
-                Array.prototype.forEach.call(items, function(
-                    v: HTMLElement,
-                    i: number,
-                ) {
-                    items[i].className = items[i].className.replace(
-                        'active',
-                        '',
-                    );
-                });
-                if (activeBox.indexOf(that.currentFun) !== -1) {
-                    this.className += ' active';
-                }
-                if (childBoxContent.indexOf(that.currentFun) !== -1) {
-                    childWrap.style.display = 'inline-block';
-                } else {
-                    childWrap.style.display = 'none';
-                }
-                if (that.currentFun === 'back') {
-                    that.back();
-                }
-                if (that.currentFun === 'close') {
-                    that.destroyed();
-                    config.emitter.emit('destoryed');
-                }
-                config.emitter.emit('blur');
-            });
-        });
-
-        Array.prototype.forEach.call(colorItem, (v: HTMLElement) => {
-            v.addEventListener('click', function() {
-                domEach(colorItem, (v: HTMLElement, i: number) => {
-                    colorItem[i].className = colorItem[i].className.replace(
-                        'active',
-                        '',
-                    );
-                });
-                this.className += ' active';
-                that.colorFun = this.getAttribute('color');
-                that.focusItem = that.findFocus();
-                if (that.focusItem) {
-                    that.focusItem.setColor(that.colorFun);
-                    that.childSaveArray.push(that.focusItem);
-                }
-            });
-        });
-        that.colorFun = colorItem[0].getAttribute('color');
-        colorItem[0].className += ' active';
     }
 
     back() {
