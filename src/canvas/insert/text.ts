@@ -8,7 +8,8 @@ let inputDiv: HTMLDivElement;
 
 const getStrLength = (str: string) => {
     // innerText 头尾空格无法被html计算宽度
-    inputDiv.innerText = <string>new String(str.replace(/[ ]/g, '1'));
+    // inputDiv.innerText = <string>new String(str.replace(/[ ]/g, '1'));
+    inputDiv.innerHTML = <string>new String(str.replace(/[ ]/g, '&nbsp;'));
     let len = 0;
     for (let i of str) {
         len += isChinese(i) ? 2 : 1;
