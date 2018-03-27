@@ -276,7 +276,6 @@ export default class Box {
                                 true,
                             );
                         } else {
-                            // newItem = new Mosaic(this.ctx, this.transctx, {
                             newItem = new Mosaic(this.offCtx, this.transctx, {
                                 x: position.startX,
                                 y: position.startY,
@@ -398,7 +397,6 @@ export default class Box {
         });
         config.emitter.on('mouseup', (e: MouseEvent) => {
             if (this.isFocus) return;
-            // if (!this.inBox(e.clientX, e.clientY)) return;
             const add = () => {
                 newItem.save();
                 this.childSaveArray.push(newItem);
@@ -472,28 +470,12 @@ export default class Box {
         this.ctx.beginPath();
         this.ctx.fillStyle = 'black';
         // boder
-        this.ctx.moveTo(
+        this.ctx.strokeRect(
             this.rect.startX - this.lineWidth,
             this.rect.startY - this.lineWidth,
+            this.rect.endX - this.rect.startX + this.lineWidth * 2,
+            this.rect.endY - this.rect.startY + this.lineWidth * 2,
         );
-        this.ctx.lineTo(
-            this.rect.endX + this.lineWidth,
-            this.rect.startY - this.lineWidth,
-        );
-        this.ctx.lineTo(
-            this.rect.endX + this.lineWidth,
-            this.rect.endY + this.lineWidth,
-        );
-        this.ctx.lineTo(
-            this.rect.startX - this.lineWidth,
-            this.rect.endY + this.lineWidth,
-        );
-        this.ctx.lineTo(
-            this.rect.startX - this.lineWidth,
-            this.rect.startY - this.lineWidth,
-        );
-        this.ctx.restore();
-        this.ctx.stroke();
 
         const circleMap = getCircleMap(this.rect, this.lineWidth);
         this.circles = circleMap;
@@ -506,6 +488,7 @@ export default class Box {
             this.ctx.fillStyle = 'white';
             this.ctx.fill();
         }
+        this.ctx.restore();
     }
 
     destroyed() {
