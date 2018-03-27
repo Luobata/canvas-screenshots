@@ -147,6 +147,8 @@ export default class extends Content {
     }
 
     draw() {
+        let minuX: number = -1;
+        let minuY: number = -1;
         const propertyMap = getCircleMap(
             this.property.rect,
             this.property.borderWidth,
@@ -202,11 +204,17 @@ export default class extends Content {
             centerX: (this.property.rect.startX + this.property.rect.endX) / 2,
             centerY: (this.property.rect.startY + this.property.rect.endY) / 2,
             radiusX:
-                Math.abs(this.property.rect.startX - this.property.rect.endX) /
-                2,
+                Math.abs(
+                    this.property.rect.startX -
+                        this.property.rect.endX +
+                        this.property.borderWidth * 2 * minuX,
+                ) / 2,
             radiusY:
-                Math.abs(this.property.rect.startY - this.property.rect.endY) /
-                2,
+                Math.abs(
+                    this.property.rect.startY -
+                        this.property.rect.endY +
+                        this.property.borderWidth * 2 * minuY,
+                ) / 2,
         });
 
         if (this.isFocus) {
