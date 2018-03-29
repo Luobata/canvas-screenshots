@@ -6,13 +6,15 @@ import Arrow from 'INSERT/arrow';
 import Pen from 'INSERT/pen';
 import Text from 'INSERT/text';
 import Mosaic from 'INSERT/mosaic';
+import ImageInsert from 'INSERT/image';
 import { config } from './config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
+import upload from 'LIB/upload';
 
 // Content 为基础类型集合 sContent为优先渲染的集合
-type Content = Rectangular | Circle | Arrow | Pen | Text;
+type Content = Rectangular | Circle | Arrow | Pen | Text | ImageInsert;
 type sContent = Mosaic;
 
 const ee = require('event-emitter');
@@ -394,7 +396,37 @@ export default class Box {
         });
     }
 
-    uploadImage() {}
+    uploadImage(e: Event) {
+        const file = upload(e);
+        if (file) {
+            const imageObj = new Image();
+            const reader = new FileReader();
+            const URL = window.URL;
+            let width: number;
+            let height: number;
+            reader.onload = () => {
+                const data = reader.result;
+
+                imageObj.onload = () => {
+                    width = imageObj.width;
+                    height = imageObj.height;
+                    URL.revokeObjectURL(imageObj.src);
+                    const image = new ImageInsert(
+                        this.offCtx,
+                        imageObj,
+                        // data,
+                        width,
+                        height,
+                    );
+                    this.content.add(image);
+                    this.childSaveArray.push(image);
+                    config.emitter.emit('draw-all');
+                };
+                imageObj.src = data;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
     getData() {
         let data;

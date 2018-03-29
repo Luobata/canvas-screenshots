@@ -1,4 +1,7 @@
 global_prefix = '#screen-shoot'
+opacity(n)
+  opacity n
+  filter unquote('progid:DXImageTransform.Microsoft.Alpha(Opacity=' + round(n * 100) + ')')
 
 {global_prefix}
     position absolute
@@ -23,40 +26,63 @@ global_prefix = '#screen-shoot'
             line-height 20px
             margin 0 10px
             vertical-align middle
-            background red
             color white
             cursor pointer
             text-align center
+            .icon
+                width 100%
+                height 100%
+            .upload
+                width 100%
+                height 200%
+                position absolute
+                top -100%
+                left 0
+                opacity 0
+                cursor pointer
+                z-index 100
             &.screen-shoot-rectangular
-                background url('~ASSETS/rectangular.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/rectangular.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-circle
-                background url('~ASSETS/circle.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/circle.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-arrow
-                background url('~ASSETS/arrow.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/arrow.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-back
-                background url('~ASSETS/back.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/back.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-save
-                background url('~ASSETS/download.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/download.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-pen
-                background url('~ASSETS/pen.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/pen.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-text
-                background url('~ASSETS/text.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/text.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-close
-                background url('~ASSETS/close.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/close.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-mosaic
-                background url('~ASSETS/mosaic.svg') no-repeat;
-                background-size 100%
+                .icon
+                    background url('~ASSETS/mosaic.svg') no-repeat;
+                    background-size 100%
             &.screen-shoot-image
-                background url('~ASSETS/image.svg') no-repeat;
-                background-size 100%
+                position relative
+                overflow hidden
+                .icon
+                    background url('~ASSETS/image.svg') no-repeat;
+                    background-size 100%
             &.active
                 background-color beige
     .function-box-child

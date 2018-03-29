@@ -3,15 +3,7 @@ import { domEach } from 'LIB/dom';
 import Box from '../box';
 
 const childBoxContent = ['rectangular', 'circle', 'arrow', 'pen', 'text'];
-const activeBox = [
-    'rectangular',
-    'circle',
-    'arrow',
-    'pen',
-    'text',
-    'mosaic',
-    'image',
-];
+const activeBox = ['rectangular', 'circle', 'arrow', 'pen', 'text', 'mosaic'];
 export default class FunctionBox {
     box: HTMLDivElement;
     wrapBox: Box;
@@ -63,10 +55,16 @@ export default class FunctionBox {
                     config.emitter.emit('destoryed');
                 }
                 if (type === 'image') {
-                    that.wrapBox.uploadImage();
+                    // that.wrapBox.uploadImage();
                 }
                 config.emitter.emit('blur');
             });
+        });
+        const uploadIcon = this.items.find((v: HTMLElement) => {
+            return v.getAttribute('type') === 'image';
+        });
+        uploadIcon.addEventListener('change', (e: Event) => {
+            this.wrapBox.uploadImage(e);
         });
 
         this.colorItems.forEach((v: HTMLElement) => {
