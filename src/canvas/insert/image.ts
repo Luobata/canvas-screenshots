@@ -16,7 +16,7 @@ interface image {
 
 export default class extends Content {
     property: image;
-    file: HTMLImageElement;
+    file: ImageData;
     constructor(
         ctx: CanvasRenderingContext2D,
         file: HTMLImageElement,
@@ -25,7 +25,7 @@ export default class extends Content {
     ) {
         super(ctx);
         this.property = {
-            lineWidth: 3,
+            lineWidth: 0,
             circleWidth: 3,
             position: {
                 x: config.boxRect.startX,
@@ -36,7 +36,12 @@ export default class extends Content {
             color: 'black',
         };
         console.log(this);
-        this.file = file;
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = width;
+        offCanvas.height = height;
+        const offCtx = offCanvas.getContext('2d');
+        offCtx.drawImage(file, 0, 0);
+        this.file = offCtx.getImageData(0, 0, width, height);
     }
 
     inBoxBorder(x: number, y: number) {
@@ -73,20 +78,20 @@ export default class extends Content {
         this.property.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.drawImage(
-            this.file,
-            this.property.position.x,
-            this.property.position.y,
-        );
-        // this.ctx.putImageData(
+        // this.ctx.drawImage(
         //     this.file,
         //     this.property.position.x,
         //     this.property.position.y,
-        //     0,
-        //     0,
-        //     this.property.width,
-        //     this.property.height,
         // );
+        this.ctx.putImageData(
+            this.file,
+            this.property.position.x,
+            this.property.position.y,
+            0,
+            0,
+            this.property.width,
+            this.property.height,
+        );
         if (this.isFocus) {
             for (let i of circleMap) {
                 this.ctx.beginPath();
