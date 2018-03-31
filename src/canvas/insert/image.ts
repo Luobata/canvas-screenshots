@@ -3,6 +3,7 @@ import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
 import Content from './content';
 import { pointInRectangular } from 'LIB/geometric';
+import Mouse from './mouse-image';
 
 interface image {
     position: Position;
@@ -17,6 +18,8 @@ interface image {
 export default class extends Content {
     property: image;
     file: ImageData;
+    mouse: Mouse;
+
     constructor(
         ctx: CanvasRenderingContext2D,
         file: HTMLImageElement,
@@ -35,13 +38,43 @@ export default class extends Content {
             height,
             color: 'black',
         };
-        console.log(this);
         const offCanvas = document.createElement('canvas');
         offCanvas.width = width;
         offCanvas.height = height;
         const offCtx = offCanvas.getContext('2d');
         offCtx.drawImage(file, 0, 0);
         this.file = offCtx.getImageData(0, 0, width, height);
+        this.mouse = new Mouse(this);
+        this.event();
+    }
+
+    event() {
+        this.mouseDown = (e: MouseEvent) => {
+            if (this.isFocus && inBox(e)) {
+                this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
+            }
+        };
+        this.mouseMove = (e: MouseEvent) => {
+            if (this.isFocus) {
+                this.mouse.mouseMove(e);
+            }
+        };
+        this.mouseUp = (e: MouseEvent) => {
+            if (this.isFocus) {
+                this.mouse.mouseUp(e);
+            }
+        };
+
+        config.emitter.on('mousedown', this.mouseDown);
+        config.emitter.on('mousemove', this.mouseMove);
+        config.emitter.on('mouseup', this.mouseUp);
+    }
+
+    setSize(pos: Position) {
+        this.property.position.x = pos.x;
+        this.property.position.y = pos.y;
+
+        config.emitter.emit('draw-all');
     }
 
     inBoxBorder(x: number, y: number) {
@@ -67,6 +100,7 @@ export default class extends Content {
         };
         return pointInRectangular(p1, p2, p3, p4, p);
     }
+
     draw() {
         const rect: Rect = {
             startX: this.property.position.x,
