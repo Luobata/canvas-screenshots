@@ -63,6 +63,7 @@ export default class FunctionBox {
         const uploadIcon = this.items.find((v: HTMLElement) => {
             return v.getAttribute('type') === 'image';
         });
+        const input = uploadIcon.querySelector('input');
         uploadIcon.addEventListener('change', (e: Event) => {
             this.wrapBox.uploadImage(e);
         });
@@ -90,6 +91,7 @@ export default class FunctionBox {
     }
 
     setColor(color: string) {
+        console.log(color);
         this.activeColor = color;
         this.colorItems.forEach((v: HTMLElement, i: number) => {
             const item = this.colorItems[i];

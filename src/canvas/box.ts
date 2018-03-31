@@ -180,8 +180,16 @@ export default class Box {
             for (let i of this.content) {
                 if (i.inBoxBorder(e.clientX, e.clientY)) {
                     focusItem = i;
-                    this.colorFun = i.property.color;
-                    this.functionBox.setColor(this.colorFun);
+                    if (
+                        focusItem instanceof Rectangular ||
+                        focusItem instanceof Circle ||
+                        focusItem instanceof Arrow ||
+                        focusItem instanceof Pen ||
+                        focusItem instanceof Text
+                    ) {
+                        this.colorFun = i.property.color;
+                        this.functionBox.setColor(this.colorFun);
+                    }
                 } else {
                 }
             }
