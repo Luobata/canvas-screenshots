@@ -87,21 +87,22 @@ export default class extends Content {
     }
 
     inBoxBorder(x: number, y: number) {
+        const margin = 10;
         const p1 = {
-            x: this.property.position.x,
-            y: this.property.position.y,
+            x: this.property.position.x - margin,
+            y: this.property.position.y - margin,
         };
         const p2 = {
-            x: this.property.position.x + this.property.width,
-            y: this.property.position.y,
+            x: this.property.position.x + this.property.width + margin,
+            y: this.property.position.y - margin,
         };
         const p3 = {
-            x: this.property.position.x,
-            y: this.property.position.y + this.property.height,
+            x: this.property.position.x - margin,
+            y: this.property.position.y + this.property.height + margin,
         };
         const p4 = {
-            x: this.property.position.x + this.property.width,
-            y: this.property.position.y + this.property.height,
+            x: this.property.position.x + this.property.width + margin,
+            y: this.property.position.y + this.property.height + margin,
         };
         const p = {
             x,
