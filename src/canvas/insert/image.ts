@@ -1,4 +1,4 @@
-import { dragCircle, Rect, Position } from 'LIB/interface';
+import { Size, dragCircle, Rect, Position } from 'LIB/interface';
 import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
 import Content from './content';
@@ -17,7 +17,8 @@ interface image {
 
 export default class extends Content {
     property: image;
-    file: ImageData;
+    // file: ImageData;
+    file: HTMLImageElement;
     mouse: Mouse;
 
     constructor(
@@ -43,7 +44,8 @@ export default class extends Content {
         offCanvas.height = height;
         const offCtx = offCanvas.getContext('2d');
         offCtx.drawImage(file, 0, 0);
-        this.file = offCtx.getImageData(0, 0, width, height);
+        this.file = file;
+        // this.file = offCtx.getImageData(0, 0, width, height);
         this.mouse = new Mouse(this);
         this.event();
     }
@@ -70,7 +72,14 @@ export default class extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    setSize(pos: Position) {
+    setSize(pos: Position, size?: Size) {
+        if (size && size.width) {
+            this.property.width = size.width;
+        }
+        if (size && size.height) {
+            this.property.height = size.height;
+        }
+
         this.property.position.x = pos.x;
         this.property.position.y = pos.y;
 
@@ -112,20 +121,22 @@ export default class extends Content {
         this.property.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
-        // this.ctx.drawImage(
-        //     this.file,
-        //     this.property.position.x,
-        //     this.property.position.y,
-        // );
-        this.ctx.putImageData(
+        this.ctx.drawImage(
             this.file,
             this.property.position.x,
             this.property.position.y,
-            0,
-            0,
             this.property.width,
             this.property.height,
         );
+        // this.ctx.putImageData(
+        //     this.file,
+        //     this.property.position.x,
+        //     this.property.position.y,
+        //     0,
+        //     0,
+        //     this.property.width,
+        //     this.property.height,
+        // );
         if (this.isFocus) {
             for (let i of circleMap) {
                 this.ctx.beginPath();

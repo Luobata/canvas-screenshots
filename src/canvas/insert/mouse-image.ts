@@ -16,6 +16,10 @@ export default class {
 
     mouseMove(e: MouseEvent) {
         // move
+        const startX = this.box.property.position.x;
+        const startY = this.box.property.position.y;
+        const endX = this.box.property.position.x + this.box.property.width;
+        const endY = this.box.property.position.y + this.box.property.height;
         switch (this.mouseEvent) {
             case 'crosshair':
                 break;
@@ -26,73 +30,105 @@ export default class {
                 });
                 break;
             case 'nw-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        startX: e.clientX,
-                        startY: e.clientY,
+                        x: e.clientX,
+                        y: e.clientY,
                     },
-                    true,
+                    {
+                        width:
+                            this.box.property.position.x +
+                            this.box.property.width -
+                            e.clientX,
+                        height:
+                            this.box.property.position.y +
+                            this.box.property.height -
+                            e.clientY,
+                    },
                 );
                 break;
             case 'w-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        startX: e.clientX,
+                        x: e.clientX,
+                        y: this.box.property.position.y,
                     },
-                    true,
+                    {
+                        width:
+                            this.box.property.position.x +
+                            this.box.property.width -
+                            e.clientX,
+                    },
                 );
                 break;
             case 'sw-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        startX: e.clientX,
-                        endY: e.clientY,
+                        x: e.clientX,
+                        y: this.box.property.position.y,
                     },
-                    true,
+                    {
+                        width: endX - e.clientX,
+                        height: e.clientY - startY,
+                    },
                 );
                 break;
             case 's-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        endY: e.clientY,
+                        x: this.box.property.position.x,
+                        y: this.box.property.position.y,
                     },
-                    true,
+                    {
+                        height: e.clientY - this.box.property.position.y,
+                    },
                 );
                 break;
             case 'se-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        endX: e.clientX,
-                        endY: e.clientY,
+                        x: startX,
+                        y: startY,
                     },
-                    true,
+                    {
+                        width: e.clientX - startX,
+                        height: e.clientY - startY,
+                    },
                 );
                 break;
             case 'e-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        endX: e.clientX,
+                        x: startX,
+                        y: startY,
                     },
-                    true,
+                    {
+                        width: e.clientX - startX,
+                    },
                 );
-                // 触发resize
                 break;
             case 'ne-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        startY: e.clientY,
-                        endX: e.clientX,
+                        x: startX,
+                        y: e.clientY,
                     },
-                    true,
+                    {
+                        width: e.clientX - startX,
+                        height: endY - e.clientY,
+                    },
                 );
                 // 触发resize
                 break;
             case 'n-resize':
-                this.box.setPosition(
+                this.box.setSize(
                     {
-                        startY: e.clientY,
+                        x: startX,
+                        y: e.clientY,
                     },
-                    true,
+                    {
+                        height: endY - e.clientY,
+                    },
                 );
                 break;
             default:
