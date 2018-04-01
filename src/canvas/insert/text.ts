@@ -161,7 +161,7 @@ export default class extends Content {
         for (let i of rows) {
             // 用lenth判断不合适 因为 中文（可能也有其他字符）计算为2个cols长度
             const length = getStrLength(i);
-            console.log(length);
+            // console.log(length);
             if (length > maxCols) {
                 maxCols =
                     length > this.property.maxCols
@@ -176,7 +176,7 @@ export default class extends Content {
                         const strObj = i.substr(k, j);
                         cols.push(strObj);
                         k += j;
-                        console.log(k, j);
+                        // console.log(k, j);
                     }
                 } else {
                     cols.push(i);
@@ -231,6 +231,7 @@ export default class extends Content {
             this.getSize();
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
+            console.log('blur');
             this.property.text = (<HTMLInputElement>e.target).value;
             this.property.width = this.input.offsetWidth;
             this.property.height = this.input.offsetHeight;
@@ -240,6 +241,15 @@ export default class extends Content {
 
             if (this.property.text === '') {
                 this.destroyed();
+            } else {
+                if (
+                    !this.saveArray.length ||
+                    this.property.text !==
+                        this.saveArray[this.saveArray.length - 1].text
+                ) {
+                    this.save();
+                    config.emitter.emit('addSave', this);
+                }
             }
         };
         this.input.addEventListener('input', this.inputListener);

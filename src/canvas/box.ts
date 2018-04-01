@@ -78,7 +78,6 @@ export default class Box {
     }
 
     back() {
-        console.log(this.childSaveArray);
         const item = this.childSaveArray.pop();
 
         if (!item) return;
@@ -120,6 +119,10 @@ export default class Box {
                     i++;
                 }
             }
+        });
+
+        config.emitter.on('addSave', (item: Content) => {
+            this.childSaveArray.push(item);
         });
 
         boxEmitter.on('shot', () => {

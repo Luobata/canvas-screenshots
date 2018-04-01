@@ -40,6 +40,7 @@ export default class {
     }
 
     save() {
+        console.log('save');
         this.saveArray.push(JSON.parse(JSON.stringify(this.property)));
     }
 
