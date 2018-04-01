@@ -23,7 +23,7 @@ export default class extends Content {
         this.event();
         this.property = {
             lines: [pos],
-            width: 3,
+            width: 3 * config.rate,
             num: 3,
         };
     }
@@ -57,26 +57,31 @@ export default class extends Content {
         const boxData = this.transctx.getImageData(
             config.rate * config.boxRect.startX,
             config.rate * config.boxRect.startY,
-            config.rate * config.boxRect.endX - config.boxRect.startX,
-            config.rate * config.boxRect.endY - config.boxRect.startY,
+            config.rate * (config.boxRect.endX - config.boxRect.startX),
+            config.rate * (config.boxRect.endY - config.boxRect.startY),
         );
         const data = boxData.data;
         const original = this.transctx.getImageData(
             config.rate * config.boxRect.startX,
             config.rate * config.boxRect.startY,
-            config.rate * config.boxRect.endX - config.boxRect.startX,
-            config.rate * config.boxRect.endY - config.boxRect.startY,
+            config.rate * (config.boxRect.endX - config.boxRect.startX),
+            config.rate * (config.boxRect.endY - config.boxRect.startY),
         ).data;
         for (let i of this.property.lines) {
             // 遍历所有点
             for (
-                let x = i.x - this.property.width * this.property.num;
-                x <= i.x + this.property.width * this.property.num;
+                let x =
+                    i.x * config.rate - this.property.width * this.property.num;
+                x <=
+                i.x * config.rate + this.property.width * this.property.num;
                 x = x + this.property.width
             ) {
                 for (
-                    let y = i.y - this.property.width * this.property.num;
-                    y <= i.y + this.property.width * this.property.num;
+                    let y =
+                        i.y * config.rate -
+                        this.property.width * this.property.num;
+                    y <=
+                    i.y * config.rate + this.property.width * this.property.num;
                     y = y + this.property.width
                 ) {
                     // 遍历以 (i.x, i.y)为中心的width*num个像素点
@@ -86,12 +91,15 @@ export default class extends Content {
                     const total = Math.pow(this.property.width + 1, 2);
                     for (let j = 0; j <= this.property.width; j++) {
                         for (let k = 0; k <= this.property.width; k++) {
-                            const pX = x + j - config.boxRect.startX;
-                            const pY = y + k - config.boxRect.startY;
+                            const pX =
+                                x + j - config.boxRect.startX * config.rate;
+                            const pY =
+                                y + k - config.boxRect.startY * config.rate;
                             const unitIndex =
                                 pY *
                                     (config.boxRect.endX -
-                                        config.boxRect.startX) +
+                                        config.boxRect.startX) *
+                                    config.rate +
                                 pX;
                             r += original[unitIndex * 4 + 0];
                             g += original[unitIndex * 4 + 1];
@@ -104,12 +112,15 @@ export default class extends Content {
                     b = b / total;
                     for (let j = 0; j <= this.property.width; j++) {
                         for (let k = 0; k <= this.property.width; k++) {
-                            const pX = x + j - config.boxRect.startX;
-                            const pY = y + k - config.boxRect.startY;
+                            const pX =
+                                x + j - config.boxRect.startX * config.rate;
+                            const pY =
+                                y + k - config.boxRect.startY * config.rate;
                             const unitIndex =
                                 pY *
                                     (config.boxRect.endX -
-                                        config.boxRect.startX) +
+                                        config.boxRect.startX) *
+                                    config.rate +
                                 pX;
                             data[unitIndex * 4 + 0] = r;
                             data[unitIndex * 4 + 1] = g;
