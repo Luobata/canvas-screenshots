@@ -78,6 +78,7 @@ export default class Box {
     }
 
     back() {
+        console.log(this.childSaveArray);
         const item = this.childSaveArray.pop();
 
         if (!item) return;
@@ -106,7 +107,11 @@ export default class Box {
         });
 
         config.emitter.on('removeItem', (item: Content) => {
-            this.content.delete(item);
+            if (item instanceof Mosaic) {
+                this.sContent.pop();
+            } else {
+                this.content.delete(item);
+            }
             for (let i = 0; i < this.childSaveArray.length; ) {
                 const child = this.childSaveArray[i];
                 if (child === item) {
