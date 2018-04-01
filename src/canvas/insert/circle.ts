@@ -157,7 +157,7 @@ export default class extends Content {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.strokeStyle = this.property.color;
-        this.ctx.lineWidth = this.property.borderWidth;
+        this.ctx.lineWidth = this.property.borderWidth * config.rate;
         const ellipse = (property: Circle) => {
             const r =
                 property.radiusX > property.radiusY
@@ -167,7 +167,7 @@ export default class extends Content {
             var ratioY = property.radiusY / r;
             this.ctx.save();
             this.ctx.strokeStyle = this.property.borderColor;
-            this.ctx.lineWidth = this.property.borderWidth;
+            this.ctx.lineWidth = this.property.borderWidth * config.rate;
             this.ctx.beginPath();
             this.ctx.scale(ratioX, ratioY);
             this.ctx.arc(
@@ -189,32 +189,42 @@ export default class extends Content {
             const endX = this.property.rect.endX;
             const endY = this.property.rect.endY;
 
-            this.ctx.lineWidth = this.property.borderWidth;
+            this.ctx.lineWidth = this.property.borderWidth * config.rate;
             this.ctx.strokeStyle = this.property.auxLineColor;
             this.ctx.strokeRect(
-                startX - this.property.borderWidth,
-                startY - this.property.borderWidth,
-                endX - startX + this.property.borderWidth * 2,
-                endY - startY + this.property.borderWidth * 2,
+                (startX - this.property.borderWidth) * config.rate,
+                (startY - this.property.borderWidth) * config.rate,
+                (endX - startX + this.property.borderWidth * 2) * config.rate,
+                (endY - startY + this.property.borderWidth * 2) * config.rate,
             );
             this.ctx.stroke();
             this.ctx.restore();
         }
         ellipse({
-            centerX: (this.property.rect.startX + this.property.rect.endX) / 2,
-            centerY: (this.property.rect.startY + this.property.rect.endY) / 2,
+            centerX:
+                (this.property.rect.startX + this.property.rect.endX) /
+                2 *
+                config.rate,
+            centerY:
+                (this.property.rect.startY + this.property.rect.endY) /
+                2 *
+                config.rate,
             radiusX:
                 Math.abs(
                     this.property.rect.startX -
                         this.property.rect.endX +
                         this.property.borderWidth * 2 * minuX,
-                ) / 2,
+                ) /
+                2 *
+                config.rate,
             radiusY:
                 Math.abs(
                     this.property.rect.startY -
                         this.property.rect.endY +
                         this.property.borderWidth * 2 * minuY,
-                ) / 2,
+                ) /
+                2 *
+                config.rate,
         });
 
         if (this.isFocus) {
@@ -223,9 +233,9 @@ export default class extends Content {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = this.property.color;
                 this.ctx.arc(
-                    i.x,
-                    i.y,
-                    this.property.circleWidth,
+                    i.x * config.rate,
+                    i.y * config.rate,
+                    this.property.circleWidth * config.rate,
                     0,
                     Math.PI * 2,
                     true,

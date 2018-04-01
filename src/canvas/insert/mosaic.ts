@@ -55,17 +55,17 @@ export default class extends Content {
 
     draw() {
         const boxData = this.transctx.getImageData(
-            config.boxRect.startX,
-            config.boxRect.startY,
-            config.boxRect.endX - config.boxRect.startX,
-            config.boxRect.endY - config.boxRect.startY,
+            config.rate * config.boxRect.startX,
+            config.rate * config.boxRect.startY,
+            config.rate * config.boxRect.endX - config.boxRect.startX,
+            config.rate * config.boxRect.endY - config.boxRect.startY,
         );
         const data = boxData.data;
         const original = this.transctx.getImageData(
-            config.boxRect.startX,
-            config.boxRect.startY,
-            config.boxRect.endX - config.boxRect.startX,
-            config.boxRect.endY - config.boxRect.startY,
+            config.rate * config.boxRect.startX,
+            config.rate * config.boxRect.startY,
+            config.rate * config.boxRect.endX - config.boxRect.startX,
+            config.rate * config.boxRect.endY - config.boxRect.startY,
         ).data;
         for (let i of this.property.lines) {
             // 遍历所有点
@@ -122,8 +122,8 @@ export default class extends Content {
 
         this.ctx.putImageData(
             boxData,
-            config.boxRect.startX,
-            config.boxRect.startY,
+            config.rate * config.boxRect.startX,
+            config.rate * config.boxRect.startY,
         );
     }
 }

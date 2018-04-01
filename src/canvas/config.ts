@@ -7,6 +7,7 @@ interface Config {
     wrap?: HTMLElement;
     boxRect?: Rect;
     platform?: string;
+    rate?: number; // deviceRate
 }
 
 export const inBox = (e: MouseEvent) => {

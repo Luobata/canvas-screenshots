@@ -89,12 +89,18 @@ export default class extends Content {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.strokeStyle = this.property.color;
-        this.ctx.lineWidth = this.property.lineWidth;
+        this.ctx.lineWidth = this.property.lineWidth * config.rate;
         // this.ctx.lineJoin = 'round';
-        this.ctx.moveTo(this.property.lines[0].x, this.property.lines[0].y);
+        this.ctx.moveTo(
+            this.property.lines[0].x * config.rate,
+            this.property.lines[0].y * config.rate,
+        );
 
         for (let i = 1; i < this.property.lines.length; i++) {
-            this.ctx.lineTo(this.property.lines[i].x, this.property.lines[i].y);
+            this.ctx.lineTo(
+                this.property.lines[i].x * config.rate,
+                this.property.lines[i].y * config.rate,
+            );
         }
 
         this.ctx.stroke();

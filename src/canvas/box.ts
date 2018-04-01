@@ -455,10 +455,10 @@ export default class Box {
     draw(data?: HTMLCanvasElement) {
         if (this.hasBox()) {
             this.ctx.clearRect(
-                this.rect.startX,
-                this.rect.startY,
-                this.rect.endX - this.rect.startX,
-                this.rect.endY - this.rect.startY,
+                this.rect.startX * config.rate,
+                this.rect.startY * config.rate,
+                (this.rect.endX - this.rect.startX) * config.rate,
+                (this.rect.endY - this.rect.startY) * config.rate,
             );
         }
 
@@ -484,10 +484,12 @@ export default class Box {
         this.ctx.fillStyle = 'black';
         // boder
         this.ctx.strokeRect(
-            this.rect.startX - this.lineWidth,
-            this.rect.startY - this.lineWidth,
-            this.rect.endX - this.rect.startX + this.lineWidth * 2,
-            this.rect.endY - this.rect.startY + this.lineWidth * 2,
+            (this.rect.startX - this.lineWidth) * config.rate,
+            (this.rect.startY - this.lineWidth) * config.rate,
+            (this.rect.endX - this.rect.startX + this.lineWidth * 2) *
+                config.rate,
+            (this.rect.endY - this.rect.startY + this.lineWidth * 2) *
+                config.rate,
         );
 
         const circleMap = getCircleMap(this.rect, this.lineWidth);
@@ -496,7 +498,14 @@ export default class Box {
         for (let i of circleMap) {
             this.ctx.beginPath();
             this.ctx.strokeStyle = 'black';
-            this.ctx.arc(i.x, i.y, this.circleWidth, 0, Math.PI * 2, true);
+            this.ctx.arc(
+                i.x * config.rate,
+                i.y * config.rate,
+                this.circleWidth * config.rate,
+                0,
+                Math.PI * 2,
+                true,
+            );
             this.ctx.stroke();
             this.ctx.fillStyle = 'white';
             this.ctx.fill();

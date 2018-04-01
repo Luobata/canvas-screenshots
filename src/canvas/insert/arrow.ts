@@ -140,12 +140,18 @@ export default class extends Content {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.property.color;
-        this.ctx.moveTo(this.property.rect.startX, this.property.rect.startY);
-        this.ctx.lineTo(P3.x, P3.y);
-        this.ctx.lineTo(P1.x, P1.y);
-        this.ctx.lineTo(this.property.rect.endX, this.property.rect.endY);
-        this.ctx.lineTo(P2.x, P2.y);
-        this.ctx.lineTo(P4.x, P4.y);
+        this.ctx.moveTo(
+            this.property.rect.startX * config.rate,
+            this.property.rect.startY * config.rate,
+        );
+        this.ctx.lineTo(P3.x * config.rate, P3.y * config.rate);
+        this.ctx.lineTo(P1.x * config.rate, P1.y * config.rate);
+        this.ctx.lineTo(
+            this.property.rect.endX * config.rate,
+            this.property.rect.endY * config.rate,
+        );
+        this.ctx.lineTo(P2.x * config.rate, P2.y * config.rate);
+        this.ctx.lineTo(P4.x * config.rate, P4.y * config.rate);
         this.ctx.fill();
 
         if (this.isFocus) {
@@ -153,9 +159,9 @@ export default class extends Content {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.property.color;
                 this.ctx.arc(
-                    i.x,
-                    i.y,
-                    this.property.circleWidth,
+                    i.x * config.rate,
+                    i.y * config.rate,
+                    this.property.circleWidth * config.rate,
                     0,
                     Math.PI * 2,
                     true,

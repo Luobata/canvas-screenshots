@@ -38,6 +38,9 @@ export default class {
         this.beginMove = false;
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
+        setConfig({
+            rate: window.devicePixelRatio,
+        });
         this.initBackGround(() => {
             this.functionBox = functionBox(this.body);
             this.box = new Box(
@@ -86,6 +89,8 @@ export default class {
         this.mask.style.left = '0';
         this.mask.style.cursor = this.cursorStyle;
         this.mask.style.zIndex = '100';
+        this.mask.style.width = width + 'px';
+        this.mask.style.height = height + 'px';
         this.reset();
         this.resize();
 
@@ -103,8 +108,8 @@ export default class {
     }
 
     reset() {
-        const width = this.body.clientWidth;
-        const height = this.body.clientHeight;
+        const width = this.body.clientWidth * config.rate;
+        const height = this.body.clientHeight * config.rate;
         this.mask.width = width;
         this.mask.height = height;
 
@@ -114,8 +119,8 @@ export default class {
 
     resize() {
         // TODO 防抖
-        const width = this.body.clientWidth;
-        const height = this.body.clientHeight;
+        const width = this.body.clientWidth * config.rate;
+        const height = this.body.clientHeight * config.rate;
 
         // this.reset();
 

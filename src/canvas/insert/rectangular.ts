@@ -113,18 +113,20 @@ export default class extends Content {
         this.property.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.lineWidth = this.property.lineWidth;
+        this.ctx.lineWidth = this.property.lineWidth * config.rate;
         this.ctx.strokeStyle = this.property.color;
         // 画圆角
         this.ctx.strokeRect(
-            this.property.rect.startX - this.property.lineWidth,
-            this.property.rect.startY - this.property.lineWidth,
-            this.property.rect.endX -
+            (this.property.rect.startX - this.property.lineWidth) * config.rate,
+            (this.property.rect.startY - this.property.lineWidth) * config.rate,
+            (this.property.rect.endX -
                 this.property.rect.startX +
-                this.property.lineWidth * 2,
-            this.property.rect.endY -
+                this.property.lineWidth * 2) *
+                config.rate,
+            (this.property.rect.endY -
                 this.property.rect.startY +
-                this.property.lineWidth * 2,
+                this.property.lineWidth * 2) *
+                config.rate,
         );
         if (this.property.isStroke) {
             this.ctx.strokeStyle = this.property.color;
@@ -138,9 +140,9 @@ export default class extends Content {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.property.color;
                 this.ctx.arc(
-                    i.x,
-                    i.y,
-                    this.property.circleWidth,
+                    i.x * config.rate,
+                    i.y * config.rate,
+                    this.property.circleWidth * config.rate,
                     0,
                     Math.PI * 2,
                     true,

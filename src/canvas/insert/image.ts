@@ -124,10 +124,10 @@ export default class extends Content {
         this.ctx.beginPath();
         this.ctx.drawImage(
             this.file,
-            this.property.position.x,
-            this.property.position.y,
-            this.property.width,
-            this.property.height,
+            config.rate * this.property.position.x,
+            config.rate * this.property.position.y,
+            config.rate * this.property.width,
+            config.rate * this.property.height,
         );
         // this.ctx.putImageData(
         //     this.file,
@@ -143,9 +143,9 @@ export default class extends Content {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.property.color;
                 this.ctx.arc(
-                    i.x,
-                    i.y,
-                    this.property.circleWidth,
+                    config.rate * i.x,
+                    config.rate * i.y,
+                    config.rate * this.property.circleWidth,
                     0,
                     Math.PI * 2,
                     true,
