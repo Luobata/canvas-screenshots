@@ -1,6 +1,7 @@
 import { config } from '../config';
 import { domEach } from 'LIB/dom';
 import Box from '../box';
+import { plugins } from 'LIB/interface';
 
 const childBoxContent = ['rectangular', 'circle', 'arrow', 'pen', 'text'];
 const activeBox = ['rectangular', 'circle', 'arrow', 'pen', 'text', 'mosaic'];
@@ -60,13 +61,15 @@ export default class FunctionBox {
                 config.emitter.emit('blur');
             });
         });
-        const uploadIcon = this.items.find((v: HTMLElement) => {
-            return v.getAttribute('type') === 'image';
-        });
-        const input = uploadIcon.querySelector('input');
-        uploadIcon.addEventListener('change', (e: Event) => {
-            this.wrapBox.uploadImage(e);
-        });
+        if (config.plugins.indexOf(plugins.image) !== -1) {
+            const uploadIcon = this.items.find((v: HTMLElement) => {
+                return v.getAttribute('type') === 'image';
+            });
+            const input = uploadIcon.querySelector('input');
+            uploadIcon.addEventListener('change', (e: Event) => {
+                this.wrapBox.uploadImage(e);
+            });
+        }
 
         this.colorItems.forEach((v: HTMLElement) => {
             v.addEventListener('click', function() {

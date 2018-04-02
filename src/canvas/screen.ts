@@ -154,10 +154,12 @@ export default class {
         let left = 100;
         const rightMargin = this.body.offsetWidth - this.box.rect.endX;
         const min = 350;
+        const maskWidth = this.mask.getBoundingClientRect().width;
         if (rightMargin < min) {
             left += min - rightMargin;
         }
-        this.functionBox.style.left = this.box.rect.endX - left + 'px';
+        // this.functionBox.style.left = this.box.rect.endX - left + 'px';
+        this.functionBox.style.right = maskWidth - this.box.rect.endX + 'px';
         this.functionBox.style.top = this.box.rect.endY + 10 + 'px';
         this.functionBox.style.display = 'block';
     }
