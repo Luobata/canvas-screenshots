@@ -2,13 +2,17 @@ import ScreenShoot from './canvas/screen';
 import { plugins } from 'LIB/interface';
 
 export default () => {
+    let screen: ScreenShoot;
     window.onload = () => {
-        const screen = new ScreenShoot({
+        screen = new ScreenShoot({
             // plugins: [plugins.rectangular, plugins.circle],
             download: (data: ImageData) => {
                 console.log(data);
             },
         });
+        screen.start();
+    };
+    (<any>window).xxxx = () => {
         screen.start();
     };
 };

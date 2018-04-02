@@ -46,15 +46,6 @@ export default class {
         ];
         this.config = Object.assign(config, plugin);
         this.body = document.body;
-        this.mask = document.createElement('canvas');
-        this.maskCtx = this.mask.getContext('2d');
-        this.offMask = document.createElement('canvas');
-        this.offMaskCtx = this.offMask.getContext('2d');
-        this.shootBox = document.createElement('div');
-        this.show = true;
-        this.beginMove = false;
-        this.cursorStyle = 'crosshair';
-        this.clickTime = 0;
         setConfig({
             rate: window.devicePixelRatio,
             plugins: plugin,
@@ -254,6 +245,15 @@ export default class {
     }
 
     start() {
+        this.mask = document.createElement('canvas');
+        this.maskCtx = this.mask.getContext('2d');
+        this.offMask = document.createElement('canvas');
+        this.offMaskCtx = this.offMask.getContext('2d');
+        this.shootBox = document.createElement('div');
+        this.show = true;
+        this.beginMove = false;
+        this.cursorStyle = 'crosshair';
+        this.clickTime = 0;
         this.initBackGround(() => {
             this.functionBox = functionBox(this.body);
             this.box = new Box(
@@ -278,6 +278,7 @@ export default class {
     destroyed() {
         // TODO 事件移除
         this.mask.remove();
+        this.offMask.remove();
         this.transMask.remove();
     }
 
