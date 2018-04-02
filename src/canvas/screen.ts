@@ -11,6 +11,7 @@ setConfig({
 });
 interface Config {
     plugins?: Array<plugins>;
+    download: Function;
 }
 
 export default class {
@@ -32,7 +33,7 @@ export default class {
 
     box: Box;
 
-    constructor(config: Config = {}) {
+    constructor(config: Config) {
         const plugin = config.plugins || [
             plugins['rectangular'],
             plugins['circle'],
@@ -43,6 +44,7 @@ export default class {
             plugins['image'],
             plugins['back'],
         ];
+        this.config = Object.assign(config, plugin);
         this.body = document.body;
         this.mask = document.createElement('canvas');
         this.maskCtx = this.mask.getContext('2d');
@@ -264,6 +266,7 @@ export default class {
             config.boxRect.endX - config.boxRect.startX,
             config.boxRect.endY - config.boxRect.startY,
         );
+        this.config.download.call(null, data);
         // this.maskCtx.putImageData(data, 0, 0);
         // 开始截图
     }
