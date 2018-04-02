@@ -515,6 +515,13 @@ export default class Box {
         this.ctx.restore();
     }
 
+    allBlur() {
+        for (let i of this.content) {
+            i.isFocus = false;
+        }
+        config.emitter.emit('draw-all');
+    }
+
     destroyed() {
         this.functionBox.remove();
     }

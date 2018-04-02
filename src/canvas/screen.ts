@@ -257,6 +257,14 @@ export default class {
 
     screenShots() {
         console.log('begin shots');
+        this.box.allBlur();
+        const data = this.offMaskCtx.getImageData(
+            config.boxRect.startX,
+            config.boxRect.startY,
+            config.boxRect.endX - config.boxRect.startX,
+            config.boxRect.endY - config.boxRect.startY,
+        );
+        // this.maskCtx.putImageData(data, 0, 0);
         // 开始截图
     }
 

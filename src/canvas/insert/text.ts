@@ -7,8 +7,6 @@ import Content from './content';
 let inputDiv: HTMLDivElement;
 
 const getStrLength = (str: string) => {
-    // innerText 头尾空格无法被html计算宽度
-    // inputDiv.innerText = <string>new String(str.replace(/[ ]/g, '1'));
     inputDiv.innerHTML = <string>new String(str.replace(/[ ]/g, '&nbsp;'));
     let len = 0;
     for (let i of str) {
@@ -157,7 +155,6 @@ export default class extends Content {
         const cols = [];
         let maxCols = 0;
         for (let i of rows) {
-            // 用lenth判断不合适 因为 中文（可能也有其他字符）计算为2个cols长度
             const length = getStrLength(i);
             // console.log(length);
             if (length > maxCols) {

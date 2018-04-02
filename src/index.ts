@@ -4,7 +4,7 @@ import { plugins } from 'LIB/interface';
 export default () => {
     window.onload = () => {
         new ScreenShoot({
-            plugins: [plugins.rectangular, plugins.circle],
+            // plugins: [plugins.rectangular, plugins.circle],
         });
     };
 };

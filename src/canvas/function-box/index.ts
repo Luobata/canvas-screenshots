@@ -58,6 +58,9 @@ export default class FunctionBox {
                 if (type === 'image') {
                     // that.wrapBox.uploadImage();
                 }
+                if (type === 'save') {
+                    config.emitter.emit('shot');
+                }
                 config.emitter.emit('blur');
             });
         });
