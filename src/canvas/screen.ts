@@ -59,25 +59,6 @@ export default class {
             rate: window.devicePixelRatio,
             plugins: plugin,
         });
-        this.initBackGround(() => {
-            this.functionBox = functionBox(this.body);
-            this.box = new Box(
-                this.maskCtx,
-                this.offMask,
-                this.offMaskCtx,
-                this.transMaskCtx,
-                this.cursorStyle,
-                this.functionBox,
-            );
-            setConfig({
-                wrap: this.body,
-            });
-
-            this.initEvent();
-            this.platform();
-            this.hackBody();
-            this.drawAll();
-        });
     }
 
     platform() {
@@ -267,8 +248,31 @@ export default class {
             config.boxRect.endY - config.boxRect.startY,
         );
         this.config.download.call(null, data);
+        config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
         // 开始截图
+    }
+
+    start() {
+        this.initBackGround(() => {
+            this.functionBox = functionBox(this.body);
+            this.box = new Box(
+                this.maskCtx,
+                this.offMask,
+                this.offMaskCtx,
+                this.transMaskCtx,
+                this.cursorStyle,
+                this.functionBox,
+            );
+            setConfig({
+                wrap: this.body,
+            });
+
+            this.initEvent();
+            this.platform();
+            this.hackBody();
+            this.drawAll();
+        });
     }
 
     destroyed() {

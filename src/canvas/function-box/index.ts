@@ -52,7 +52,6 @@ export default class FunctionBox {
                     that.wrapBox.back();
                 }
                 if (type === 'close') {
-                    that.wrapBox.destroyed();
                     config.emitter.emit('destoryed');
                 }
                 if (type === 'image') {
@@ -94,6 +93,10 @@ export default class FunctionBox {
         });
         that.wrapBox.colorFun = colorItem[0].getAttribute('color');
         colorItem[0].className += ' active';
+
+        config.emitter.on('destoryed', () => {
+            this.wrapBox.destroyed();
+        });
     }
 
     setColor(color: string) {
