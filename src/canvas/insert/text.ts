@@ -47,7 +47,6 @@ interface property {
     fontSize: string;
     fontFamily: string;
     isEditor?: boolean;
-    textWidth?: number;
 }
 
 export default class extends Content {
@@ -58,11 +57,11 @@ export default class extends Content {
 
     property: property;
 
-    constructor(ctx: CanvasRenderingContext2D, pos: Position) {
+    constructor(ctx: CanvasRenderingContext2D, pos: Position, color: string) {
         super(ctx);
         this.property = {
             position: pos,
-            color: (<any>window).color || 'red',
+            color: color || 'red',
             borderColor: '#fff',
             borderWidth: 2,
             text: '',
@@ -72,7 +71,6 @@ export default class extends Content {
             fontSize: '20px',
             fontFamily: 'monospace',
         };
-        this.property.textWidth = Math.floor(this.getTextWidth('1').width);
         this.initTextArea();
         this.event();
         this.mouse = new Mouse(this);

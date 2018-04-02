@@ -272,10 +272,14 @@ export default class Box {
                 if (!hasBlur) {
                     if (this.currentFun === 'text') {
                         // newItem = new Text(this.offCtx, {
-                        const item = new Text(this.offCtx, {
-                            x: position.startX,
-                            y: position.startY,
-                        });
+                        const item = new Text(
+                            this.offCtx,
+                            {
+                                x: position.startX,
+                                y: position.startY,
+                            },
+                            this.colorFun,
+                        );
                         position.startX = -1;
                         this.content.add(item);
                         config.emitter.emit('draw-all');
@@ -393,27 +397,12 @@ export default class Box {
                 this.childSaveArray.push(newItem);
             };
             if (newItem) {
-                if (newItem instanceof Text) {
-                    // 没有即增加
-                    if (!newItem.saveArray.length) {
-                        console.log(1);
-                        add();
-                    } else {
-                        // 如果有的话 输入内容和上一次不一样的即增加
-                        const last =
-                            newItem.saveArray[newItem.saveArray.length - 1];
-                        if (last.text !== newItem.property.text) {
-                            console.log(2);
-                            add();
-                        }
-                    }
-                } else {
+                if (!(newItem instanceof Text)) {
                     add();
                 }
             }
             position.startX = -1;
             newItem = null;
-            console.log(newItem);
         });
     }
 
