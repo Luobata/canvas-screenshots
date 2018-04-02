@@ -1,5 +1,6 @@
 import { setConfig, config } from './config';
 import Box from './box';
+import { plugins } from 'LIB/interface';
 import functionBox from './function-box/function-box';
 const html2canvas = require('html2canvas');
 const ee = require('event-emitter');
@@ -8,8 +9,12 @@ const emitter = new ee();
 setConfig({
     emitter,
 });
+interface Config {
+    plugins?: Array<plugins>;
+}
 
 export default class {
+    config: Config;
     body: HTMLElement;
     transMask: HTMLCanvasElement;
     transMaskCtx: CanvasRenderingContext2D;
@@ -27,8 +32,18 @@ export default class {
 
     box: Box;
 
-    constructor(body: HTMLElement = document.body) {
-        this.body = body;
+    constructor(config: Config = {}) {
+        const plugin = config.plugins || [
+            plugins['rectangular'],
+            plugins['circle'],
+            plugins['arrow'],
+            plugins['pen'],
+            plugins['text'],
+            plugins['mosaic'],
+            plugins['image'],
+            plugins['back'],
+        ];
+        this.body = document.body;
         this.mask = document.createElement('canvas');
         this.maskCtx = this.mask.getContext('2d');
         this.offMask = document.createElement('canvas');
@@ -40,6 +55,7 @@ export default class {
         this.clickTime = 0;
         setConfig({
             rate: window.devicePixelRatio,
+            plugins: plugin,
         });
         this.initBackGround(() => {
             this.functionBox = functionBox(this.body);

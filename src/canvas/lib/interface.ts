@@ -29,3 +29,14 @@ export interface Size {
     width?: number;
     height?: number;
 }
+
+export enum plugins {
+    rectangular = 'rectangular',
+    circle = 'circle',
+    arrow = 'arrow',
+    pen = 'pen',
+    text = 'text',
+    mosaic = 'mosaic',
+    image = 'image',
+    back = 'back',
+}

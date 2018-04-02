@@ -1,51 +1,16 @@
 const tpl = require('./function-box.pug');
 import './function-box.styl';
+import { config } from '../config';
 
 export default (parent: HTMLElement) => {
     const div = document.createElement('div');
-    const item = [
-        {
-            text: 'R',
-            className: 'rectangular',
-        },
-        {
-            text: 'C',
-            className: 'circle',
-        },
-        {
-            text: 'A',
-            className: 'arrow',
-        },
-        {
-            text: 'P',
-            className: 'pen',
-        },
-        {
-            text: 'T',
-            className: 'text',
-        },
-        {
-            text: 'M',
-            className: 'mosaic',
-        },
-        {
-            text: 'I',
-            className: 'image',
-        },
-        {
-            text: 'B',
-            className: 'back',
-        },
-        {
-            text: 'X',
-            className: 'close',
-        },
-        {
-            text: 'S',
-            className: 'save',
-        },
-    ];
-
+    let item = config.plugins.map(v => {
+        return { className: v };
+    });
+    item = (<Array<any>>item).concat([
+        { className: 'close' },
+        { className: 'save' },
+    ]);
     const colors = [
         {
             color: 'red',
