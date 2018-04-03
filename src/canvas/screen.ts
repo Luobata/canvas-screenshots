@@ -5,6 +5,7 @@ import functionBox from './function-box/function-box';
 const html2canvas = require('html2canvas');
 const ee = require('event-emitter');
 const emitter = new ee();
+type EventListener = (...args: any[]) => void;
 
 setConfig({
     emitter,
@@ -27,6 +28,18 @@ export default class {
     show: Boolean;
     beginMove: Boolean;
     functionBox: HTMLDivElement;
+
+    drawAllListener: EventListener;
+    resizeListener: EventListener;
+    mouseDownListener: EventListener;
+    mouseMoveListener: EventListener;
+    mouseUpListener: EventListener;
+    keyUpListener: EventListener;
+    drawListener: EventListener;
+    destoryedListener: EventListener;
+    shotListener: EventListener;
+    blurListener: EventListener;
+    cursorChangeListener: EventListener;
 
     cursorStyle: string;
     clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否确定
@@ -140,13 +153,14 @@ export default class {
 
     initEvent() {
         let hasTrajectory = false; // 移动轨迹 避免只点击没有移动的情况
-        window.addEventListener('resize', e => {
+        this.resizeListener = e => {
             if (this.show) {
                 // TODO resize box bug
                 // this.resize();
             }
-        });
-        this.mask.addEventListener('mousedown', e => {
+        };
+        window.addEventListener('resize', this.resizeListener);
+        this.mouseDownListener = (e: MouseEvent) => {
             hasTrajectory = false;
             if (e.button !== 0) return;
             if (!this.box.hasBox()) {
@@ -155,8 +169,8 @@ export default class {
                 emitter.emit('end-mousedown', e);
             }
             emitter.emit('mousedown', e);
-        });
-        this.mask.addEventListener('mousemove', e => {
+        };
+        this.mouseMoveListener = (e: MouseEvent) => {
             if (this.beginMove) {
                 this.drawBox(e);
                 hasTrajectory = true;
@@ -167,8 +181,8 @@ export default class {
                 this.functionBoxPos();
             }
             emitter.emit('mousemove', e);
-        });
-        this.mask.addEventListener('mouseup', e => {
+        };
+        this.mouseUpListener = (e: MouseEvent) => {
             this.beginMove = false;
             if (hasTrajectory) {
                 this.box.isShowCircle = true;
@@ -183,30 +197,40 @@ export default class {
                 emitter.emit('end-mouseup', e);
             }
             emitter.emit('mouseup', e);
-        });
-        document.addEventListener('keyup', e => {
+        };
+        this.keyUpListener = e => {
             emitter.emit('keyup', e);
-        });
+        };
 
-        emitter.on('draw', () => {
+        this.drawListener = () => {
             this.resize();
-        });
+        };
 
-        emitter.on('destoryed', () => {
+        this.destoryedListener = () => {
             this.destroyed();
-        });
+        };
 
-        emitter.on('shot', () => {
+        this.shotListener = () => {
             this.screenShots();
-        });
+        };
 
-        emitter.once('blur', () => {
+        this.blurListener = () => {
             this.blur();
-        });
+        };
 
-        emitter.on('cursor-change', (cursorStyle: string) => {
+        this.cursorChangeListener = (cursorStyle: string) => {
             this.cursorStyle = cursorStyle;
-        });
+        };
+
+        this.mask.addEventListener('mousedown', this.mouseDownListener);
+        this.mask.addEventListener('mousemove', this.mouseMoveListener);
+        this.mask.addEventListener('mouseup', this.mouseUpListener);
+        document.addEventListener('keyup', this.keyUpListener);
+        emitter.on('draw', this.drawListener);
+        emitter.on('destoryed', this.destoryedListener);
+        emitter.on('shot', this.shotListener);
+        emitter.on('cursor-change', this.cursorChangeListener);
+        emitter.once('blur', this.blurListener);
     }
 
     beginBox(e: MouseEvent) {
@@ -280,6 +304,16 @@ export default class {
         this.mask.remove();
         this.offMask.remove();
         this.transMask.remove();
+        config.emitter.off('draw-all', this.drawAllListener);
+        this.mask.removeEventListener('mousedown', this.mouseDownListener);
+        this.mask.removeEventListener('mousemove', this.mouseMoveListener);
+        this.mask.removeEventListener('mouseup', this.mouseUpListener);
+        document.removeEventListener('keyup', this.keyUpListener);
+        emitter.off('draw', this.drawListener);
+        emitter.off('destoryed', this.destoryedListener);
+        emitter.off('shot', this.shotListener);
+        emitter.off('cursor-change', this.cursorChangeListener);
+        emitter.off('blur', this.blurListener);
     }
 
     blur() {
@@ -296,8 +330,9 @@ export default class {
     }
 
     drawAll() {
-        config.emitter.on('draw-all', () => {
+        this.drawAllListener = () => {
             this.globaldraw();
-        });
+        };
+        config.emitter.on('draw-all', this.drawAllListener);
     }
 }
