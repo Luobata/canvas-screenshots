@@ -2,6 +2,7 @@ import { setConfig, config } from './config';
 import Box from './box';
 import { plugins } from 'LIB/interface';
 import functionBox from './function-box/function-box';
+const throttle = require('throttle-debounce/throttle');
 const html2canvas = require('html2canvas');
 const ee = require('event-emitter');
 const emitter = new ee();
@@ -153,12 +154,13 @@ export default class {
 
     initEvent() {
         let hasTrajectory = false; // 移动轨迹 避免只点击没有移动的情况
-        this.resizeListener = e => {
+        this.resizeListener = throttle(50, () => {
             if (this.show) {
+                this.destroyed();
                 // TODO resize box bug
                 // this.resize();
             }
-        };
+        });
         window.addEventListener('resize', this.resizeListener);
         this.mouseDownListener = (e: MouseEvent) => {
             hasTrajectory = false;
