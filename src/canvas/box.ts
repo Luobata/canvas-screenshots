@@ -271,7 +271,6 @@ export default class Box {
                 };
                 if (!hasBlur) {
                     if (this.currentFun === 'text') {
-                        // newItem = new Text(this.offCtx, {
                         const item = new Text(
                             this.offCtx,
                             {
@@ -424,7 +423,6 @@ export default class Box {
                     const image = new ImageInsert(
                         this.offCtx,
                         imageObj,
-                        // data,
                         width,
                         height,
                     );
@@ -484,7 +482,6 @@ export default class Box {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = 'black';
-        // boder
         this.ctx.strokeRect(
             (this.rect.startX - this.lineWidth) * config.rate,
             (this.rect.startY - this.lineWidth) * config.rate,

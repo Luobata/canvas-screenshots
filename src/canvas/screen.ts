@@ -139,14 +139,9 @@ export default class {
     }
 
     functionBoxPos() {
-        let left = 100;
         const rightMargin = this.body.offsetWidth - this.box.rect.endX;
-        const min = 350;
         const maskWidth = this.mask.getBoundingClientRect().width;
-        if (rightMargin < min) {
-            left += min - rightMargin;
-        }
-        // this.functionBox.style.left = this.box.rect.endX - left + 'px';
+
         this.functionBox.style.right = maskWidth - this.box.rect.endX + 'px';
         this.functionBox.style.top = this.box.rect.endY + 10 + 'px';
         this.functionBox.style.display = 'block';
@@ -177,7 +172,6 @@ export default class {
                 this.drawBox(e);
                 hasTrajectory = true;
             } else if (this.box.hasBox()) {
-                //this.cursorStyle = this.cursor.getCursor(e);
                 this.mask.style.cursor = this.cursorStyle;
                 emitter.emit('end-mousemove', e);
                 this.functionBoxPos();
@@ -256,6 +250,7 @@ export default class {
     }
 
     screenShots() {
+        // 开始截图
         console.log('begin shots');
         this.box.allBlur();
         const data = this.offMaskCtx.getImageData(
@@ -267,7 +262,6 @@ export default class {
         this.config.download.call(null, data);
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
-        // 开始截图
     }
 
     start() {

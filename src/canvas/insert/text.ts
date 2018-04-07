@@ -279,14 +279,6 @@ export default class extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    getTextWidth(txt: string) {
-        this.ctx.save();
-        this.ctx.font = `${this.property.fontSize} ${this.property.fontFamily}`;
-        const width = this.ctx.measureText(txt);
-        this.ctx.restore();
-        return width;
-    }
-
     drawText() {
         const getLineHeight = () => {
             this.ctx.save();
@@ -295,10 +287,10 @@ export default class extends Content {
             }`;
             const height = this.ctx.measureText('w').width * 1.7;
             return parseInt(this.property.fontSize, 10);
-            // return height;
         };
         const size = parseInt(this.property.fontSize, 10) * config.rate + 'px';
         const height = getLineHeight();
+        const fixMargin = config.platform === 'windows' ? 1 : -1;
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.property.color;
@@ -308,8 +300,8 @@ export default class extends Content {
             this.ctx.fillText(
                 this.property.txts[i],
                 config.rate * (this.property.position.x + 1 + 10),
-                // this.property.position.y - 6 + getHeight() * (i + 1) + 10,
-                config.rate * (this.property.position.y + height * i + 10 - 1),
+                config.rate *
+                    (this.property.position.y + height * i + 10 + fixMargin),
             );
         }
         this.ctx.restore();
@@ -355,6 +347,5 @@ export default class extends Content {
         this.input.removeEventListener('input', this.inputListener);
         this.input.removeEventListener('blur', this.inputBlurListener);
         this.input.remove();
-        // inputDiv.remove();
     }
 }
