@@ -72,7 +72,7 @@ export default class Box {
         this.cursor = new Cursor(this);
         this.content = new Set();
         this.sContent = [];
-        this.drawAll();
+        // this.drawAll();
         this.functionBox = new FunctionBox(functionBox, this);
         this.childSaveArray = [];
     }
@@ -486,14 +486,24 @@ export default class Box {
 
         if (data) {
             window.requestAnimationFrame(() => {
-                this.ctx.drawImage(data, 0, 0);
+                this.ctx.drawImage(
+                    data,
+                    this.rect.startX,
+                    this.rect.startY,
+                    this.rect.endX - this.rect.startX,
+                    this.rect.endY - this.rect.startY,
+                    this.rect.startX,
+                    this.rect.startY,
+                    this.rect.endX - this.rect.startX,
+                    this.rect.endY - this.rect.startY,
+                );
             });
         }
     }
     drawAll() {
-        config.emitter.on('draw-all', () => {
-            this.draw();
-        });
+        // config.emitter.on('draw-all', () => {
+        //     this.draw();
+        // });
     }
 
     drawCircle() {

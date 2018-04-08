@@ -184,7 +184,7 @@ export default class {
 
         this.mouseUpListener = (e: MouseEvent) => {
             this.beginMove = false;
-            if (hasTrajectory) {
+            if (hasTrajectory && this.box.isFocus) {
                 this.box.isShowCircle = true;
                 this.box.draw();
                 this.functionBoxPos();
