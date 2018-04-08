@@ -14,6 +14,7 @@ setConfig({
 interface Config {
     plugins?: Array<plugins>;
     download: Function;
+    imageFail: Function;
 }
 
 export default class {
@@ -30,6 +31,7 @@ export default class {
     beginMove: Boolean;
     functionBox: HTMLDivElement;
 
+    imageFailListener: EventListener;
     drawAllListener: EventListener;
     resizeListener: EventListener;
     mouseDownListener: EventListener;
@@ -98,7 +100,7 @@ export default class {
         this.reset();
         this.resize();
 
-        html2canvas(document.body).then((canvas: HTMLCanvasElement) => {
+        html2canvas(this.body).then((canvas: HTMLCanvasElement) => {
             console.log('finished');
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
@@ -156,7 +158,7 @@ export default class {
                 // this.resize();
             }
         });
-        window.addEventListener('resize', this.resizeListener);
+
         this.mouseDownListener = (e: MouseEvent) => {
             hasTrajectory = false;
             if (e.button !== 0) return;
@@ -167,6 +169,7 @@ export default class {
             }
             emitter.emit('mousedown', e);
         };
+
         this.mouseMoveListener = (e: MouseEvent) => {
             if (this.beginMove) {
                 this.drawBox(e);
@@ -178,6 +181,7 @@ export default class {
             }
             emitter.emit('mousemove', e);
         };
+
         this.mouseUpListener = (e: MouseEvent) => {
             this.beginMove = false;
             if (hasTrajectory) {
@@ -194,6 +198,7 @@ export default class {
             }
             emitter.emit('mouseup', e);
         };
+
         this.keyUpListener = e => {
             emitter.emit('keyup', e);
         };
@@ -218,10 +223,16 @@ export default class {
             this.cursorStyle = cursorStyle;
         };
 
+        this.imageFailListener = (error: object) => {
+            this.config.imageFail(error);
+        };
+
+        window.addEventListener('resize', this.resizeListener);
         this.mask.addEventListener('mousedown', this.mouseDownListener);
         this.mask.addEventListener('mousemove', this.mouseMoveListener);
         this.mask.addEventListener('mouseup', this.mouseUpListener);
         document.addEventListener('keyup', this.keyUpListener);
+        emitter.on('image-fail', this.imageFailListener);
         emitter.on('draw', this.drawListener);
         emitter.on('destoryed', this.destoryedListener);
         emitter.on('shot', this.shotListener);
@@ -296,15 +307,16 @@ export default class {
     }
 
     destroyed() {
-        // TODO 事件移除
         this.mask.remove();
         this.offMask.remove();
         this.transMask.remove();
+
         config.emitter.off('draw-all', this.drawAllListener);
         this.mask.removeEventListener('mousedown', this.mouseDownListener);
         this.mask.removeEventListener('mousemove', this.mouseMoveListener);
         this.mask.removeEventListener('mouseup', this.mouseUpListener);
         document.removeEventListener('keyup', this.keyUpListener);
+        emitter.off('image-fail', this.imageFailListener);
         emitter.off('draw', this.drawListener);
         emitter.off('destoryed', this.destoryedListener);
         emitter.off('shot', this.shotListener);

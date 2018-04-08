@@ -271,6 +271,7 @@ export default class Box {
                 };
                 if (!hasBlur) {
                     if (this.currentFun === 'text') {
+                        // newItem = new Text(this.offCtx, {
                         const item = new Text(
                             this.offCtx,
                             {
@@ -407,7 +408,7 @@ export default class Box {
 
     uploadImage(e: Event) {
         const file = upload(e);
-        if (file) {
+        if (file instanceof File) {
             const imageObj = new Image();
             const reader = new FileReader();
             const URL = window.URL;
@@ -423,6 +424,7 @@ export default class Box {
                     const image = new ImageInsert(
                         this.offCtx,
                         imageObj,
+                        // data,
                         width,
                         height,
                     );
@@ -433,6 +435,8 @@ export default class Box {
                 imageObj.src = data;
             };
             reader.readAsDataURL(file);
+        } else {
+            config.emitter.emit('image-fail', file);
         }
     }
 
@@ -482,6 +486,7 @@ export default class Box {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = 'black';
+        // boder
         this.ctx.strokeRect(
             (this.rect.startX - this.lineWidth) * config.rate,
             (this.rect.startY - this.lineWidth) * config.rate,

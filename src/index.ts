@@ -9,6 +9,9 @@ export default () => {
             download: (data: ImageData) => {
                 console.log(data);
             },
+            imageFail: (error: object) => {
+                console.log(error);
+            },
         });
         screen.start();
     };

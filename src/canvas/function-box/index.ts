@@ -71,6 +71,9 @@ export default class FunctionBox {
             uploadIcon.addEventListener('change', (e: Event) => {
                 this.wrapBox.uploadImage(e);
             });
+            config.emitter.on('image-fail', () => {
+                input.value = '';
+            });
         }
 
         this.colorItems.forEach((v: HTMLElement) => {
