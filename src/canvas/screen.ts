@@ -14,7 +14,7 @@ setConfig({
 interface Config {
     plugins?: Array<plugins>;
     download: Function;
-    imageFail: Function;
+    imageFail?: Function;
 }
 
 export default class {
@@ -226,7 +226,7 @@ export default class {
         };
 
         this.imageFailListener = (error: object) => {
-            this.config.imageFail(error);
+            this.config.imageFail && this.config.imageFail(error);
         };
 
         window.addEventListener('resize', this.resizeListener);
