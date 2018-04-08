@@ -412,6 +412,8 @@ export default class Box {
             const imageObj = new Image();
             const reader = new FileReader();
             const URL = window.URL;
+            const maxWidth = config.width / 4 * 3;
+            const maxHeight = config.height / 4 * 3;
             let width: number;
             let height: number;
             reader.onload = () => {
@@ -420,6 +422,18 @@ export default class Box {
                 imageObj.onload = () => {
                     width = imageObj.width;
                     height = imageObj.height;
+                    if (width / height >= config.width / config.height) {
+                        // 宽度 截断
+                        if (width >= maxWidth) {
+                            height = height / (width / maxWidth);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height >= maxHeight) {
+                            width = width / (height / maxHeight);
+                            height = maxHeight;
+                        }
+                    }
                     URL.revokeObjectURL(imageObj.src);
                     const image = new ImageInsert(
                         this.offCtx,

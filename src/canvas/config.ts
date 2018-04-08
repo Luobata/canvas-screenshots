@@ -6,6 +6,8 @@ interface Config {
     uid?: number;
     wrap?: HTMLElement;
     boxRect?: Rect;
+    width?: number;
+    height?: number;
     platform?: string;
     rate?: number; // deviceRate
     plugins?: Array<plugins>;

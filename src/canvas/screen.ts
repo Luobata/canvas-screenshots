@@ -190,6 +190,8 @@ export default class {
                 this.functionBoxPos();
                 setConfig({
                     boxRect: this.box.rect,
+                    width: this.box.rect.endX - this.box.rect.startX,
+                    height: this.box.rect.endY - this.box.rect.startY,
                 });
             } else if (!this.box.hasBox()) {
                 this.box.initBox();

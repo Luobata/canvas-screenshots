@@ -1,6 +1,6 @@
 const config = {
     type: ['png', 'jpg', 'jpeg'],
-    max: 20 * 1024,
+    max: 100 * 1024,
     min: 0,
 };
 const validateType = (type: string) => {
