@@ -290,18 +290,24 @@ export default class extends Content {
         };
         const size = parseInt(this.property.fontSize, 10) * config.rate + 'px';
         const height = getLineHeight();
-        const fixMargin = config.platform === 'windows' ? 1 : -1;
+        // const fixMargin = config.platform === 'windows' ? 1 : -1;
+        const fixMargin = 1;
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.property.color;
         this.ctx.font = `${size} ${this.property.fontFamily}`;
         this.ctx.textBaseline = 'top';
+        this.ctx.textBaseline = 'middle';
         for (let i = 0; i < this.property.txts.length; i++) {
             this.ctx.fillText(
                 this.property.txts[i],
                 config.rate * (this.property.position.x + 1 + 10),
                 config.rate *
-                    (this.property.position.y + height * i + 10 + fixMargin),
+                    (this.property.position.y +
+                        height * i +
+                        height / 2 +
+                        10 +
+                        fixMargin),
             );
         }
         this.ctx.restore();
