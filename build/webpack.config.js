@@ -15,7 +15,7 @@ module.exports = {
     output: {
         path: `${root}/`,
         publicPath: '/',
-        filename: 'bundle.js',
+        filename: 'screenShots.js',
     },
     resolve: {
         extensions: ['json', '.js', '.ts'],
