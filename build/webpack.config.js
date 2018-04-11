@@ -1,20 +1,19 @@
-var path = require('path');
-var webpack = require('webpack');
-var root = path.resolve(__dirname, '../');
-var htmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const root = path.resolve(__dirname, '../');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     devtool: 'source-map',
 
-    entry: root + '/test/index.js',
     entry: {
         app: [
             'webpack-hot-middleware/client?quiet=true',
-            root + '/test/index.js',
+            `${root}/test/index.js`,
         ],
     },
     output: {
-        path: root + '/',
+        path: `${root}/`,
         publicPath: '/',
         filename: 'bundle.js',
     },
@@ -73,18 +72,10 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new htmlWebpackPlugin({
+        new HtmlWebpackPlugin({
             filename: 'test.html',
             template: 'test.html',
             inject: true,
         }),
     ],
-
-    // devServer: {
-    //     contentBase: "./",
-    //     port: 8888,
-    //     colors: true,
-    //     historyApiFallback: true,
-    //     inline: true
-    // }
 };
