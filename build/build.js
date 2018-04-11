@@ -1,7 +1,7 @@
 const ora = require('ora');
 const path = require('path');
 const webpack = require('webpack');
-const webpackConfig = require('./webpack.config.js');
+const webpackConfig = require('./webpack.config.build.js');
 require('shelljs/global');
 
 const dist = path.resolve(__dirname, '../') + '/dist/';
