@@ -1,8 +1,8 @@
 import ScreenShoot from './canvas/screen';
 import { plugins } from 'LIB/interface';
 
-// module.exports = ScreenShoot;
-export default ScreenShoot;
+module.exports = ScreenShoot;
+// export default ScreenShoot;
 // export default () => {
 //     let screen: ScreenShoot;
 //     window.onload = () => {

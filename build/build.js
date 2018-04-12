@@ -15,8 +15,8 @@ console.log(
 const spinner = ora('building for production...');
 spinner.start();
 
-rm('-rf', dist);
-mkdir('-p', dist);
+// rm('-rf', dist);
+// mkdir('-p', dist);
 
 webpack(webpackConfig, function(err, stats) {
     spinner.stop();

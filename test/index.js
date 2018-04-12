@@ -2,10 +2,11 @@
 //
 // canvas();
 
-import ScreenShoot from '../screenShots';
+import ScreenShoot from '../dist/screenShots';
 
 let screen;
 window.onload = () => {
+    console.log(ScreenShoot);
     screen = new ScreenShoot({
         // plugins: [plugins.rectangular, plugins.circle],
         download: data => {

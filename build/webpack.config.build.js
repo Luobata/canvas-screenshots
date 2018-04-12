@@ -1,18 +1,22 @@
 const path = require('path');
 const webpack = require('webpack');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 const root = path.resolve(__dirname, '../');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const productionGzipExtensions = ['js', 'css', 'ts', 'pug', 'styl'];
 
 module.exports = {
     devtool: 'source-map',
 
     entry: {
-        app: [`${root}/src/index.ts`],
+        app: `${root}/src/index.ts`,
     },
     output: {
         path: `${root}/dist`,
         publicPath: '/',
         filename: 'screenShots.js',
+        libraryTarget: 'umd',
     },
     resolve: {
         extensions: ['json', '.js', '.ts'],
@@ -67,7 +71,23 @@ module.exports = {
                 NODE_ENV: '"production"',
             },
         }),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
+        new UglifyJsPlugin({
+            uglifyOptions: {
+                compress: {
+                    warnings: false,
+                },
+            },
+            sourceMap: true,
+            parallel: true,
+        }),
+        new CompressionWebpackPlugin({
+            asset: '[path].gz[query]',
+            algorithm: 'gzip',
+            test: new RegExp(
+                '\\.(' + productionGzipExtensions.join('|') + ')$',
+            ),
+            threshold: 10240,
+            minRatio: 0.8,
+        }),
     ],
 };
