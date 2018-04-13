@@ -1,8 +1,11 @@
-import ScreenShoot from '../dist/screenShots';
-let screen: ScreenShoot;
+/// <reference path="../src/index.d.ts"/>
+// import ScreenShoot from '../dist/screenShots';
+const ScreenShoot = require('../src/index');
+// import ScreenShoot from '../src/canvas/screen';
 
 window.onload = () => {
-    screen = new ScreenShoot({
+    // let screen: ScreenShoot;
+    let screen = new ScreenShoot({
         // plugins: [plugins.rectangular, plugins.circle],
         download: (data: ImageData) => {
             console.log(data);
@@ -13,6 +16,6 @@ window.onload = () => {
     });
     screen.start();
 };
-(<any>window).xxxx = () => {
-    screen.start();
-};
+// (<any>window).xxxx = () => {
+//     screen.start();
+// };

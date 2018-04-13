@@ -49,3 +49,9 @@ export type PluginType =
     | 'mosaic'
     | 'image'
     | 'back';
+
+export interface Config {
+    plugins?: Array<PluginType>;
+    download: Function;
+    imageFail?: Function;
+}

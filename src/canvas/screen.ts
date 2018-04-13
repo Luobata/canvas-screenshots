@@ -1,6 +1,6 @@
 import { setConfig, config } from './config';
 import Box from './box';
-import { PluginType } from 'LIB/interface';
+import { PluginType, Config } from 'LIB/interface';
 import functionBox from './function-box/function-box';
 const throttle = require('throttle-debounce/throttle');
 const html2canvas = require('html2canvas');
@@ -11,11 +11,6 @@ type EventListener = (...args: any[]) => void;
 setConfig({
     emitter,
 });
-interface Config {
-    plugins?: Array<PluginType>;
-    download: Function;
-    imageFail?: Function;
-}
 
 export default class {
     config: Config;
