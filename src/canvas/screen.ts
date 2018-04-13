@@ -1,6 +1,6 @@
 import { setConfig, config } from './config';
 import Box from './box';
-import { plugins } from 'LIB/interface';
+import { PluginType } from 'LIB/interface';
 import functionBox from './function-box/function-box';
 const throttle = require('throttle-debounce/throttle');
 const html2canvas = require('html2canvas');
@@ -12,7 +12,7 @@ setConfig({
     emitter,
 });
 interface Config {
-    plugins?: Array<plugins>;
+    plugins?: Array<PluginType>;
     download: Function;
     imageFail?: Function;
 }
@@ -51,14 +51,14 @@ export default class {
 
     constructor(config: Config) {
         const plugin = config.plugins || [
-            plugins['rectangular'],
-            plugins['circle'],
-            plugins['arrow'],
-            plugins['pen'],
-            plugins['text'],
-            plugins['mosaic'],
-            plugins['image'],
-            plugins['back'],
+            'rectangular',
+            'circle',
+            'arrow',
+            'pen',
+            'text',
+            'mosaic',
+            'image',
+            'back',
         ];
         this.config = Object.assign(config, plugin);
         this.body = document.body;

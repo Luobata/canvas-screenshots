@@ -30,13 +30,22 @@ export interface Size {
     height?: number;
 }
 
-export enum plugins {
-    rectangular = 'rectangular',
-    circle = 'circle',
-    arrow = 'arrow',
-    pen = 'pen',
-    text = 'text',
-    mosaic = 'mosaic',
-    image = 'image',
-    back = 'back',
-}
+// export enum plugins {
+//     rectangular = 'rectangular',
+//     circle = 'circle',
+//     arrow = 'arrow',
+//     pen = 'pen',
+//     text = 'text',
+//     mosaic = 'mosaic',
+//     image = 'image',
+//     back = 'back',
+// }
+export type PluginType =
+    | 'rectangular'
+    | 'circle'
+    | 'arrow'
+    | 'pen'
+    | 'text'
+    | 'mosaic'
+    | 'image'
+    | 'back';

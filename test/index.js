@@ -2,7 +2,8 @@
 //
 // canvas();
 
-import ScreenShoot from '../dist/screenShots';
+// import ScreenShoot from '../dist/screenShots';
+import ScreenShoot from '../src/index.ts';
 
 let screen;
 window.onload = () => {
