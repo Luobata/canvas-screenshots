@@ -9,7 +9,7 @@ let screen;
 window.onload = () => {
     console.log(ScreenShoot);
     screen = new ScreenShoot({
-        // plugins: [plugins.rectangular, plugins.circle],
+        // plugins: ['rectangular', 'circle'],
         download: data => {
             console.log(data);
         },

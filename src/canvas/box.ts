@@ -42,6 +42,7 @@ export default class Box {
     // functionBox: HTMLDivElement;
     functionBox: FunctionBox;
     childSaveArray: Array<Content | sContent>;
+    paintList: Array<HTMLCanvasElement>;
 
     currentFun?: string;
     colorFun?: string;
@@ -75,6 +76,7 @@ export default class Box {
         // this.drawAll();
         this.functionBox = new FunctionBox(functionBox, this);
         this.childSaveArray = [];
+        this.paintList = [];
     }
 
     back() {
@@ -470,6 +472,32 @@ export default class Box {
         return data;
     }
 
+    painter(data?: HTMLCanvasElement) {
+        let frame: HTMLCanvasElement;
+        if (data) this.paintList.push(data);
+
+        if (this.paintList.length > 1) return;
+        window.requestAnimationFrame(() => {
+            // 先paint 然后再出队列
+            frame = this.paintList.slice(0, 1)[0];
+            this.ctx.drawImage(
+                frame,
+                this.rect.startX,
+                this.rect.startY,
+                this.rect.endX - this.rect.startX,
+                this.rect.endY - this.rect.startY,
+                this.rect.startX,
+                this.rect.startY,
+                this.rect.endX - this.rect.startX,
+                this.rect.endY - this.rect.startY,
+            );
+            this.paintList.shift();
+            if (this.paintList.length) {
+                this.painter();
+            }
+        });
+    }
+
     draw(data?: HTMLCanvasElement) {
         if (this.hasBox()) {
             this.ctx.clearRect(
@@ -485,19 +513,7 @@ export default class Box {
         }
 
         if (data) {
-            window.requestAnimationFrame(() => {
-                this.ctx.drawImage(
-                    data,
-                    this.rect.startX,
-                    this.rect.startY,
-                    this.rect.endX - this.rect.startX,
-                    this.rect.endY - this.rect.startY,
-                    this.rect.startX,
-                    this.rect.startY,
-                    this.rect.endX - this.rect.startX,
-                    this.rect.endY - this.rect.startY,
-                );
-            });
+            this.painter(data);
         }
     }
     drawAll() {
