@@ -1,6 +1,10 @@
 import { config } from './config';
 export default function(...args: any[]) {
     if (config.debuggerMode) {
-        console.log.apply(window, arguments);
+        if (console.trace) {
+            console.trace.apply(window, arguments);
+        } else {
+            console.log.apply(window, arguments);
+        }
     }
 }
