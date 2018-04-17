@@ -1,6 +1,7 @@
 import { config } from '../config';
 import { domEach } from 'LIB/dom';
 import Box from '../box';
+import logger from '../log';
 
 const childBoxContent = ['rectangular', 'circle', 'arrow', 'pen', 'text'];
 const activeBox = ['rectangular', 'circle', 'arrow', 'pen', 'text', 'mosaic'];
@@ -30,7 +31,7 @@ export default class FunctionBox {
         this.items.forEach((v: HTMLElement) => {
             v.addEventListener('click', function() {
                 const type = this.getAttribute('type');
-                console.log(type);
+                logger(type);
                 that.activeFun = type;
                 that.wrapBox.currentFun = type;
                 that.items.forEach((v: HTMLElement, i: number) => {
@@ -102,7 +103,7 @@ export default class FunctionBox {
     }
 
     setColor(color: string) {
-        console.log(color);
+        logger(color);
         this.activeColor = color;
         this.colorItems.forEach((v: HTMLElement, i: number) => {
             const item = this.colorItems[i];

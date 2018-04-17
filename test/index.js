@@ -16,6 +16,7 @@ window.onload = () => {
         imageFail: error => {
             console.log(error);
         },
+        debuggerMode: true,
     });
     screen.start();
     window.xxxx = () => {

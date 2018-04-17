@@ -4,6 +4,7 @@ import { pointInRectangular } from 'LIB/geometric';
 import { isChinese } from 'LIB/reg';
 import Mouse from './mouse-text';
 import Content from './content';
+import logger from '../log';
 let inputDiv: HTMLDivElement;
 
 const getStrLength = (str: string) => {
@@ -156,7 +157,7 @@ export default class extends Content {
         let maxCols = 0;
         for (let i of rows) {
             const length = getStrLength(i);
-            // console.log(length);
+            // logger(length);
             if (length > maxCols) {
                 maxCols =
                     length > this.property.maxCols
@@ -171,7 +172,7 @@ export default class extends Content {
                         const strObj = i.substr(k, j);
                         cols.push(strObj);
                         k += j;
-                        // console.log(k, j);
+                        // logger(k, j);
                     }
                 } else {
                     cols.push(i);
@@ -226,7 +227,7 @@ export default class extends Content {
             this.getSize();
         };
         this.inputBlurListener = (e: KeyboardEvent) => {
-            console.log('blur');
+            logger('blur');
             this.property.text = (<HTMLInputElement>e.target).value;
             this.property.width = this.input.offsetWidth;
             this.property.height = this.input.offsetHeight;

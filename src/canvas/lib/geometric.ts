@@ -54,7 +54,7 @@ export const pointInArea = (
         total += P1.ankle(P2);
     }
 
-    // console.log(total);
+    // logger(total);
     const margin = 0.05;
 
     return Math.abs(total / 360 - 1) < margin;

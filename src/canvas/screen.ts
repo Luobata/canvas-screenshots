@@ -2,6 +2,7 @@ import { setConfig, config } from './config';
 import Box from './box';
 import { PluginType, Config } from 'LIB/interface';
 import functionBox from './function-box/function-box';
+import logger from './log';
 const throttle = require('throttle-debounce/throttle');
 const html2canvas = require('html2canvas');
 const ee = require('event-emitter');
@@ -60,6 +61,7 @@ export default class {
         setConfig({
             rate: window.devicePixelRatio,
             plugins: plugin,
+            debuggerMode: config.debuggerMode || false,
         });
     }
 
@@ -96,7 +98,7 @@ export default class {
         this.resize();
 
         html2canvas(this.body).then((canvas: HTMLCanvasElement) => {
-            console.log('finished');
+            logger('finished', 1);
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
             this.transMask.style.position = 'fixed';
@@ -259,7 +261,7 @@ export default class {
 
     screenShots() {
         // 开始截图
-        console.log('begin shots');
+        logger('begin shots');
         this.box.allBlur();
         const data = this.offMaskCtx.getImageData(
             config.boxRect.startX,

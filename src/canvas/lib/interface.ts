@@ -54,4 +54,5 @@ export interface Config {
     plugins?: Array<PluginType>;
     download: Function;
     imageFail?: Function;
+    debuggerMode?: boolean;
 }

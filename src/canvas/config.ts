@@ -11,6 +11,7 @@ interface Config {
     platform?: string;
     rate?: number; // deviceRate
     plugins?: Array<PluginType>;
+    debuggerMode?: boolean;
 }
 
 export const inBox = (e: MouseEvent) => {

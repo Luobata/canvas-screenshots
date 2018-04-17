@@ -1,4 +1,5 @@
 import { dragCircle, Rect } from 'LIB/interface';
+import logger from '../log';
 import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
 import { EventEmitter } from 'events';
@@ -40,7 +41,7 @@ export default class {
     }
 
     save() {
-        console.log('save');
+        logger('save');
         this.saveArray.push(JSON.parse(JSON.stringify(this.property)));
     }
 

@@ -1,3 +1,4 @@
+import logger from '../log';
 const config = {
     type: ['png', 'jpg', 'jpeg'],
     max: 100 * 1024,
@@ -26,6 +27,6 @@ export default (e: Event) => {
         error.msg = '图片大小不符合要求';
         return error;
     }
-    console.log(file);
+    logger(file);
     return file;
 };
