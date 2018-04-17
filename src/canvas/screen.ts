@@ -62,6 +62,7 @@ export default class {
             rate: window.devicePixelRatio,
             plugins: plugin,
             debuggerMode: config.debuggerMode || false,
+            type: config.type || 'imageData',
         });
     }
 
@@ -269,7 +270,17 @@ export default class {
             config.boxRect.endX - config.boxRect.startX,
             config.boxRect.endY - config.boxRect.startY,
         );
-        this.config.download.call(null, data);
+        if (config.type === 'imageData') {
+            this.config.download.call(null, data);
+        } else if (config.type === 'png') {
+            const image = new Image();
+            const tmpCanvas = document.createElement('canvas');
+            tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
+            tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
+            tmpCanvas.getContext('2d').putImageData(data, 0, 0);
+            image.src = tmpCanvas.toDataURL('image/png');
+            this.config.download.call(null, image);
+        }
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
     }

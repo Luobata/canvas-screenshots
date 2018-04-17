@@ -17,6 +17,7 @@ window.onload = () => {
             console.log(error);
         },
         debuggerMode: true,
+        type: 'png',
     });
     screen.start();
     window.xxxx = () => {

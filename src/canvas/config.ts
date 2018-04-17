@@ -1,5 +1,5 @@
 import { Emitter } from 'event-emitter';
-import { Rect, PluginType } from 'LIB/interface';
+import { Rect, PluginType, Type } from 'LIB/interface';
 
 interface Config {
     emitter?: Emitter;
@@ -12,6 +12,7 @@ interface Config {
     rate?: number; // deviceRate
     plugins?: Array<PluginType>;
     debuggerMode?: boolean;
+    type?: Type;
 }
 
 export const inBox = (e: MouseEvent) => {

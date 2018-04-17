@@ -55,4 +55,7 @@ export interface Config {
     download: Function;
     imageFail?: Function;
     debuggerMode?: boolean;
+    type?: Type;
 }
+
+export type Type = 'imageData' | 'png';
