@@ -7,6 +7,7 @@
         "build": "node build/build.js",
         "dev:test": "node build/dev-server.js",
         "test": "echo \"Error: no test specified\" && exit 1",
+        "tslint": "tslint -c tslint.json src/*",
         "lint": "eslint --fix src/"
     },
     "devDependencies": {
@@ -51,7 +52,8 @@
         "stylus-loader": "^3.0.1",
         "throttle-debounce": "^1.0.1",
         "ts-loader": "^3.2.0",
-        "typescript": "^2.6.2",
+        "tslint": "^5.9.1",
+        "typescript": "^2.8.1",
         "uglifyjs-webpack-plugin": "^1.2.4",
         "url-loader": "^0.6.2",
         "webpack": "^3.6.0",
