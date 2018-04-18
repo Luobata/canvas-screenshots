@@ -264,13 +264,25 @@ export default class {
         // 开始截图
         logger('begin shots');
         this.box.allBlur();
-        const data = this.transMaskCtx.getImageData(
+        const bData = this.transMaskCtx.getImageData(
             config.boxRect.startX * config.rate,
             config.boxRect.startY * config.rate,
             (config.boxRect.endX - config.boxRect.startX) * config.rate,
             (config.boxRect.endY - config.boxRect.startY) * config.rate,
         );
-        console.log(data);
+        this.offMaskCtx.putImageData(
+            bData,
+            config.boxRect.startX * config.rate,
+            config.boxRect.startY * config.rate,
+        );
+        this.box.getData();
+        const data = this.offMaskCtx.getImageData(
+            config.boxRect.startX * config.rate,
+            config.boxRect.startY * config.rate,
+            (config.boxRect.endX - config.boxRect.startX) * config.rate,
+            (config.boxRect.endY - config.boxRect.startY) * config.rate,
+        );
+        console.log(bData);
         if (config.type === 'imageData') {
             this.config.download.call(null, data);
         } else if (config.type === 'png') {
