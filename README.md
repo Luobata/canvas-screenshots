@@ -2,13 +2,13 @@
 
 canvas-screenshots is a useful screenshots tools on your website created by canvas.The behavior is similar with your Pc clients like wechat or QQ.
 
-# Installation
+## Installation
 
 ```js
 npm install --save-dev canvas-screenshots
 ```
 
-# Usage
+## Usage
 
 ```js
 import ScreenShoots from 'canvas-screenshots';
@@ -24,24 +24,25 @@ const screen = new ScreenShoots({
 screen.start();
 ```
 
-# Demo
+## Demo
 
+[demo](https://luobata.github.io/canvas-screenshots/test.html)
 
-# Surrpoted fcuntions
+## Surrpoted fcuntions
 
--  Rectangular
--  Circle & Ellipsis
--  Arrow
--  Pen
--  Text
--  Mosaic
--  Image
--  Back
+*   Rectangular
+*   Circle & Ellipsis
+*   Arrow
+*   Pen
+*   Text
+*   Mosaic
+*   Image
+*   Back
 
-# Config
+## Config
 
-# Surrported browsers
+## Surrported browsers
 
--  Chrome
+*   Chrome
 
 The browsers supported is now minimal because of the different behavior of canvas, and it will soon be more.
