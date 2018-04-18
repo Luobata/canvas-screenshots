@@ -1,5 +1,3 @@
-import { cpus } from 'os';
-
 const ora = require('ora');
 const path = require('path');
 const webpack = require('webpack');
@@ -19,7 +17,6 @@ spinner.start();
 
 // rm('-rf', dist);
 // mkdir('-p', dist);
-cp('-rf', 'dist/*', 'docs')
 
 webpack(webpackConfig, function (err, stats) {
     spinner.stop();
@@ -33,4 +30,5 @@ webpack(webpackConfig, function (err, stats) {
             chunkModules: false,
         }) + '\n',
     );
+    cp('-f', 'dist/*', 'docs')
 });
