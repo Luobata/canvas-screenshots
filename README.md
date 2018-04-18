@@ -26,19 +26,19 @@ screen.start();
 
 # Surrpoted fcuntions
 
-1.  Rectangular
-2.  Circle & Ellipsis
-3.  Arrow
-4.  Pen
-5.  Text
-6.  Mosaic
-7.  Image
-8.  Back
+-  Rectangular
+-  Circle & Ellipsis
+-  Arrow
+-  Pen
+-  Text
+-  Mosaic
+-  Image
+-  Back
 
 # Config
 
 # Surrported browsers
 
-1.  Chrome
+-  Chrome
 
 The browsers supported is now minimal because of the different behavior of canvas, and it will soon be more.
