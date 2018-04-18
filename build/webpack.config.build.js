@@ -17,6 +17,7 @@ module.exports = {
         publicPath: '/',
         filename: 'screenShots.js',
         libraryTarget: 'umd',
+        library: 'screenShots',
     },
     resolve: {
         extensions: ['json', '.js', '.ts'],
