@@ -8,7 +8,7 @@ canvas-screenshots is a useful screenshots tools on your website created by canv
 npm install --save-dev canvas-screenshots
 ```
 
-#Usage
+# Usage
 
 ```js
 import ScreenShoots from 'canvas-screenshots';
@@ -23,6 +23,9 @@ const screen = new ScreenShoots({
 // create mask above
 screen.start();
 ```
+
+# Demo
+
 
 # Surrpoted fcuntions
 
