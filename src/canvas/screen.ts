@@ -264,12 +264,13 @@ export default class {
         // 开始截图
         logger('begin shots');
         this.box.allBlur();
-        const data = this.offMaskCtx.getImageData(
-            config.boxRect.startX,
-            config.boxRect.startY,
-            config.boxRect.endX - config.boxRect.startX,
-            config.boxRect.endY - config.boxRect.startY,
+        const data = this.transMaskCtx.getImageData(
+            config.boxRect.startX * config.rate,
+            config.boxRect.startY * config.rate,
+            (config.boxRect.endX - config.boxRect.startX) * config.rate,
+            (config.boxRect.endY - config.boxRect.startY) * config.rate,
         );
+        console.log(data);
         if (config.type === 'imageData') {
             this.config.download.call(null, data);
         } else if (config.type === 'png') {
@@ -295,6 +296,7 @@ export default class {
         this.beginMove = false;
         this.cursorStyle = 'crosshair';
         this.clickTime = 0;
+        this.mask.id = 'screenshots-mask';
         this.initBackGround(() => {
             this.functionBox = functionBox(this.body);
             this.box = new Box(

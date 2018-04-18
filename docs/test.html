@@ -19,23 +19,45 @@
             position: relative;
         }
 
-        img {
+        #background {
             margin: 0 auto;
             display: block;
+            display: none;
+        }
+
+        #btn {
+            width: 200px;
+            height: 200px;
+            background: red;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            font-family: microsoft yahei;
+            cursor: pointer;
+            font-size: 20px
         }
     </style>
 </head>
 
 <body>
-    <img src="./test.jpg" alt="">
+    <img src="./test.jpg" alt="" id="background">
+    <button id="btn">try to click me.</button>
     <script type="text/javascript" src="./screenShots.js">
     </script>
     <script typs="text/javascript">
         window.onload = () => {
             var ScreenShoot = window.screenShots;
+            var btn = document.getElementById('btn')
+            var background = document.getElementById('background')
             var screen = new ScreenShoot({
                 download: data => {
                     console.log(data);
+                    background.style.display = 'none'
+                    document.body.append(data)
                 },
                 imageFail: error => {
                     console.log(error);
@@ -43,10 +65,13 @@
                 debuggerMode: true,
                 type: 'png',
             });
-            screen.start();
-            window.xxxx = () => {
-                screen.start();
-            };
+            btn.addEventListener('click', function () {
+                btn.style.display = 'none'
+                background.style.display = 'block'
+                window.setTimeout(function () {
+                    screen.start();
+                }, 0);
+            });
         };
     </script>
 

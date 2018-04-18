@@ -12,6 +12,8 @@ window.onload = () => {
         // plugins: ['rectangular', 'circle'],
         download: data => {
             console.log(data);
+            document.getElementById('back').remove();
+            document.body.append(data);
         },
         imageFail: error => {
             console.log(error);

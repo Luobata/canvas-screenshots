@@ -113,7 +113,7 @@ export default class Box {
             } else {
                 this.content.delete(item);
             }
-            for (let i = 0; i < this.childSaveArray.length; ) {
+            for (let i = 0; i < this.childSaveArray.length;) {
                 const child = this.childSaveArray[i];
                 if (child === item) {
                     this.childSaveArray.splice(i, 1);
@@ -531,9 +531,9 @@ export default class Box {
             (this.rect.startX - this.lineWidth) * config.rate,
             (this.rect.startY - this.lineWidth) * config.rate,
             (this.rect.endX - this.rect.startX + this.lineWidth * 2) *
-                config.rate,
+            config.rate,
             (this.rect.endY - this.rect.startY + this.lineWidth * 2) *
-                config.rate,
+            config.rate,
         );
 
         const circleMap = getCircleMap(this.rect, this.lineWidth);
