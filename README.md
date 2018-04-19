@@ -41,6 +41,49 @@ screen.start();
 
 ## Config
 
+- plugins
+
+  ```js
+  The switch to each function.
+  type: Array<pluginType> 
+  (pluginType: 'rectangular' || 'circle' || 'arrow' || 'pen' || 'text' || 'mosaic' || 'image' || 'back')
+  default: Array<all pluginType>
+  ```
+
+- download
+
+  ```js
+  Trigger when click the download button, the type of output data will be decided by config type.
+  type: Function
+  default: noop function
+  arguments: data
+  ```
+
+- imageFail
+
+  ```js
+  Trigger when choose a image but not match the expected.
+  type: Function
+  default: noop function
+  arguments: error
+  ```
+
+- debuggerMode
+
+  ```js
+  debugger switch.
+  type: boolean
+  default: false
+  ```
+
+- type
+
+  ```js
+  The output type with download.
+  type: string('imageData' || 'png')
+  default: 'imageData'
+  ```
+
 ## Surrported browsers
 
 *   Chrome
