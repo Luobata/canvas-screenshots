@@ -2,7 +2,7 @@ import { setConfig, config } from './config';
 import Box from './box';
 import { PluginType, Config } from 'LIB/interface';
 import functionBox from './function-box/function-box';
-import logger from './log';
+import logger, { setDebuggerData } from './log';
 const throttle = require('throttle-debounce/throttle');
 const html2canvas = require('html2canvas');
 const ee = require('event-emitter');
@@ -64,6 +64,7 @@ export default class {
             debuggerMode: config.debuggerMode || false,
             type: config.type || 'imageData',
         });
+        setDebuggerData();
     }
 
     platform() {

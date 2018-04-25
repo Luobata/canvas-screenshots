@@ -1,3 +1,11 @@
+import Rectangular from 'INSERT/rectangular';
+import cCircle from 'INSERT/circle';
+import Arrow from 'INSERT/arrow';
+import Pen from 'INSERT/pen';
+import Text from 'INSERT/text';
+import Mosaic from 'INSERT/mosaic';
+import ImageInsert from 'INSERT/image';
+
 export interface dragCircle {
     x: number;
     y: number;
@@ -59,3 +67,6 @@ export interface Config {
 }
 
 export type Type = 'imageData' | 'png';
+
+export type Content = Rectangular | cCircle | Arrow | Pen | Text | ImageInsert;
+export type sContent = Mosaic;

@@ -7,7 +7,7 @@ import ScreenShoot from '../src/index.ts';
 
 let screen;
 window.onload = () => {
-    console.log(ScreenShoot);
+    // console.log(ScreenShoot);
     screen = new ScreenShoot({
         // plugins: ['rectangular', 'circle'],
         download: data => {
@@ -26,3 +26,4 @@ window.onload = () => {
         screen.start();
     };
 };
+window.test = [1, 2];

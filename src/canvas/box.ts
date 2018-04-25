@@ -1,4 +1,4 @@
-import { dragCircle, Rect } from 'LIB/interface';
+import { dragCircle, Rect, Content, sContent } from 'LIB/interface';
 import FunctionBox from './function-box/';
 import Rectangular from 'INSERT/rectangular';
 import Circle from 'INSERT/circle';
@@ -12,10 +12,11 @@ import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse';
 import Cursor from './cursor';
 import upload from 'LIB/upload';
+import { hackArray, hackSet } from 'LIB/hack';
 
 // Content 为基础类型集合 sContent为优先渲染的集合
-type Content = Rectangular | Circle | Arrow | Pen | Text | ImageInsert;
-type sContent = Mosaic;
+// type Content = Rectangular | Circle | Arrow | Pen | Text | ImageInsert;
+// type sContent = Mosaic;
 
 const ee = require('event-emitter');
 const boxEmitter = new ee();
@@ -77,6 +78,7 @@ export default class Box {
         this.functionBox = new FunctionBox(functionBox, this);
         this.childSaveArray = [];
         this.paintList = [];
+        hackSet(this.content);
     }
 
     back() {
@@ -113,7 +115,7 @@ export default class Box {
             } else {
                 this.content.delete(item);
             }
-            for (let i = 0; i < this.childSaveArray.length;) {
+            for (let i = 0; i < this.childSaveArray.length; ) {
                 const child = this.childSaveArray[i];
                 if (child === item) {
                     this.childSaveArray.splice(i, 1);
@@ -531,9 +533,9 @@ export default class Box {
             (this.rect.startX - this.lineWidth) * config.rate,
             (this.rect.startY - this.lineWidth) * config.rate,
             (this.rect.endX - this.rect.startX + this.lineWidth * 2) *
-            config.rate,
+                config.rate,
             (this.rect.endY - this.rect.startY + this.lineWidth * 2) *
-            config.rate,
+                config.rate,
         );
 
         const circleMap = getCircleMap(this.rect, this.lineWidth);
