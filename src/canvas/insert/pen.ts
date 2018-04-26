@@ -10,7 +10,7 @@ interface pen {
     lineWidth: number;
 }
 
-export default class extends Content {
+export default class sPen extends Content {
     mouse: Mouse;
     property: pen;
 

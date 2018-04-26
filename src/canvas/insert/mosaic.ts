@@ -8,7 +8,7 @@ interface mosaic {
     num: number; // 一次操作生成马赛克数量(一个方向上)
 }
 
-export default class extends Content {
+export default class sMosaic extends Content {
     property: mosaic;
     transctx: CanvasRenderingContext2D;
     constructor(

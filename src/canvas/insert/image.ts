@@ -15,7 +15,7 @@ interface image {
     color: string;
 }
 
-export default class extends Content {
+export default class sImage extends Content {
     property: image;
     // file: ImageData;
     file: HTMLImageElement;

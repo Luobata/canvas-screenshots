@@ -17,8 +17,9 @@ const inCircle = (
     );
 };
 
-export default class {
+export default class Content {
     id: number;
+    name: string;
     ctx: CanvasRenderingContext2D;
     // mouse: Mouse;
     isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
@@ -38,6 +39,9 @@ export default class {
         this.saveArray = [];
 
         this.keyCodeListener();
+    }
+    getName() {
+        this.name = `${this.constructor.name}_${this.id}`;
     }
 
     save() {

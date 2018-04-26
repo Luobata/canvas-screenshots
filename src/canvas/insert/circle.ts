@@ -15,7 +15,7 @@ interface circle {
     circleWidth: number;
 }
 
-export default class extends Content {
+export default class sCircle extends Content {
     mouse: Mouse;
     property: circle;
 

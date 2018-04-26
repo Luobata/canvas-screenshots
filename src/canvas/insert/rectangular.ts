@@ -14,7 +14,7 @@ interface rectangular {
     circleWidth: number;
 }
 
-export default class extends Content {
+export default class sRectangular extends Content {
     property: rectangular;
     mouse: Mouse;
 
@@ -31,6 +31,7 @@ export default class extends Content {
 
         this.init();
         this.event();
+        this.getName();
     }
 
     event() {

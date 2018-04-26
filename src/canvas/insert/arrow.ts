@@ -15,7 +15,7 @@ interface arrow {
     circleWidth: number;
 }
 
-export default class extends Content {
+export default class sArrow extends Content {
     mouse: Mouse;
     property: arrow;
 

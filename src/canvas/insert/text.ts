@@ -48,7 +48,7 @@ interface property {
     isEditor?: boolean;
 }
 
-export default class extends Content {
+export default class sText extends Content {
     input: HTMLTextAreaElement;
     inputListener: EventListener;
     inputBlurListener: EventListener;
