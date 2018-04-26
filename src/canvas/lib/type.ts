@@ -17,7 +17,8 @@ export const getPlainObj = (obj: any) => {
                 type(obj[i], 'Object')) &&
             i !== 'mouse'
         ) {
-            item[i] = JSON.parse(JSON.stringify(obj[i]));
+            //item[i] = JSON.parse(JSON.stringify(obj[i]));
+            item[i] = obj[i];
         }
     }
     return item;
