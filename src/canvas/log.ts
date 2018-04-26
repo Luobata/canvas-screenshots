@@ -1,5 +1,7 @@
 import { config } from './config';
 import { Content, sContent } from './lib/interface';
+import { getType, type, getPlainObj } from './lib/type';
+
 export default function(...args: any[]) {
     if (config.debuggerMode) {
         if (console.trace) {
@@ -11,7 +13,7 @@ export default function(...args: any[]) {
 }
 
 type Con = Content | sContent;
-let debuggerData: Array<Con> = [];
+let debuggerData: Array<any> = [];
 export const setDebuggerData = () => {
     if (config.debuggerMode) {
         if ((<any>window).__Canvas_Screen_Data) return;
@@ -19,14 +21,17 @@ export const setDebuggerData = () => {
     }
 };
 
-export const addDebuggerData = (obj: Con) => {
-    debuggerData.push(obj);
+export const addDebuggerData = (obj: any) => {
+    const item = getPlainObj(obj);
+    if (!debuggerData.find(v => v.id === item.id)) {
+        debuggerData.push(item);
+    }
 };
 
 export const deleteDebuggerData = (obj: Con) => {
     for (let i = 0; i < debuggerData.length; ) {
         if (debuggerData[i].id === obj.id) {
-            debuggerData.slice(i, 1);
+            debuggerData.splice(i, 1);
         } else {
             i++;
         }
