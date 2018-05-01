@@ -1,4 +1,4 @@
-import ScreenShoot from './canvas/screen';
+import ScreenShoot from "./canvas/screen";
 
 module.exports = ScreenShoot;
 // export default ScreenShoot;

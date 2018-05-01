@@ -1,4 +1,4 @@
-import { PluginType, Config } from './canvas/lib/interface';
+import { Config, PluginType } from "./canvas/lib/interface";
 
 // export declare class ScreenShoot {
 //     config: Config;
@@ -7,5 +7,5 @@ import { PluginType, Config } from './canvas/lib/interface';
 
 export declare class ScreenShoot {
     constructor(config: Config);
-    start(): void;
+    public start(): void;
 }
