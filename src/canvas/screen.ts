@@ -1,23 +1,31 @@
 /**
  * @description screen
  */
-import { config, setConfig } from 'Canvas/config';
 import box from 'Canvas/box';
-import { Config, PluginType } from 'LIB/interface';
+import { config, setConfig } from 'Canvas/config';
 import functionBox from 'Canvas/function-box/function-box';
-import logger, { setDebuggerData } from 'Canvas/log';
+import log, { setDebuggerData } from 'Canvas/log';
 import { Emitter } from 'event-emitter';
+import { Config, PluginType } from 'LIB/interface';
+
+// tslint:disable
 const throttle: Function = require('throttle-debounce/throttle');
 const html2canvas: Function = require('html2canvas');
 const ee = require('event-emitter');
+
 const emitter: Emitter = new ee();
-type EventListener = (...args: Array<Object | string>) => void;
+// tslint:enable
+
+type EventListener = (...args: (Object | string)[]) => void;
 
 setConfig({
     emitter,
 });
 
-export default class screen {
+/**
+ * a default class
+ */
+export default class Screen {
     private config: Config;
     private body: HTMLElement;
     private transMask: HTMLCanvasElement;
@@ -50,7 +58,7 @@ export default class screen {
     private box: box;
 
     constructor(conf: Config) {
-        const plugin: PluginType[] = conf.plugins || [
+        conf.plugins = conf.plugins || [
             'rectangular',
             'circle',
             'arrow',
@@ -60,11 +68,12 @@ export default class screen {
             'image',
             'back',
         ];
-        this.config = Object.assign(conf, plugin);
+        // this.config = {...conf, ...plugin};
+        this.config = { ...conf };
         this.body = document.body;
         setConfig({
             rate: window.devicePixelRatio,
-            plugins: plugin,
+            plugins: conf.plugins,
             debuggerMode: conf.debuggerMode || false,
             type: conf.type || 'imageData',
         });
@@ -103,8 +112,10 @@ export default class screen {
         this.reset();
         this.resize();
 
+        // tslint:disable
         html2canvas(this.body).then((canvas: HTMLCanvasElement): void => {
-            logger('finished', 1);
+            // tslint:enable
+            log('finished', 1);
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
             this.transMask.style.position = 'fixed';
@@ -154,7 +165,9 @@ export default class screen {
 
     private initEvent(): void {
         let hasTrajectory: boolean = false; // 移动轨迹 避免只点击没有移动的情况
+        // tslint:disable
         this.resizeListener = throttle(50, (): void => {
+            // tslint:enable
             if (this.show) {
                 // TODO resize box bug
                 this.destroyed();
@@ -273,7 +286,7 @@ export default class screen {
 
     private screenShots(): void {
         // 开始截图
-        logger('begin shots');
+        log('begin shots');
         this.box.allBlur();
         const bData: ImageData = this.transMaskCtx.getImageData(
             config.boxRect.startX * config.rate,

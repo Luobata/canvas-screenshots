@@ -10,7 +10,7 @@ interface Config {
     height?: number;
     platform?: string;
     rate?: number; // deviceRate
-    plugins?: Array<PluginType>;
+    plugins?: PluginType[];
     debuggerMode?: boolean;
     type?: Type;
 }
