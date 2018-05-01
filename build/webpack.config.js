@@ -23,6 +23,8 @@ module.exports = {
             LIB: path.resolve(__dirname, '../src/canvas/lib'),
             INSERT: path.resolve(__dirname, '../src/canvas/insert'),
             ASSETS: path.resolve(__dirname, '../asserts'),
+            FunBox: path.resolve(__dirname, '../src/canvas/function-boxk'),
+            Canvas: path.resolve(__dirname, '../src/canvas'),
         },
     },
 

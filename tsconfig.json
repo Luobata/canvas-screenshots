@@ -15,6 +15,12 @@
             ],
             "INSERT/*": [
                 "src/canvas/insert/*"
+            ],
+            "FunBox/*": [
+                "src/canvas/function-box/*"
+            ],
+            "Canvas/*": [
+                "src/canvas/*"
             ]
         },
         "lib": [

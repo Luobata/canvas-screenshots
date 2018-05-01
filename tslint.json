@@ -1,9 +1,19 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint-microsoft-contrib"
+        //"tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "no-implicit-dependencies": false,
+        "no-submodule-imports": [
+            true,
+            "Canvas",
+            "LIB",
+            "FunBox",
+            "INSERT"
+        ]
+    },
     "rulesDirectory": []
 }

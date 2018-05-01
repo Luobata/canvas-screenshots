@@ -1,6 +1,9 @@
-import ScreenShoot from "./canvas/screen";
+/**
+ * @description index
+ */
+import screen from 'Canvas/screen';
 
-module.exports = ScreenShoot;
+module.exports = screen;
 // export default ScreenShoot;
 // export default () => {
 //     let screen: ScreenShoot;
