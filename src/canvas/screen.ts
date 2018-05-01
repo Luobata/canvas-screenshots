@@ -3,11 +3,12 @@ import Box from './box';
 import { PluginType, Config } from 'LIB/interface';
 import functionBox from './function-box/function-box';
 import logger, { setDebuggerData } from './log';
+import { Emitter } from 'event-emitter';
 const throttle = require('throttle-debounce/throttle');
 const html2canvas = require('html2canvas');
 const ee = require('event-emitter');
-const emitter = new ee();
-type EventListener = (...args: any[]) => void;
+const emitter: Emitter = new ee();
+type EventListener = (...args: Array<Object | string>) => void;
 
 setConfig({
     emitter,
@@ -67,7 +68,7 @@ export default class {
         setDebuggerData();
     }
 
-    platform() {
+    private platform(): void {
         let platform = window.navigator.platform;
         if (platform.indexOf('win') !== -1 || platform.indexOf('Win') !== -1) {
             platform = 'windows';
@@ -79,13 +80,13 @@ export default class {
         });
     }
 
-    hackBody() {
+    private hackBody(): void {
         // TODO 浏览器前缀
         this.mask.style['userSelect'] = 'none';
         this.transMask.style['userSelect'] = 'none';
     }
 
-    initBackGround(fn: Function) {
+    private initBackGround(fn: Function): void {
         const width = this.body.clientWidth;
         const height = this.body.clientHeight;
 
@@ -112,7 +113,7 @@ export default class {
         });
     }
 
-    reset() {
+    private reset(): void {
         const width = this.body.clientWidth * config.rate;
         const height = this.body.clientHeight * config.rate;
         this.mask.width = width;
@@ -122,7 +123,7 @@ export default class {
         this.offMask.height = height;
     }
 
-    resize() {
+    private resize(): void {
         // TODO 防抖
         const width = this.body.clientWidth * config.rate;
         const height = this.body.clientHeight * config.rate;
@@ -139,7 +140,7 @@ export default class {
         this.maskCtx.restore();
     }
 
-    functionBoxPos() {
+    private functionBoxPos(): void {
         const rightMargin = this.body.offsetWidth - this.box.rect.endX;
         const maskWidth = this.mask.getBoundingClientRect().width;
 
@@ -148,7 +149,7 @@ export default class {
         this.functionBox.style.display = 'block';
     }
 
-    initEvent() {
+    private initEvent(): void {
         let hasTrajectory = false; // 移动轨迹 避免只点击没有移动的情况
         this.resizeListener = throttle(50, () => {
             if (this.show) {
@@ -158,7 +159,7 @@ export default class {
             }
         });
 
-        this.mouseDownListener = (e: MouseEvent) => {
+        this.mouseDownListener = (e: MouseEvent): void => {
             hasTrajectory = false;
             if (e.button !== 0) return;
             if (!this.box.hasBox()) {
@@ -169,7 +170,7 @@ export default class {
             emitter.emit('mousedown', e);
         };
 
-        this.mouseMoveListener = (e: MouseEvent) => {
+        this.mouseMoveListener = (e: MouseEvent): void => {
             if (this.beginMove) {
                 this.drawBox(e);
                 hasTrajectory = true;
@@ -181,7 +182,7 @@ export default class {
             emitter.emit('mousemove', e);
         };
 
-        this.mouseUpListener = (e: MouseEvent) => {
+        this.mouseUpListener = (e: MouseEvent): void => {
             this.beginMove = false;
             if (hasTrajectory && this.box.isFocus) {
                 this.box.isShowCircle = true;
@@ -200,31 +201,31 @@ export default class {
             emitter.emit('mouseup', e);
         };
 
-        this.keyUpListener = e => {
+        this.keyUpListener = (e: KeyboardEvent): void => {
             emitter.emit('keyup', e);
         };
 
-        this.drawListener = () => {
+        this.drawListener = (): void => {
             this.resize();
         };
 
-        this.destoryedListener = () => {
+        this.destoryedListener = (): void => {
             this.destroyed();
         };
 
-        this.shotListener = () => {
+        this.shotListener = (): void => {
             this.screenShots();
         };
 
-        this.blurListener = () => {
+        this.blurListener = (): void => {
             this.blur();
         };
 
-        this.cursorChangeListener = (cursorStyle: string) => {
+        this.cursorChangeListener = (cursorStyle: string): void => {
             this.cursorStyle = cursorStyle;
         };
 
-        this.imageFailListener = (error: object) => {
+        this.imageFailListener = (error: object): void => {
             this.config.imageFail && this.config.imageFail(error);
         };
 
@@ -241,7 +242,7 @@ export default class {
         emitter.once('blur', this.blurListener);
     }
 
-    beginBox(e: MouseEvent) {
+    private beginBox(e: MouseEvent): void {
         this.box.initBox();
         this.box.setPosition({
             startX: e.clientX,
@@ -250,8 +251,10 @@ export default class {
         this.beginMove = true;
     }
 
-    drawBox(e: MouseEvent) {
-        if (!this.beginMove) return;
+    private drawBox(e: MouseEvent): void {
+        if (!this.beginMove) {
+            return;
+        }
 
         this.box.setPosition({
             endX: e.clientX,
@@ -261,11 +264,11 @@ export default class {
         this.globaldraw();
     }
 
-    screenShots() {
+    private screenShots(): void {
         // 开始截图
         logger('begin shots');
         this.box.allBlur();
-        const bData = this.transMaskCtx.getImageData(
+        const bData: ImageData = this.transMaskCtx.getImageData(
             config.boxRect.startX * config.rate,
             config.boxRect.startY * config.rate,
             (config.boxRect.endX - config.boxRect.startX) * config.rate,
@@ -277,7 +280,7 @@ export default class {
             config.boxRect.startY * config.rate,
         );
         this.box.getData();
-        const data = this.offMaskCtx.getImageData(
+        const data: ImageData = this.offMaskCtx.getImageData(
             config.boxRect.startX * config.rate,
             config.boxRect.startY * config.rate,
             (config.boxRect.endX - config.boxRect.startX) * config.rate,
@@ -286,8 +289,10 @@ export default class {
         if (config.type === 'imageData') {
             this.config.download.call(null, data);
         } else if (config.type === 'png') {
-            const image = new Image();
-            const tmpCanvas = document.createElement('canvas');
+            const image: HTMLImageElement = new Image();
+            const tmpCanvas: HTMLCanvasElement = document.createElement(
+                'canvas',
+            );
             tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
             tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
             tmpCanvas.getContext('2d').putImageData(data, 0, 0);
@@ -298,7 +303,7 @@ export default class {
         // this.maskCtx.putImageData(data, 0, 0);
     }
 
-    start() {
+    private start(): void {
         this.mask = document.createElement('canvas');
         this.maskCtx = this.mask.getContext('2d');
         this.offMask = document.createElement('canvas');
@@ -330,7 +335,7 @@ export default class {
         });
     }
 
-    destroyed() {
+    private destroyed(): void {
         this.mask.remove();
         this.offMask.remove();
         this.transMask.remove();
@@ -348,21 +353,21 @@ export default class {
         emitter.off('blur', this.blurListener);
     }
 
-    blur() {
+    private blur(): void {
         this.box.isFocus = false;
         this.cursorStyle = 'crosshair';
         this.globaldraw();
     }
 
-    globaldraw() {
+    private globaldraw(): void {
         this.reset();
-        const data = this.box.getData();
+        const data: HTMLCanvasElement = this.box.getData();
         this.resize();
         this.box.draw(data);
     }
 
-    drawAll() {
-        this.drawAllListener = () => {
+    public drawAll(): void {
+        this.drawAllListener = (): void => {
             this.globaldraw();
         };
         config.emitter.on('draw-all', this.drawAllListener);
