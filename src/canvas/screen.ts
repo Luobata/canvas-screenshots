@@ -283,7 +283,6 @@ export default class {
             (config.boxRect.endX - config.boxRect.startX) * config.rate,
             (config.boxRect.endY - config.boxRect.startY) * config.rate,
         );
-        console.log(bData);
         if (config.type === 'imageData') {
             this.config.download.call(null, data);
         } else if (config.type === 'png') {

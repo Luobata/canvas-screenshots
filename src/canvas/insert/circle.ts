@@ -212,16 +212,16 @@ export default class sCircle extends Content {
             radiusX:
                 Math.abs(
                     this.property.rect.startX -
-                        this.property.rect.endX +
-                        this.property.borderWidth * 2 * minuX,
+                    this.property.rect.endX +
+                    this.property.borderWidth * 2 * minuX,
                 ) /
                 2 *
                 config.rate,
             radiusY:
                 Math.abs(
                     this.property.rect.startY -
-                        this.property.rect.endY +
-                        this.property.borderWidth * 2 * minuY,
+                    this.property.rect.endY +
+                    this.property.borderWidth * 2 * minuY,
                 ) /
                 2 *
                 config.rate,

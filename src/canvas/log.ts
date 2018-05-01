@@ -2,7 +2,7 @@ import { config } from './config';
 import { Content, sContent } from './lib/interface';
 import { getType, type, getPlainObj } from './lib/type';
 
-export default function(...args: any[]) {
+export default function log(...args: any[]) {
     if (config.debuggerMode) {
         if (console.trace) {
             console.trace.apply(window, arguments);
@@ -29,7 +29,7 @@ export const addDebuggerData = (obj: any) => {
 };
 
 export const deleteDebuggerData = (obj: Con) => {
-    for (let i = 0; i < debuggerData.length; ) {
+    for (let i = 0; i < debuggerData.length;) {
         if (debuggerData[i].id === obj.id) {
             debuggerData.splice(i, 1);
         } else {

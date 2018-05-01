@@ -39,6 +39,7 @@ export default class Content {
         this.saveArray = [];
 
         this.keyCodeListener();
+        this.getName();
     }
     getName() {
         this.name = `${this.constructor.name}_${this.id}`;
@@ -127,9 +128,9 @@ export default class Content {
         };
     }
 
-    event() {}
+    event() { }
 
-    initBox() {}
+    initBox() { }
 
     hasBox() {
         return !!(
@@ -140,9 +141,9 @@ export default class Content {
         );
     }
 
-    inBoxBorder(positionX: number, positionY: number) {}
+    inBoxBorder(positionX: number, positionY: number) { }
 
-    inBox(positionX: number, positionY: number, circlePath = 0) {}
+    inBox(positionX: number, positionY: number, circlePath = 0) { }
 
-    draw() {}
+    draw() { }
 }

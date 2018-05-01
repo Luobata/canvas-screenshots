@@ -31,7 +31,6 @@ export default class sRectangular extends Content {
 
         this.init();
         this.event();
-        this.getName();
     }
 
     event() {
@@ -123,11 +122,11 @@ export default class sRectangular extends Content {
             (this.property.rect.endX -
                 this.property.rect.startX +
                 this.property.lineWidth * 2) *
-                config.rate,
+            config.rate,
             (this.property.rect.endY -
                 this.property.rect.startY +
                 this.property.lineWidth * 2) *
-                config.rate,
+            config.rate,
         );
         if (this.property.isStroke) {
             this.ctx.strokeStyle = this.property.color;
