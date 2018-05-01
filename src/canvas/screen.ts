@@ -1,11 +1,14 @@
-import { setConfig, config } from './config';
-import Box from './box';
-import { PluginType, Config } from 'LIB/interface';
-import functionBox from './function-box/function-box';
-import logger, { setDebuggerData } from './log';
+/**
+ * @description screen
+ */
+import { config, setConfig } from 'Canvas/config';
+import box from 'Canvas/box';
+import { Config, PluginType } from 'LIB/interface';
+import functionBox from 'Canvas/function-box/function-box';
+import logger, { setDebuggerData } from 'Canvas/log';
 import { Emitter } from 'event-emitter';
-const throttle = require('throttle-debounce/throttle');
-const html2canvas = require('html2canvas');
+const throttle: Function = require('throttle-debounce/throttle');
+const html2canvas: Function = require('html2canvas');
 const ee = require('event-emitter');
 const emitter: Emitter = new ee();
 type EventListener = (...args: Array<Object | string>) => void;
@@ -14,40 +17,40 @@ setConfig({
     emitter,
 });
 
-export default class {
-    config: Config;
-    body: HTMLElement;
-    transMask: HTMLCanvasElement;
-    transMaskCtx: CanvasRenderingContext2D;
-    mask: HTMLCanvasElement;
-    maskCtx: CanvasRenderingContext2D;
-    offMask: HTMLCanvasElement;
-    offMaskCtx: CanvasRenderingContext2D;
-    shootBox: HTMLElement;
-    show: Boolean;
-    beginMove: Boolean;
-    functionBox: HTMLDivElement;
+export default class screen {
+    private config: Config;
+    private body: HTMLElement;
+    private transMask: HTMLCanvasElement;
+    private transMaskCtx: CanvasRenderingContext2D;
+    private mask: HTMLCanvasElement;
+    private maskCtx: CanvasRenderingContext2D;
+    private offMask: HTMLCanvasElement;
+    private offMaskCtx: CanvasRenderingContext2D;
+    private shootBox: HTMLElement;
+    private show: boolean;
+    private beginMove: boolean;
+    private functionBox: HTMLDivElement;
 
-    imageFailListener: EventListener;
-    drawAllListener: EventListener;
-    resizeListener: EventListener;
-    mouseDownListener: EventListener;
-    mouseMoveListener: EventListener;
-    mouseUpListener: EventListener;
-    keyUpListener: EventListener;
-    drawListener: EventListener;
-    destoryedListener: EventListener;
-    shotListener: EventListener;
-    blurListener: EventListener;
-    cursorChangeListener: EventListener;
+    private imageFailListener: EventListener;
+    private drawAllListener: EventListener;
+    private resizeListener: EventListener;
+    private mouseDownListener: EventListener;
+    private mouseMoveListener: EventListener;
+    private mouseUpListener: EventListener;
+    private keyUpListener: EventListener;
+    private drawListener: EventListener;
+    private destoryedListener: EventListener;
+    private shotListener: EventListener;
+    private blurListener: EventListener;
+    private cursorChangeListener: EventListener;
 
-    cursorStyle: string;
-    clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否确定
+    private cursorStyle: string;
+    private clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否确定
 
-    box: Box;
+    private box: box;
 
-    constructor(config: Config) {
-        const plugin = config.plugins || [
+    constructor(conf: Config) {
+        const plugin: PluginType[] = conf.plugins || [
             'rectangular',
             'circle',
             'arrow',
@@ -57,19 +60,19 @@ export default class {
             'image',
             'back',
         ];
-        this.config = Object.assign(config, plugin);
+        this.config = Object.assign(conf, plugin);
         this.body = document.body;
         setConfig({
             rate: window.devicePixelRatio,
             plugins: plugin,
-            debuggerMode: config.debuggerMode || false,
-            type: config.type || 'imageData',
+            debuggerMode: conf.debuggerMode || false,
+            type: conf.type || 'imageData',
         });
         setDebuggerData();
     }
 
     private platform(): void {
-        let platform = window.navigator.platform;
+        let platform: string = window.navigator.platform;
         if (platform.indexOf('win') !== -1 || platform.indexOf('Win') !== -1) {
             platform = 'windows';
         } else {
@@ -82,25 +85,25 @@ export default class {
 
     private hackBody(): void {
         // TODO 浏览器前缀
-        this.mask.style['userSelect'] = 'none';
-        this.transMask.style['userSelect'] = 'none';
+        this.mask.style.userSelect = 'none';
+        this.transMask.style.userSelect = 'none';
     }
 
     private initBackGround(fn: Function): void {
-        const width = this.body.clientWidth;
-        const height = this.body.clientHeight;
+        const width: number = this.body.clientWidth;
+        const height: number = this.body.clientHeight;
 
         this.mask.style.position = 'fixed';
         this.mask.style.top = '0';
         this.mask.style.left = '0';
         this.mask.style.cursor = this.cursorStyle;
         this.mask.style.zIndex = '100';
-        this.mask.style.width = width + 'px';
-        this.mask.style.height = height + 'px';
+        this.mask.style.width = `${width}px`;
+        this.mask.style.height = `${height}px`;
         this.reset();
         this.resize();
 
-        html2canvas(this.body).then((canvas: HTMLCanvasElement) => {
+        html2canvas(this.body).then((canvas: HTMLCanvasElement): void => {
             logger('finished', 1);
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
@@ -114,8 +117,8 @@ export default class {
     }
 
     private reset(): void {
-        const width = this.body.clientWidth * config.rate;
-        const height = this.body.clientHeight * config.rate;
+        const width: number = this.body.clientWidth * config.rate;
+        const height: number = this.body.clientHeight * config.rate;
         this.mask.width = width;
         this.mask.height = height;
 
@@ -125,8 +128,8 @@ export default class {
 
     private resize(): void {
         // TODO 防抖
-        const width = this.body.clientWidth * config.rate;
-        const height = this.body.clientHeight * config.rate;
+        const width: number = this.body.clientWidth * config.rate;
+        const height: number = this.body.clientHeight * config.rate;
 
         // this.reset();
 
@@ -141,27 +144,29 @@ export default class {
     }
 
     private functionBoxPos(): void {
-        const rightMargin = this.body.offsetWidth - this.box.rect.endX;
-        const maskWidth = this.mask.getBoundingClientRect().width;
+        const rightMargin: number = this.body.offsetWidth - this.box.rect.endX;
+        const maskWidth: number = this.mask.getBoundingClientRect().width;
 
-        this.functionBox.style.right = maskWidth - this.box.rect.endX + 'px';
-        this.functionBox.style.top = this.box.rect.endY + 10 + 'px';
+        this.functionBox.style.right = `${maskWidth - this.box.rect.endX}px`;
+        this.functionBox.style.top = `${this.box.rect.endY + 10}px`;
         this.functionBox.style.display = 'block';
     }
 
     private initEvent(): void {
-        let hasTrajectory = false; // 移动轨迹 避免只点击没有移动的情况
-        this.resizeListener = throttle(50, () => {
+        let hasTrajectory: boolean = false; // 移动轨迹 避免只点击没有移动的情况
+        this.resizeListener = throttle(50, (): void => {
             if (this.show) {
-                this.destroyed();
                 // TODO resize box bug
+                this.destroyed();
                 // this.resize();
             }
         });
 
         this.mouseDownListener = (e: MouseEvent): void => {
             hasTrajectory = false;
-            if (e.button !== 0) return;
+            if (e.button !== 0) {
+                return;
+            }
             if (!this.box.hasBox()) {
                 this.beginBox(e);
             } else {
@@ -226,7 +231,9 @@ export default class {
         };
 
         this.imageFailListener = (error: object): void => {
-            this.config.imageFail && this.config.imageFail(error);
+            if (this.config.imageFail) {
+                this.config.imageFail(error);
+            }
         };
 
         window.addEventListener('resize', this.resizeListener);
@@ -316,7 +323,7 @@ export default class {
         this.mask.id = 'screenshots-mask';
         this.initBackGround(() => {
             this.functionBox = functionBox(this.body);
-            this.box = new Box(
+            this.box = new box(
                 this.maskCtx,
                 this.offMask,
                 this.offMaskCtx,
@@ -366,7 +373,7 @@ export default class {
         this.box.draw(data);
     }
 
-    public drawAll(): void {
+    private drawAll(): void {
         this.drawAllListener = (): void => {
             this.globaldraw();
         };
