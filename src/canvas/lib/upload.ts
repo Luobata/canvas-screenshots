@@ -10,7 +10,7 @@ const validateType = (type: string) => {
 const validateSize = (size: number) => {
     return size >= config.min && size <= config.max;
 };
-export default (e: Event) => {
+export default (e: Event): File | object => {
     // 默认单张
     const file = (<HTMLInputElement>e.target).files[0];
     const error = {

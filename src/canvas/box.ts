@@ -1,5 +1,8 @@
+/**
+ * @description box
+ */
 import { dragCircle, Rect, Content, sContent } from 'LIB/interface';
-import FunctionBox from './function-box/';
+import FunctionBox from 'Canvas/function-box/index';
 import Rectangular from 'INSERT/rectangular';
 import Circle from 'INSERT/circle';
 import Arrow from 'INSERT/arrow';
@@ -7,47 +10,54 @@ import Pen from 'INSERT/pen';
 import Text from 'INSERT/text';
 import Mosaic from 'INSERT/mosaic';
 import ImageInsert from 'INSERT/image';
-import { config } from './config';
+import { config } from 'Canvas/config';
 import { getCircleMap } from 'LIB/help';
-import Mouse from './mouse';
-import Cursor from './cursor';
+import Mouse from 'Canvas/mouse';
+import Cursor from 'Canvas/cursor';
 import upload from 'LIB/upload';
 import { hackArray, hackSet } from 'LIB/hack';
-
-// Content 为基础类型集合 sContent为优先渲染的集合
-// type Content = Rectangular | Circle | Arrow | Pen | Text | ImageInsert;
-// type sContent = Mosaic;
-
+import { Emitter } from 'event-emitter';
+// tslint:disable
 const ee = require('event-emitter');
-const boxEmitter = new ee();
+const boxEmitter: Emitter = new ee();
+// tslint:enable
+
+interface IPosition {
+    startX: number;
+    startY: number;
+}
 
 let globalMosaic: Mosaic;
 
+/**
+ * default class Box
+ */
 export default class Box {
-    ctx: CanvasRenderingContext2D;
-    transctx: CanvasRenderingContext2D;
-    offCanvas: HTMLCanvasElement;
-    offCtx: CanvasRenderingContext2D; //离屏canvas
-    circles: Array<dragCircle>;
-    content: Set<Content>;
-    sContent: Array<sContent>;
-    rect?: Rect;
-    cursorStyle: string;
-    isFocus: Boolean;
-    isShowCircle: Boolean;
-    lineWidth: number;
-    borderRadious: number;
-    circleWidth: number;
-    mouse: Mouse;
-    cursor: Cursor;
-    // functionBox: HTMLDivElement;
-    functionBox: FunctionBox;
-    childSaveArray: Array<Content | sContent>;
-    paintList: Array<HTMLCanvasElement>;
+    public circles: dragCircle[];
+    public rect?: Rect;
+    public isFocus: Boolean;
+    public isShowCircle: Boolean;
+    public colorFun?: string;
+    public focusItem: Content | null;
+    public currentFun?: string;
+    public childSaveArray: (Content | sContent)[];
 
-    currentFun?: string;
-    colorFun?: string;
-    focusItem: Content | null;
+    private ctx: CanvasRenderingContext2D;
+    private transctx: CanvasRenderingContext2D;
+    private offCanvas: HTMLCanvasElement;
+    private offCtx: CanvasRenderingContext2D; //离屏canvas
+    private content: Set<Content>;
+    private sContent: sContent[];
+    private cursorStyle: string;
+
+    private lineWidth: number;
+    private borderRadious: number;
+    private circleWidth: number;
+    private mouse: Mouse;
+    private cursor: Cursor;
+    // functionBox: HTMLDivElement;
+    private functionBox: FunctionBox;
+    private paintList: HTMLCanvasElement[];
 
     constructor(
         ctx: CanvasRenderingContext2D,
@@ -74,67 +84,34 @@ export default class Box {
         this.cursor = new Cursor(this);
         this.content = new Set();
         this.sContent = [];
-        // this.drawAll();
         this.functionBox = new FunctionBox(functionBox, this);
         this.childSaveArray = [];
         this.paintList = [];
         hackSet(this.content);
     }
 
-    back() {
-        const item = this.childSaveArray.pop();
+    public allBlur(): void {
+        for (const i of this.content) {
+            i.isFocus = false;
+        }
+        config.emitter.emit('draw-all');
+    }
 
-        if (!item) return;
+    public destroyed(): void {
+        this.functionBox.remove();
+    }
+
+    public back(): void {
+        const item: Content | sContent = this.childSaveArray.pop();
+
+        if (!item) {
+            return;
+        }
         item.back();
         config.emitter.emit('draw-all');
     }
 
-    events() {
-        config.emitter.on('end-mousedown', e => {
-            if (this.isFocus && this.hasBox()) {
-                this.mouse.mouseDown(e, this.cursor.getCursor(e, 'eve'));
-            }
-        });
-        config.emitter.on('end-mousemove', e => {
-            if (this.isFocus && this.hasBox()) {
-                this.cursorStyle = this.cursor.getCursor(e);
-                config.emitter.emit('cursor-change', this.cursorStyle);
-                this.mouse.mouseMove(e);
-            }
-        });
-
-        config.emitter.on('end-mouseup', e => {
-            if (this.isFocus && this.hasBox()) {
-                this.mouse.mouseUp(e);
-            }
-        });
-
-        config.emitter.on('removeItem', (item: Content) => {
-            if (item instanceof Mosaic) {
-                this.sContent.pop();
-            } else {
-                this.content.delete(item);
-            }
-            for (let i = 0; i < this.childSaveArray.length;) {
-                const child = this.childSaveArray[i];
-                if (child === item) {
-                    this.childSaveArray.splice(i, 1);
-                } else {
-                    i++;
-                }
-            }
-        });
-
-        config.emitter.on('addSave', (item: Content) => {
-            this.childSaveArray.push(item);
-        });
-
-        boxEmitter.on('shot', () => {
-            config.emitter.emit('shot');
-        });
-    }
-
-    initBox() {
+    public initBox(): void {
         this.rect = {
             startX: undefined,
             startY: undefined,
@@ -143,7 +120,7 @@ export default class Box {
         };
     }
 
-    hasBox() {
+    public hasBox(): boolean {
         return !!(
             this.rect.startX !== undefined &&
             this.rect.startY !== undefined &&
@@ -152,8 +129,8 @@ export default class Box {
         );
     }
 
-    inBox(positionX: number, positionY: number): boolean {
-        const inX = (): boolean => {
+    public inBox(positionX: number, positionY: number): boolean {
+        const inX: Function = (): boolean => {
             if (this.rect.startX < this.rect.endX) {
                 return (
                     positionX >= this.rect.startX && positionX <= this.rect.endX
@@ -164,7 +141,7 @@ export default class Box {
                 );
             }
         };
-        const inY = (): boolean => {
+        const inY: Function = (): boolean => {
             if (this.rect.startY < this.rect.endY) {
                 return (
                     positionY >= this.rect.startY && positionY <= this.rect.endY
@@ -175,10 +152,11 @@ export default class Box {
                 );
             }
         };
-        return inX() && inY();
+
+        return !!(inX() && inY());
     }
 
-    setPosition(rect: Rect, isDraw = false) {
+    public setPosition(rect: Rect, isDraw: boolean = false): void {
         Object.assign(this.rect, rect);
 
         if (isDraw) {
@@ -186,10 +164,147 @@ export default class Box {
         }
     }
 
-    focusRectangular(e: MouseEvent) {
-        let focusItem;
+    public findFocus(): Content | null {
+        for (const i of this.content) {
+            if (i.isFocus) {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    public uploadImage(e: Event): void {
+        const file: File | object = upload(e);
+        if (file instanceof File) {
+            const imageObj: HTMLImageElement = new Image();
+            const reader: FileReader = new FileReader();
+            const maxWidth: number = config.width / 4 * 3;
+            const maxHeight: number = config.height / 4 * 3;
+            let width: number;
+            let height: number;
+            reader.onload = (): void => {
+                const data: string = reader.result;
+
+                imageObj.onload = (): void => {
+                    width = imageObj.width;
+                    height = imageObj.height;
+                    if (width / height >= config.width / config.height) {
+                        // 宽度 截断
+                        if (width >= maxWidth) {
+                            height = height / (width / maxWidth);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height >= maxHeight) {
+                            width = width / (height / maxHeight);
+                            height = maxHeight;
+                        }
+                    }
+                    window.URL.revokeObjectURL(imageObj.src);
+                    const image: ImageInsert = new ImageInsert(
+                        this.offCtx,
+                        imageObj,
+                        // data,
+                        width,
+                        height,
+                    );
+                    this.content.add(image);
+                    this.childSaveArray.push(image);
+                    config.emitter.emit('draw-all');
+                };
+                imageObj.src = data;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            config.emitter.emit('image-fail', file);
+        }
+    }
+
+    public getData(): HTMLCanvasElement {
+        let data: HTMLCanvasElement;
+        // 要等i.draw之后才会回写ctx 所以ctx还是空的
+        if (this.content.size || this.sContent.length) {
+            for (const i of this.sContent) {
+                i.draw();
+            }
+            for (const i of this.content) {
+                i.draw();
+            }
+            data = this.offCanvas;
+        }
+
+        return data;
+    }
+
+    public draw(data?: HTMLCanvasElement): void {
+        if (this.hasBox()) {
+            this.ctx.clearRect(
+                this.rect.startX * config.rate,
+                this.rect.startY * config.rate,
+                (this.rect.endX - this.rect.startX) * config.rate,
+                (this.rect.endY - this.rect.startY) * config.rate,
+            );
+        }
+
+        if (this.isFocus && this.isShowCircle) {
+            this.drawCircle();
+        }
+
+        if (data) {
+            this.painter(data);
+        }
+    }
+
+    private events(): void {
+        config.emitter.on('end-mousedown', (e: MouseEvent): void => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseDown(e, this.cursor.getCursor(e, 'eve'));
+            }
+        });
+        config.emitter.on('end-mousemove', (e: MouseEvent): void => {
+            if (this.isFocus && this.hasBox()) {
+                this.cursorStyle = this.cursor.getCursor(e);
+                config.emitter.emit('cursor-change', this.cursorStyle);
+                this.mouse.mouseMove(e);
+            }
+        });
+
+        config.emitter.on('end-mouseup', (e: MouseEvent): void => {
+            if (this.isFocus && this.hasBox()) {
+                this.mouse.mouseUp(e);
+            }
+        });
+
+        config.emitter.on('removeItem', (item: Content): void => {
+            if (item instanceof Mosaic) {
+                this.sContent.pop();
+            } else {
+                this.content.delete(item);
+            }
+            for (let i: number = 0; i < this.childSaveArray.length; ) {
+                const child: Content | sContent = this.childSaveArray[i];
+                if (child === item) {
+                    this.childSaveArray.splice(i, 1);
+                } else {
+                    i = i + 1;
+                }
+            }
+        });
+
+        config.emitter.on('addSave', (item: Content): void => {
+            this.childSaveArray.push(item);
+        });
+
+        boxEmitter.on('shot', (): void => {
+            config.emitter.emit('shot');
+        });
+    }
+
+    private focusRectangular(e: MouseEvent): Content {
+        let focusItem: Content;
         if (this.inBox(e.clientX, e.clientY)) {
-            for (let i of this.content) {
+            for (const i of this.content) {
                 if (i.inBoxBorder(e.clientX, e.clientY)) {
                     focusItem = i;
                     if (
@@ -202,7 +317,6 @@ export default class Box {
                         this.colorFun = i.property.color;
                         this.functionBox.setColor(this.colorFun);
                     }
-                } else {
                 }
             }
         }
@@ -210,11 +324,11 @@ export default class Box {
         return focusItem;
     }
 
-    outFocus(item?: Content) {
+    private outFocus(item?: Content): Content {
         // 把该item的位置放到最后
-        let topItem; // 选中item放入最上层
-        let blurItem; // 判断是否有原宿blur
-        for (let i of this.content) {
+        let topItem: Content; // 选中item放入最上层
+        let blurItem: Content; // 判断是否有原宿blur
+        for (const i of this.content) {
             if (!(item && item === i)) {
                 if (i.isFocus) {
                     blurItem = i;
@@ -226,26 +340,18 @@ export default class Box {
                 topItem = i;
             }
         }
-        if (topItem) this.content.add(topItem);
+        if (topItem) {
+            this.content.add(topItem);
+        }
         config.emitter.emit('draw-all');
 
         return blurItem;
     }
 
-    findFocus() {
-        for (let i of this.content) {
-            if (i.isFocus) {
-                return i;
-            }
-        }
-
-        return null;
-    }
-
-    cursorChange(e: MouseEvent) {
-        let cursor = 'crosshair';
+    private cursorChange(e: MouseEvent): string {
+        let cursor: string = 'crosshair';
         if (this.inBox(e.clientX, e.clientY)) {
-            for (let i of this.content) {
+            for (const i of this.content) {
                 if (i.inBoxBorder(e.clientX, e.clientY)) {
                     cursor = i.getCursor(e);
                 }
@@ -257,18 +363,20 @@ export default class Box {
         return cursor;
     }
 
-    listenMouse() {
+    private listenMouse(): void {
         let newItem: Content | sContent | null;
-        let position = {
+        let position: IPosition = {
             startX: -1,
             startY: -1,
         };
-        config.emitter.on('mousedown', (e: MouseEvent) => {
-            if (this.isFocus) return;
+        config.emitter.on('mousedown', (e: MouseEvent): void => {
+            if (this.isFocus) {
+                return;
+            }
             if (!this.inBox(e.clientX, e.clientY)) {
                 return;
             }
-            const setPosition = (hasBlur = false) => {
+            const setPosition: Function = (hasBlur: boolean = false): void => {
                 position = {
                     startX: e.clientX,
                     startY: e.clientY,
@@ -276,7 +384,7 @@ export default class Box {
                 if (!hasBlur) {
                     if (this.currentFun === 'text') {
                         // newItem = new Text(this.offCtx, {
-                        const item = new Text(
+                        const item: Text = new Text(
                             this.offCtx,
                             {
                                 x: position.startX,
@@ -313,20 +421,22 @@ export default class Box {
                 setPosition();
             } else {
                 // 鼠标位置是否有选中某个item
-                const item = this.focusRectangular(e);
+                const item: Content = this.focusRectangular(e);
                 if (item) {
                     // 有 操作该item
                     newItem = item;
                     this.outFocus(item);
                 } else {
                     // 没有让所有item blur 如果有blur的元素 不创建新的 否则创建新的
-                    const blurItem = this.outFocus();
+                    const blurItem: Content = this.outFocus();
                     setPosition(!!blurItem);
                 }
             }
         });
-        config.emitter.on('mousemove', (e: MouseEvent) => {
-            if (this.isFocus) return;
+        config.emitter.on('mousemove', (e: MouseEvent): void => {
+            if (this.isFocus) {
+                return;
+            }
             this.cursorChange(e);
             if (newItem) {
                 if (
@@ -358,7 +468,7 @@ export default class Box {
                     }
                 }
             } else if (position.startX !== -1) {
-                const list = ['rectangular', 'circle', 'arrow'];
+                const list: string[] = ['rectangular', 'circle', 'arrow'];
                 if (list.indexOf(this.currentFun) !== -1) {
                     // 统一setPosition
                     if (this.currentFun === 'rectangular') {
@@ -394,9 +504,11 @@ export default class Box {
                 // 不操作 等待元素自己监听mousemove
             }
         });
-        config.emitter.on('mouseup', (e: MouseEvent) => {
-            if (this.isFocus) return;
-            const add = () => {
+        config.emitter.on('mouseup', (e: MouseEvent): void => {
+            if (this.isFocus) {
+                return;
+            }
+            const add: Function = (): void => {
                 newItem.save();
                 this.childSaveArray.push(newItem);
             };
@@ -410,75 +522,15 @@ export default class Box {
         });
     }
 
-    uploadImage(e: Event) {
-        const file = upload(e);
-        if (file instanceof File) {
-            const imageObj = new Image();
-            const reader = new FileReader();
-            const URL = window.URL;
-            const maxWidth = config.width / 4 * 3;
-            const maxHeight = config.height / 4 * 3;
-            let width: number;
-            let height: number;
-            reader.onload = () => {
-                const data = reader.result;
-
-                imageObj.onload = () => {
-                    width = imageObj.width;
-                    height = imageObj.height;
-                    if (width / height >= config.width / config.height) {
-                        // 宽度 截断
-                        if (width >= maxWidth) {
-                            height = height / (width / maxWidth);
-                            width = maxWidth;
-                        }
-                    } else {
-                        if (height >= maxHeight) {
-                            width = width / (height / maxHeight);
-                            height = maxHeight;
-                        }
-                    }
-                    URL.revokeObjectURL(imageObj.src);
-                    const image = new ImageInsert(
-                        this.offCtx,
-                        imageObj,
-                        // data,
-                        width,
-                        height,
-                    );
-                    this.content.add(image);
-                    this.childSaveArray.push(image);
-                    config.emitter.emit('draw-all');
-                };
-                imageObj.src = data;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            config.emitter.emit('image-fail', file);
-        }
-    }
-
-    getData(): HTMLCanvasElement {
-        let data: HTMLCanvasElement;
-        // 要等i.draw之后才会回写ctx 所以ctx还是空的
-        if (this.content.size || this.sContent.length) {
-            for (let i of this.sContent) {
-                i.draw();
-            }
-            for (let i of this.content) {
-                i.draw();
-            }
-            data = this.offCanvas;
-        }
-
-        return data;
-    }
-
-    painter(data?: HTMLCanvasElement) {
+    private painter(data?: HTMLCanvasElement): void {
         let frame: HTMLCanvasElement;
-        if (data) this.paintList.push(data);
+        if (data) {
+            this.paintList.push(data);
+        }
 
-        if (this.paintList.length > 1) return;
+        if (this.paintList.length > 1) {
+            return;
+        }
         window.requestAnimationFrame(() => {
             // 先paint 然后再出队列
             frame = this.paintList.slice(0, 1)[0];
@@ -500,31 +552,7 @@ export default class Box {
         });
     }
 
-    draw(data?: HTMLCanvasElement) {
-        if (this.hasBox()) {
-            this.ctx.clearRect(
-                this.rect.startX * config.rate,
-                this.rect.startY * config.rate,
-                (this.rect.endX - this.rect.startX) * config.rate,
-                (this.rect.endY - this.rect.startY) * config.rate,
-            );
-        }
-
-        if (this.isFocus && this.isShowCircle) {
-            this.drawCircle();
-        }
-
-        if (data) {
-            this.painter(data);
-        }
-    }
-    drawAll() {
-        // config.emitter.on('draw-all', () => {
-        //     this.draw();
-        // });
-    }
-
-    drawCircle() {
+    private drawCircle(): void {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = 'black';
@@ -533,15 +561,15 @@ export default class Box {
             (this.rect.startX - this.lineWidth) * config.rate,
             (this.rect.startY - this.lineWidth) * config.rate,
             (this.rect.endX - this.rect.startX + this.lineWidth * 2) *
-            config.rate,
+                config.rate,
             (this.rect.endY - this.rect.startY + this.lineWidth * 2) *
-            config.rate,
+                config.rate,
         );
 
-        const circleMap = getCircleMap(this.rect, this.lineWidth);
+        const circleMap: dragCircle[] = getCircleMap(this.rect, this.lineWidth);
         this.circles = circleMap;
 
-        for (let i of circleMap) {
+        for (const i of circleMap) {
             this.ctx.beginPath();
             this.ctx.strokeStyle = 'black';
             this.ctx.arc(
@@ -557,16 +585,5 @@ export default class Box {
             this.ctx.fill();
         }
         this.ctx.restore();
-    }
-
-    allBlur() {
-        for (let i of this.content) {
-            i.isFocus = false;
-        }
-        config.emitter.emit('draw-all');
-    }
-
-    destroyed() {
-        this.functionBox.remove();
     }
 }

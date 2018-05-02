@@ -18,6 +18,7 @@
         "no-default-export": false,
         "match-default-export-name": false,
         "export-name": false,
+        "import-name": false,
         "trailing-comma": [
             true,
             {
@@ -29,7 +30,7 @@
                 },
                 "singleline": {
                     "objects": "never",
-                    "arrays": "always",
+                    "arrays": "never",
                     "functions": "never",
                     "typeLiterals": "ignore"
                 }
