@@ -1,22 +1,22 @@
 /**
  * @description box
  */
-import { dragCircle, Rect, Content, sContent } from 'LIB/interface';
-import FunctionBox from 'Canvas/function-box/index';
-import Rectangular from 'INSERT/rectangular';
-import Circle from 'INSERT/circle';
-import Arrow from 'INSERT/arrow';
-import Pen from 'INSERT/pen';
-import Text from 'INSERT/text';
-import Mosaic from 'INSERT/mosaic';
-import ImageInsert from 'INSERT/image';
 import { config } from 'Canvas/config';
-import { getCircleMap } from 'LIB/help';
-import Mouse from 'Canvas/mouse';
 import Cursor from 'Canvas/cursor';
-import upload from 'LIB/upload';
-import { hackArray, hackSet } from 'LIB/hack';
+import FunctionBox from 'Canvas/function-box/index';
+import Mouse from 'Canvas/mouse';
 import { Emitter } from 'event-emitter';
+import Arrow from 'INSERT/arrow';
+import Circle from 'INSERT/circle';
+import ImageInsert from 'INSERT/image';
+import Mosaic from 'INSERT/mosaic';
+import Pen from 'INSERT/pen';
+import Rectangular from 'INSERT/rectangular';
+import Text from 'INSERT/text';
+import { hackArray, hackSet } from 'LIB/hack';
+import { getCircleMap } from 'LIB/help';
+import { Content, dragCircle, Rect, sContent } from 'LIB/interface';
+import upload from 'LIB/upload';
 // tslint:disable
 const ee = require('event-emitter');
 const boxEmitter: Emitter = new ee();
@@ -184,7 +184,7 @@ export default class Box {
             let width: number;
             let height: number;
             reader.onload = (): void => {
-                const data: string = reader.result;
+                const data: string = <string>reader.result;
 
                 imageObj.onload = (): void => {
                     width = imageObj.width;
@@ -282,7 +282,7 @@ export default class Box {
             } else {
                 this.content.delete(item);
             }
-            for (let i: number = 0; i < this.childSaveArray.length; ) {
+            for (let i: number = 0; i < this.childSaveArray.length;) {
                 const child: Content | sContent = this.childSaveArray[i];
                 if (child === item) {
                     this.childSaveArray.splice(i, 1);
