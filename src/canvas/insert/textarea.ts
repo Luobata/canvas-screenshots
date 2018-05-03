@@ -1,13 +1,13 @@
 /**
  * @description text
  */
-import { Position } from 'LIB/interface';
-import { config, inBox } from '../config';
+import { config, inBox } from 'Canvas/config';
+import logger from 'Canvas/log';
+import Content from 'INSERT/content';
+import Mouse from 'INSERT/mouse-text';
 import { pointInRectangular } from 'LIB/geometric';
+import { Position } from 'LIB/interface';
 import { isChinese } from 'LIB/reg';
-import Mouse from './mouse-text';
-import Content from './content';
-import logger from '../log';
 let inputDiv: HTMLDivElement;
 
 const getStrLength: Function = (str: string): number => {

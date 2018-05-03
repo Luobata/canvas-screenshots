@@ -1,21 +1,20 @@
-import Arrow from './arrow';
+/**
+ * @description mouse
+ */
+import Arrow from 'INSERT/arrow';
 
 export default class {
-    box: Arrow;
-    mouseEvent: string;
+    public box: Arrow;
+    public mouseEvent: string;
 
     constructor(arrow: Arrow) {
         this.box = arrow;
     }
 
-    mouseDown(e: MouseEvent, cursorStyle = 'crosshair') {
+    public mouseDown(e: MouseEvent, cursorStyle: string = 'crosshair'): void {
         this.mouseEvent = cursorStyle;
     }
-    mouseMove(e: MouseEvent) {
-        let startX;
-        let startY;
-        let endX;
-        let endY;
+    public mouseMove(e: MouseEvent): void {
         // move
         switch (this.mouseEvent) {
             case 'crosshair':
@@ -50,11 +49,10 @@ export default class {
                 );
                 break;
             default:
-                break;
         }
     }
 
-    mouseUp(e: MouseEvent) {
+    public mouseUp(e: MouseEvent): void {
         this.mouseEvent = 'crosshair';
     }
 }

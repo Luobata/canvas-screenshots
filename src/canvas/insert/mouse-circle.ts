@@ -1,21 +1,23 @@
-import Circle from './circle';
+/**
+ * @default mouse circle
+ */
+import Circle from 'INSERT/circle';
 
+/**
+ * default class
+ */
 export default class {
-    box: Circle;
-    mouseEvent: string;
+    public box: Circle;
+    private mouseEvent: string;
 
     constructor(circle: Circle) {
         this.box = circle;
     }
 
-    mouseDown(e: MouseEvent, cursorStyle = 'crosshair') {
+    public mouseDown(e: MouseEvent, cursorStyle: string = 'crosshair'): void {
         this.mouseEvent = cursorStyle;
     }
-    mouseMove(e: MouseEvent) {
-        let startX;
-        let startY;
-        let endX;
-        let endY;
+    public mouseMove(e: MouseEvent): void {
         // move
         switch (this.mouseEvent) {
             case 'crosshair':
@@ -102,11 +104,10 @@ export default class {
                 );
                 break;
             default:
-                break;
         }
     }
 
-    mouseUp(e: MouseEvent) {
+    public mouseUp(e: MouseEvent): void {
         this.mouseEvent = 'crosshair';
     }
 }

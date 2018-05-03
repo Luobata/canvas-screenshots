@@ -1,25 +1,33 @@
+/**
+ * @default mouse image
+ */
 import { EventEmitter } from 'events';
-import Box from './image';
+import Box from 'INSERT/image';
 
+/**
+ * default class
+ */
 export default class {
-    box: Box;
-    mouseEvent: string; // 处理后续move事件逻辑
+    public box: Box;
+    private mouseEvent: string; // 处理后续move事件逻辑
 
     constructor(box: Box) {
         this.box = box;
         this.mouseEvent = 'crosshair'; // 鼠标点击状态 代表后续事件
     }
 
-    mouseDown(e: MouseEvent, cursorStyle = 'crosshair') {
+    public mouseDown(e: MouseEvent, cursorStyle: string = 'crosshair'): void {
         this.mouseEvent = cursorStyle;
     }
 
-    mouseMove(e: MouseEvent) {
+    public mouseMove(e: MouseEvent): void {
         // move
-        const startX = this.box.property.position.x;
-        const startY = this.box.property.position.y;
-        const endX = this.box.property.position.x + this.box.property.width;
-        const endY = this.box.property.position.y + this.box.property.height;
+        const startX: number = this.box.property.position.x;
+        const startY: number = this.box.property.position.y;
+        const endX: number =
+            this.box.property.position.x + this.box.property.width;
+        const endY: number =
+            this.box.property.position.y + this.box.property.height;
         switch (this.mouseEvent) {
             case 'crosshair':
                 break;
@@ -132,11 +140,10 @@ export default class {
                 );
                 break;
             default:
-                break;
         }
     }
 
-    mouseUp(e: MouseEvent) {
+    public mouseUp(e: MouseEvent): void {
         this.mouseEvent = 'crosshair';
     }
 }

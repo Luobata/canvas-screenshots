@@ -1,11 +1,14 @@
-import { DragCircle, Rect } from 'LIB/interface';
-import logger from '../log';
-import { config, inBox } from '../config';
-import { getCircleMap } from 'LIB/help';
+/**
+ * @description content
+ */
+import { config, inBox } from 'Canvas/config';
+import logger from 'Canvas/log';
 import { EventEmitter } from 'events';
+import { getCircleMap } from 'LIB/help';
+import { DragCircle, Rect } from 'LIB/interface';
 
-const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
-const inCircle = (
+const circlePath: number = 10; // 手势范围 认为这个范围内就是可以使用新手势
+const inCircle: Function = (
     x: number,
     y: number,
     positionX: number,
@@ -18,18 +21,17 @@ const inCircle = (
 };
 
 export default class Content {
-    id: number;
-    name: string;
-    ctx: CanvasRenderingContext2D;
+    public id: number;
+    public name: string;
+    public isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
+    public property: any;
+    public saveArray: any[];
     // mouse: Mouse;
-    isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
-    mouseDown: EventListener;
-    mouseMove: EventListener;
-    mouseUp: EventListener;
-    keyUp: EventListener;
-
-    property: any;
-    saveArray: Array<any>;
+    public ctx: CanvasRenderingContext2D;
+    public mouseDown: EventListener;
+    public mouseMove: EventListener;
+    public mouseUp: EventListener;
+    public keyUp: EventListener;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
@@ -41,16 +43,16 @@ export default class Content {
         this.keyCodeListener();
         this.getName();
     }
-    getName() {
+    public getName(): void {
         this.name = `${this.constructor.name}_${this.id}`;
     }
 
-    save() {
+    public save(): void {
         logger('save');
         this.saveArray.push(JSON.parse(JSON.stringify(this.property)));
     }
 
-    back() {
+    public back(): void {
         if (this.saveArray.length) {
             this.saveArray.pop();
             this.property = this.saveArray[this.saveArray.length - 1];
@@ -60,7 +62,7 @@ export default class Content {
         }
     }
 
-    destroyed() {
+    public destroyed(): void {
         config.emitter.off('mousedown', this.mouseDown);
         config.emitter.off('mousemove', this.mouseMove);
         config.emitter.off('mouseup', this.mouseUp);
@@ -68,8 +70,8 @@ export default class Content {
         config.emitter.emit('removeItem', this);
     }
 
-    keyCodeListener() {
-        this.keyUp = (e: KeyboardEvent) => {
+    public keyCodeListener(): void {
+        this.keyUp = (e: KeyboardEvent): void => {
             if (e.keyCode === 8) {
                 // 删除
                 if (this.isFocus) {
@@ -81,14 +83,13 @@ export default class Content {
         config.emitter.on('keyup', this.keyUp);
     }
 
-    setColor(color: string) {
+    public setColor(color: string): void {
         this.property.color = color;
         this.save();
         config.emitter.emit('draw-all');
     }
 
-    setPosition(rect: Rect, isDraw = false) {
-        // Rectangular circle arrow
+    public setPosition(rect: Rect, isDraw = false): void {
         Object.assign(this.property.rect, rect);
 
         if (isDraw) {
@@ -96,13 +97,13 @@ export default class Content {
         }
     }
 
-    getCursor(e: MouseEvent, type?: string) {
-        let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
-        for (let i of this.property.circles) {
+    public getCursor(e: MouseEvent, cursorType?: string): string {
+        let result: string = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
+        for (const i of this.property.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
                 //result = `${i.cssPosition}-resize`;
-                if (type === 'eve') {
+                if (cursorType === 'eve') {
                     result = `${i.cssPositionEve}-resize`;
                 } else {
                     result = `${i.cssPosition}-resize`;
@@ -119,7 +120,7 @@ export default class Content {
         return result;
     }
 
-    init() {
+    public init(): void {
         this.property.rect = {
             startX: undefined,
             startY: undefined,
@@ -128,11 +129,15 @@ export default class Content {
         };
     }
 
-    event() {}
+    public event(): void {
+        // TODO
+    }
 
-    initBox() {}
+    public initBox(): void {
+        // TODO
+    }
 
-    hasBox() {
+    public hasBox(): boolean {
         return !!(
             this.property.rect.startX !== undefined &&
             this.property.rect.startY !== undefined &&
@@ -141,9 +146,19 @@ export default class Content {
         );
     }
 
-    inBoxBorder(positionX: number, positionY: number) {}
+    public inBoxBorder(positionX: number, positionY: number): void {
+        // TODO
+    }
 
-    inBox(positionX: number, positionY: number, circlePath = 0) {}
+    public inBox(
+        positionX: number,
+        positionY: number,
+        circlePaths: number = 0,
+    ): void {
+        // TODO
+    }
 
-    draw() {}
+    public draw(): void {
+        // TODO
+    }
 }

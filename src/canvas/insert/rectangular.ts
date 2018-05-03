@@ -1,12 +1,15 @@
+/**
+ * @description rectangular
+ */
+import { config, inBox } from 'Canvas/config';
+import Content from 'INSERT/content';
+import Mouse from 'INSERT/mouse-rectangular';
+import { getCircleMap, IcircleMap } from 'LIB/help';
 import { DragCircle, Rect } from 'LIB/interface';
-import { config, inBox } from '../config';
-import { getCircleMap } from 'LIB/help';
-import Content from './content';
-import Mouse from './mouse-rectangular';
 
 interface rectangular {
     rect?: Rect;
-    circles?: Array<DragCircle>;
+    circles?: DragCircle[];
     isStroke: boolean; // 是否是是空心的
     color: string;
     lineWidth: number;
@@ -14,9 +17,12 @@ interface rectangular {
     circleWidth: number;
 }
 
-export default class sRectangular extends Content {
-    property: rectangular;
-    mouse: Mouse;
+/**
+ * default class
+ */
+export default class SRectangular extends Content {
+    public property: rectangular;
+    private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
         super(ctx);
@@ -33,18 +39,18 @@ export default class sRectangular extends Content {
         this.event();
     }
 
-    event() {
-        this.mouseDown = (e: MouseEvent) => {
+    public event(): void {
+        this.mouseDown = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox() && inBox(e)) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
         };
-        this.mouseMove = (e: MouseEvent) => {
+        this.mouseMove = (e: MouseEvent): void => {
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
         };
-        this.mouseUp = (e: MouseEvent) => {
+        this.mouseUp = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseUp(e);
             }
@@ -55,36 +61,36 @@ export default class sRectangular extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    inBoxBorder(positionX: number, positionY: number): boolean {
-        const centerX =
+    public inBoxBorder(positionX: number, positionY: number): boolean {
+        const centerX: number =
             this.property.rect.startX +
             (this.property.rect.endX - this.property.rect.startX) / 2;
-        const centerY =
+        const centerY: number =
             this.property.rect.startY +
             (this.property.rect.endY - this.property.rect.startY) / 2;
-        const inLength = Math.abs(
+        const inLength: number = Math.abs(
             (this.property.rect.endY - this.property.rect.startY) / 2,
         );
-        const outLength = inLength + this.property.lineWidth;
-        const margin = 5;
-        const borderWidth = this.property.lineWidth + margin * 2;
-        const sX =
+        const outLength: number = inLength + this.property.lineWidth;
+        const margin: number = 5;
+        const borderWidth: number = this.property.lineWidth + margin * 2;
+        const sX: number =
             this.property.rect.startX < this.property.rect.endX
                 ? this.property.rect.startX
                 : this.property.rect.endX + margin;
-        const bX =
+        const bX: number =
             this.property.rect.startX >= this.property.rect.endX
                 ? this.property.rect.startX
                 : this.property.rect.endX - margin;
-        const sY =
+        const sY: number =
             this.property.rect.startY < this.property.rect.endY
                 ? this.property.rect.startY
                 : this.property.rect.endY + margin;
-        const bY =
+        const bY: number =
             this.property.rect.startY >= this.property.rect.endY
                 ? this.property.rect.startY
                 : this.property.rect.endY - margin;
-        const inRow = (): boolean => {
+        const inRow: Function = (): boolean => {
             return (
                 positionX >= sX - borderWidth &&
                 positionX <= bX + borderWidth &&
@@ -93,7 +99,7 @@ export default class sRectangular extends Content {
             );
         };
 
-        const inColumn = (): boolean => {
+        const inColumn: Function = (): boolean => {
             return (
                 positionY >= sY &&
                 positionY <= bY &&
@@ -105,8 +111,8 @@ export default class sRectangular extends Content {
         return inRow() || inColumn();
     }
 
-    draw() {
-        const circleMap = getCircleMap(
+    public draw(): void {
+        const circleMap: IcircleMap[] = getCircleMap(
             this.property.rect,
             this.property.lineWidth,
         );
@@ -136,7 +142,7 @@ export default class sRectangular extends Content {
             this.ctx.fill();
         }
         if (this.isFocus) {
-            for (let i of circleMap) {
+            for (const i of circleMap) {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.property.color;
                 this.ctx.arc(

@@ -14,7 +14,7 @@ export const changeVal: Function = (
     obj[keyB] = tmp;
 };
 
-interface IcircleMap {
+export interface IcircleMap {
     x: number;
     y: number;
     position: string;

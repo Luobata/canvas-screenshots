@@ -1,13 +1,16 @@
-import { DragCircle, Circle, Rect } from 'LIB/interface';
-import { config, inBox } from '../config';
-import { getCircleMap } from 'LIB/help';
-import Mouse from './mouse-circle';
+/**
+ * @description circle
+ */
+import { config, inBox } from 'Canvas/config';
+import Content from 'INSERT/content';
+import Mouse from 'INSERT/mouse-circle';
 import { pointInRectangular } from 'LIB/geometric';
-import Content from './content';
+import { getCircleMap, IcircleMap } from 'LIB/help';
+import { Circle, DragCircle, Position, Rect } from 'LIB/interface';
 
 interface circle {
     rect?: Rect;
-    circles?: Array<DragCircle>;
+    circles?: DragCircle[];
     color: string;
     borderColor: string;
     auxLineColor: string;
@@ -15,9 +18,12 @@ interface circle {
     circleWidth: number;
 }
 
-export default class sCircle extends Content {
-    mouse: Mouse;
-    property: circle;
+/**
+ * default class
+ */
+export default class SCircle extends Content {
+    public property: circle;
+    private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
         super(ctx);
@@ -34,25 +40,25 @@ export default class sCircle extends Content {
         this.event();
     }
 
-    setColor(color: string) {
+    public setColor(color: string): void {
         this.property.borderColor = color;
         super.setColor(color);
     }
 
-    inBoxBorder(positionX: number, positionY: number) {
-        const inCircle = () => {
-            const margin = 0.1;
-            let a;
-            let b;
-            const radiusX =
+    public inBoxBorder(positionX: number, positionY: number): boolean {
+        const inCircle: Function = (): boolean => {
+            const margin: number = 0.1;
+            let a: number;
+            let b: number;
+            const radiusX: number =
                 Math.abs(this.property.rect.endX - this.property.rect.startX) /
                 2;
-            const radiusY =
+            const radiusY: number =
                 Math.abs(this.property.rect.endY - this.property.rect.startY) /
                 2;
-            const centerX =
+            const centerX: number =
                 (this.property.rect.startX + this.property.rect.endX) / 2;
-            const centerY =
+            const centerY: number =
                 (this.property.rect.startY + this.property.rect.endY) / 2;
             if (radiusX > radiusY) {
                 a = radiusX;
@@ -61,60 +67,62 @@ export default class sCircle extends Content {
                 a = radiusY;
                 b = radiusX;
             }
-            const res =
+            const res: number =
                 Math.pow(positionX - centerX, 2) / Math.pow(a, 2) +
                 Math.pow(positionY - centerY, 2) / Math.pow(b, 2);
+
             return Math.abs(res - 1) < margin;
         };
 
-        const inBorder = () => {
-            const margin = 3;
-            const radiusX =
+        const inBorder: Function = (): boolean => {
+            const margin: number = 3;
+            const radiusX: number =
                 Math.abs(this.property.rect.endX - this.property.rect.startX) /
                 2;
-            const radiusY =
+            const radiusY: number =
                 Math.abs(this.property.rect.endY - this.property.rect.startY) /
                 2;
-            const centerX =
+            const centerX: number =
                 (this.property.rect.startX + this.property.rect.endX) / 2;
-            const centerY =
+            const centerY: number =
                 (this.property.rect.startY + this.property.rect.endY) / 2;
-            const p1 = {
+            const p1: Position = {
                 x: centerX - radiusX + margin,
                 y: centerY - radiusY + margin,
             };
-            const p2 = {
+            const p2: Position = {
                 x: centerX + radiusX - margin,
                 y: centerY - radiusY + margin,
             };
-            const p3 = {
+            const p3: Position = {
                 x: centerX - radiusX + margin,
                 y: centerY + radiusY - margin,
             };
-            const p4 = {
+            const p4: Position = {
                 x: centerX + radiusX - margin,
                 y: centerY + radiusY - margin,
             };
-            const P1 = {
+            const P1: Position = {
                 x: centerX - radiusX - this.property.borderWidth - margin,
                 y: centerY - radiusY - this.property.borderWidth - margin,
             };
-            const P2 = {
+            const P2: Position = {
                 x: centerX + radiusX + this.property.borderWidth + margin,
                 y: centerY - radiusY - this.property.borderWidth - margin,
             };
-            const P3 = {
+            const P3: Position = {
                 x: centerX - radiusX - this.property.borderWidth - margin,
                 y: centerY + radiusY + this.property.borderWidth + margin,
             };
-            const P4 = {
+            const P4: Position = {
                 x: centerX + radiusX + this.property.borderWidth + margin,
                 y: centerY + radiusY + this.property.borderWidth + margin,
             };
-            const p = {
+            const p: Position = {
                 x: positionX,
                 y: positionY,
             };
+
             return (
                 !pointInRectangular(p1, p2, p3, p4, p) &&
                 pointInRectangular(P1, P2, P3, P4, p)
@@ -124,18 +132,18 @@ export default class sCircle extends Content {
         return inCircle() || inBorder();
     }
 
-    event() {
-        this.mouseDown = (e: MouseEvent) => {
+    public event(): void {
+        this.mouseDown = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox() && inBox(e)) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
         };
-        this.mouseMove = (e: MouseEvent) => {
+        this.mouseMove = (e: MouseEvent): void => {
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
         };
-        this.mouseUp = (e: MouseEvent) => {
+        this.mouseUp = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseUp(e);
             }
@@ -146,10 +154,10 @@ export default class sCircle extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    draw() {
-        let minuX: number = -1;
-        let minuY: number = -1;
-        const propertyMap = getCircleMap(
+    public draw(): void {
+        const minuX: number = -1;
+        const minuY: number = -1;
+        const propertyMap: IcircleMap[] = getCircleMap(
             this.property.rect,
             this.property.borderWidth,
         );
@@ -158,13 +166,13 @@ export default class sCircle extends Content {
         this.ctx.beginPath();
         this.ctx.strokeStyle = this.property.color;
         this.ctx.lineWidth = this.property.borderWidth * config.rate;
-        const ellipse = (property: Circle) => {
-            const r =
+        const ellipse: Function = (property: Circle): void => {
+            const r: number =
                 property.radiusX > property.radiusY
                     ? property.radiusX
                     : property.radiusY;
-            var ratioX = property.radiusX / r;
-            var ratioY = property.radiusY / r;
+            const ratioX: number = property.radiusX / r;
+            const ratioY: number = property.radiusY / r;
             this.ctx.save();
             this.ctx.strokeStyle = this.property.borderColor;
             this.ctx.lineWidth = this.property.borderWidth * config.rate;
@@ -175,7 +183,7 @@ export default class sCircle extends Content {
                 property.centerY / ratioY,
                 r,
                 0,
-                2 * Math.PI,
+                Math.PI * 2,
                 false,
             );
             this.ctx.stroke();
@@ -184,10 +192,10 @@ export default class sCircle extends Content {
 
         // 画椭圆
         if (this.isFocus) {
-            const startX = this.property.rect.startX;
-            const startY = this.property.rect.startY;
-            const endX = this.property.rect.endX;
-            const endY = this.property.rect.endY;
+            const startX: number = this.property.rect.startX;
+            const startY: number = this.property.rect.startY;
+            const endX: number = this.property.rect.endX;
+            const endY: number = this.property.rect.endY;
 
             this.ctx.lineWidth = this.property.borderWidth * config.rate;
             this.ctx.strokeStyle = this.property.auxLineColor;
@@ -229,7 +237,7 @@ export default class sCircle extends Content {
 
         if (this.isFocus) {
             this.ctx.save();
-            for (let i of propertyMap) {
+            for (const i of propertyMap) {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = this.property.color;
                 this.ctx.arc(

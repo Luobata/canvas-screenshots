@@ -1,18 +1,21 @@
-import { Position } from 'LIB/interface';
-import { config, inBox } from '../config';
-import Mouse from './mouse-pen';
+/**
+ * @description pen
+ */
+import { config, inBox } from 'Canvas/config';
+import Content from 'INSERT/content';
+import Mouse from 'INSERT/mouse-pen';
 import { pointInLine } from 'LIB/geometric';
-import Content from './content';
+import { Position } from 'LIB/interface';
 
 interface pen {
-    lines: Array<Position>;
+    lines: Position[];
     color: string;
     lineWidth: number;
 }
 
-export default class sPen extends Content {
-    mouse: Mouse;
-    property: pen;
+export default class SPen extends Content {
+    public property: pen;
+    private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
         super(ctx);
@@ -25,15 +28,15 @@ export default class sPen extends Content {
         this.event();
     }
 
-    inBoxBorder(x: number, y: number) {
+    public inBoxBorder(x: number, y: number): boolean {
         return pointInLine(
             this.property.lines,
             { x, y },
-            10 + this.property.lineWidth,
+            this.property.lineWidth + 10,
         );
     }
 
-    getCursor(e: MouseEvent) {
+    public getCursor(e: MouseEvent): string {
         let result = 'crosshair';
         if (this.inBoxBorder(e.clientX, e.clientY)) {
             result = 'all-scroll';
@@ -42,22 +45,22 @@ export default class sPen extends Content {
         return result;
     }
 
-    hasBox(): boolean {
+    public hasBox(): boolean {
         return this.property.lines.length > 1;
     }
 
-    event() {
-        this.mouseDown = (e: MouseEvent) => {
+    public event(): void {
+        this.mouseDown = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox() && inBox(e)) {
                 this.mouse.mouseDown(this.getCursor(e));
             }
         };
-        this.mouseMove = (e: MouseEvent) => {
+        this.mouseMove = (e: MouseEvent): void => {
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
         };
-        this.mouseUp = (e: MouseEvent) => {
+        this.mouseUp = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseUp();
             }
@@ -68,7 +71,7 @@ export default class sPen extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    addPosition(pos: Position, isDraw = false) {
+    public addPosition(pos: Position, isDraw = false): void {
         this.property.lines.push(pos);
 
         if (isDraw) {
@@ -76,7 +79,7 @@ export default class sPen extends Content {
         }
     }
 
-    move(x: number, y: number) {
+    public move(x: number, y: number): void {
         for (let i of this.property.lines) {
             i.x += x;
             i.y += y;
@@ -85,7 +88,7 @@ export default class sPen extends Content {
         config.emitter.emit('draw-all');
     }
 
-    draw() {
+    public draw(): void {
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.strokeStyle = this.property.color;

@@ -1,23 +1,29 @@
-import { Position, DragCircle, Rect } from 'LIB/interface';
-import { config, inBox } from '../config';
-import { getArrowCircleMap } from 'LIB/help';
-import Mouse from './mouse-arrow';
+/**
+ * @description arrow
+ */
+import { config, inBox } from 'Canvas/config';
+import Content from 'INSERT/content';
+import Mouse from 'INSERT/mouse-arrow';
 import { pointInArea } from 'LIB/geometric';
-import Content from './content';
+import { getArrowCircleMap, IcircleMap } from 'LIB/help';
+import { DragCircle, Position, Rect } from 'LIB/interface';
 
-const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
+const circlePath: number = 10; // 手势范围 认为这个范围内就是可以使用新手势
 
 interface arrow {
     rect?: Rect;
-    circles: Array<DragCircle>;
-    lines: Array<Position>;
+    circles: DragCircle[];
+    lines: Position[];
     color: string;
     circleWidth: number;
 }
 
-export default class sArrow extends Content {
-    mouse: Mouse;
-    property: arrow;
+/**
+ * default class
+ */
+export default class SArrow extends Content {
+    public property: arrow;
+    private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
         super(ctx);
@@ -32,18 +38,18 @@ export default class sArrow extends Content {
         this.event();
     }
 
-    event() {
-        this.mouseDown = (e: MouseEvent) => {
+    public event(): void {
+        this.mouseDown = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox() && inBox(e)) {
                 this.mouse.mouseDown(e, this.getCursor(e, 'eve'));
             }
         };
-        this.mouseMove = (e: MouseEvent) => {
+        this.mouseMove = (e: MouseEvent): void => {
             if (this.isFocus) {
                 this.mouse.mouseMove(e);
             }
         };
-        this.mouseUp = (e: MouseEvent) => {
+        this.mouseUp = (e: MouseEvent): void => {
             if (this.isFocus && this.hasBox()) {
                 this.mouse.mouseUp(e);
             }
@@ -54,29 +60,29 @@ export default class sArrow extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    inBoxBorder(x: number, y: number) {
+    public inBoxBorder(x: number, y: number): boolean {
         return pointInArea(this.property.lines, { x, y });
     }
 
-    draw() {
-        const circleMap = getArrowCircleMap(this.property.rect);
+    public draw(): void {
+        const circleMap: IcircleMap[] = getArrowCircleMap(this.property.rect);
         this.property.circles = circleMap;
 
-        const lineWid = Math.sqrt(
+        const lineWid: number = Math.sqrt(
             Math.pow(this.property.rect.endX - this.property.rect.startX, 2) +
                 Math.pow(
                     this.property.rect.endY - this.property.rect.startY,
                     2,
                 ),
         );
-        const propertyWid = lineWid * 0.2; // 箭头位置总长度的十分之一
-        const propertyInWid = propertyWid * 0.7;
-        let rec = Math.atan(
+        const propertyWid: number = lineWid * 0.2; // 箭头位置总长度的十分之一
+        const propertyInWid: number = propertyWid * 0.7;
+        const rec: number = Math.atan(
             Math.abs(this.property.rect.endY - this.property.rect.startY) /
                 Math.abs(this.property.rect.endX - this.property.rect.startX),
         );
-        let margin = Math.PI / 4;
-        const min = margin - rec;
+        const margin: number = Math.PI / 4;
+        const min: number = margin - rec;
         let minuX: number = 1;
         let minuY: number = 1;
 
@@ -91,7 +97,7 @@ export default class sArrow extends Content {
             minuY = -1;
         }
 
-        const P1 = {
+        const P1: Position = {
             x:
                 this.property.rect.endX -
                 propertyWid * Math.cos(margin - rec) * minuX,
@@ -99,7 +105,7 @@ export default class sArrow extends Content {
                 this.property.rect.endY +
                 propertyWid * Math.sin(margin - rec) * minuY,
         };
-        const P2 = {
+        const P2: Position = {
             x:
                 this.property.rect.endX -
                 propertyWid * Math.cos(margin + rec) * minuX,
@@ -107,7 +113,7 @@ export default class sArrow extends Content {
                 this.property.rect.endY -
                 propertyWid * Math.sin(margin + rec) * minuY,
         };
-        const P3 = {
+        const P3: Position = {
             x:
                 this.property.rect.endX -
                 propertyInWid * Math.cos(margin - rec - margin / 2) * minuX,
@@ -115,7 +121,7 @@ export default class sArrow extends Content {
                 this.property.rect.endY +
                 propertyInWid * Math.sin(margin - rec - margin / 2) * minuY,
         };
-        const P4 = {
+        const P4: Position = {
             x:
                 this.property.rect.endX -
                 propertyInWid * Math.cos(margin + rec - margin / 2) * minuX,
@@ -155,7 +161,7 @@ export default class sArrow extends Content {
         this.ctx.fill();
 
         if (this.isFocus) {
-            for (let i of circleMap) {
+            for (const i of circleMap) {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.property.color;
                 this.ctx.arc(

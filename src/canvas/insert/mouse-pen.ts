@@ -1,26 +1,32 @@
-import Pen from './pen';
-export default class {
-    box: Pen;
-    mouseEvent: string;
+/**
+ * @default mouse pen
+ */
+import Pen from 'INSERT/pen';
+
+/**
+ * default class
+ */
+export default class Mouse {
+    public box: Pen;
+    private mouseEvent: string;
 
     constructor(pen: Pen) {
         this.box = pen;
     }
 
-    mouseDown(cursorStyle = 'crosshair') {
+    public mouseDown(cursorStyle: string = 'crosshair'): void {
         this.mouseEvent = cursorStyle;
     }
 
-    mouseMove(e: MouseEvent) {
+    public mouseMove(e: MouseEvent): void {
         switch (this.mouseEvent) {
             case 'all-scroll':
                 this.box.move(e.movementX, e.movementY);
                 break;
             default:
-                break;
         }
     }
-    mouseUp() {
+    public mouseUp(): void {
         this.mouseEvent = 'crosshair';
     }
 }

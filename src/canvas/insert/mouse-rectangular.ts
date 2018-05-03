@@ -1,13 +1,19 @@
+/**
+ * @description mouse rectangular
+ */
 import { EventEmitter } from 'events';
-import Box from './rectangular';
+import Box from 'INSERT/rectangular';
 
-let timer = new Date().getTime();
-const tick = 300; // 点击间隔 小于该值认为属于连续点击
+let timer: number = new Date().getTime();
+const tick: number = 300; // 点击间隔 小于该值认为属于连续点击
 
-export default class {
-    box: Box;
-    mouseEvent: string; // 处理后续move事件逻辑
-    clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否生成截图
+/**
+ * @default class
+ */
+export default class Mouse {
+    public box: Box;
+    private mouseEvent: string; // 处理后续move事件逻辑
+    private clickTime: number; // 点击次数 只在出现box之后计算 用于判断是否生成截图
     // emitter: EventEmitter;
 
     constructor(box: Box) {
@@ -17,10 +23,10 @@ export default class {
         this.clickTime = 0;
     }
 
-    mouseDown(e: MouseEvent, cursorStyle = 'crosshair') {
-        const now = new Date().getTime();
+    public mouseDown(e: MouseEvent, cursorStyle: string = 'crosshair'): void {
+        const now: number = new Date().getTime();
         if (this.clickTime === 0) {
-            this.clickTime++;
+            this.clickTime = this.clickTime + 1;
         } else if (this.clickTime === 1) {
             if (now - timer <= tick) {
                 // 双击事件
@@ -33,7 +39,7 @@ export default class {
         this.mouseEvent = cursorStyle;
     }
 
-    mouseMove(e: MouseEvent) {
+    public mouseMove(e: MouseEvent): void {
         // move
         switch (this.mouseEvent) {
             case 'crosshair':
@@ -120,11 +126,10 @@ export default class {
                 );
                 break;
             default:
-                break;
         }
     }
 
-    mouseUp(e: MouseEvent) {
+    public mouseUp(e: MouseEvent): void {
         this.mouseEvent = 'crosshair';
     }
 }

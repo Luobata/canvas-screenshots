@@ -1,16 +1,20 @@
-import Content from './content';
+/**
+ * @description mosaic
+ */
+import { config, inBox } from 'Canvas/config';
+import Content from 'INSERT/content';
 import { Position } from 'LIB/interface';
-import { config, inBox } from '../config';
 
 interface mosaic {
-    lines: Array<Position>;
+    lines: Position[];
     width: number; // 单个马赛克大小
     num: number; // 一次操作生成马赛克数量(一个方向上)
 }
 
-export default class sMosaic extends Content {
-    property: mosaic;
-    transctx: CanvasRenderingContext2D;
+export default class SMosaic extends Content {
+    public property: mosaic;
+    private transctx: CanvasRenderingContext2D;
+
     constructor(
         ctx: CanvasRenderingContext2D,
         transctx: CanvasRenderingContext2D,
@@ -23,12 +27,12 @@ export default class sMosaic extends Content {
         this.event();
         this.property = {
             lines: [pos],
-            width: 3 * config.rate,
+            width: config.rate * 3,
             num: 3,
         };
     }
 
-    addPosition(pos: Position, isDraw = false) {
+    public addPosition(pos: Position, isDraw = false): void {
         this.property.lines.push(pos);
 
         if (isDraw) {
@@ -36,38 +40,43 @@ export default class sMosaic extends Content {
         }
     }
 
-    event() {
-        this.mouseDown = (e: MouseEvent) => {
+    public event(): void {
+        this.mouseDown = (e: MouseEvent): void => {
             if (inBox(e)) {
+                // TODO
             }
         };
-        this.mouseMove = (e: MouseEvent) => {};
-        this.mouseUp = (e: MouseEvent) => {};
+        this.mouseMove = (e: MouseEvent): void => {
+            // TODO
+        };
+        this.mouseUp = (e: MouseEvent): void => {
+            // TODO
+        };
 
         config.emitter.on('mousedown', this.mouseDown);
         config.emitter.on('mousemove', this.mouseMove);
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    inBoxBorder(x: number, y: number) {
+    public inBoxBorder(x: number, y: number): boolean {
         return false;
     }
 
-    draw() {
-        const boxData = this.transctx.getImageData(
+    public draw(): void {
+        const boxData: ImageData = this.transctx.getImageData(
             config.rate * config.boxRect.startX,
             config.rate * config.boxRect.startY,
             config.rate * (config.boxRect.endX - config.boxRect.startX),
             config.rate * (config.boxRect.endY - config.boxRect.startY),
         );
-        const data = boxData.data;
-        const original = this.transctx.getImageData(
+        const data: Uint8ClampedArray = boxData.data;
+        const original: Uint8ClampedArray = this.transctx.getImageData(
             config.rate * config.boxRect.startX,
             config.rate * config.boxRect.startY,
             config.rate * (config.boxRect.endX - config.boxRect.startX),
             config.rate * (config.boxRect.endY - config.boxRect.startY),
         ).data;
-        for (let i of this.property.lines) {
+        for (const i of this.property.lines) {
             // 遍历所有点
             for (
                 let x =
@@ -77,7 +86,7 @@ export default class sMosaic extends Content {
                 x = x + this.property.width
             ) {
                 for (
-                    let y =
+                    let y: number =
                         i.y * config.rate -
                         this.property.width * this.property.num;
                     y <=
@@ -85,17 +94,17 @@ export default class sMosaic extends Content {
                     y = y + this.property.width
                 ) {
                     // 遍历以 (i.x, i.y)为中心的width*num个像素点
-                    let r = 0;
-                    let g = 0;
-                    let b = 0;
-                    const total = Math.pow(this.property.width + 1, 2);
-                    for (let j = 0; j <= this.property.width; j++) {
-                        for (let k = 0; k <= this.property.width; k++) {
-                            const pX =
+                    let r: number = 0;
+                    let g: number = 0;
+                    let b: number = 0;
+                    const total: number = Math.pow(this.property.width + 1, 2);
+                    for (let j: number = 0; j <= this.property.width; j++) {
+                        for (let k: number = 0; k <= this.property.width; k++) {
+                            const pX: number =
                                 x + j - config.boxRect.startX * config.rate;
-                            const pY =
+                            const pY: number =
                                 y + k - config.boxRect.startY * config.rate;
-                            const unitIndex =
+                            const unitIndex: number =
                                 pY *
                                     (config.boxRect.endX -
                                         config.boxRect.startX) *
@@ -110,13 +119,13 @@ export default class sMosaic extends Content {
                     r = r / total;
                     g = g / total;
                     b = b / total;
-                    for (let j = 0; j <= this.property.width; j++) {
-                        for (let k = 0; k <= this.property.width; k++) {
-                            const pX =
+                    for (let j: number = 0; j <= this.property.width; j++) {
+                        for (let k: number = 0; k <= this.property.width; k++) {
+                            const pX: number =
                                 x + j - config.boxRect.startX * config.rate;
-                            const pY =
+                            const pY: number =
                                 y + k - config.boxRect.startY * config.rate;
-                            const unitIndex =
+                            const unitIndex: number =
                                 pY *
                                     (config.boxRect.endX -
                                         config.boxRect.startX) *
