@@ -1,3 +1,8 @@
+/**
+ * @description type lib
+ */
+
+// tslint:disable no-any
 export const type = (obj: any, type: string) => {
     return Object.prototype.toString.call(obj) === `[object ${type}]`;
 };
@@ -23,3 +28,5 @@ export const getPlainObj = (obj: any) => {
     }
     return item;
 };
+
+// tslint:enable no-any

@@ -19,6 +19,7 @@
         "match-default-export-name": false,
         "export-name": false,
         "import-name": false,
+        "space-within-parens": false,
         "max-func-body-length": [
             true,
             200,

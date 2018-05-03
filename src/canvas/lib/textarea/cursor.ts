@@ -1,10 +1,16 @@
+/**
+ * @description cursor
+ */
 import { Position } from 'LIB/interface';
 
+/**
+ * default class Cursor
+ */
 export default class Cursor {
-    position: Position;
-    color: String;
-    flashTime: number;
-    timer: null | number;
+    public position: Position;
+    public color: String;
+    public flashTime: number;
+    public timer: null | number;
 
     constructor(pos: Position, color: string) {
         this.position = pos;
@@ -12,23 +18,25 @@ export default class Cursor {
         this.flashTime = 1000;
     }
 
-    start() {
+    public start(): void {
         this.timer = window.setInterval(() => {
             // draw();
         }, this.flashTime);
     }
 
-    end() {
+    public end(): void {
         if (this.timer) {
             window.clearInterval(this.timer);
             this.timer = null;
         }
     }
 
-    setPositin(pos: Position) {
+    public setPositin(pos: Position): void {
         this.position = pos;
         this.draw();
     }
 
-    draw() {}
+    public draw(): void {
+        // TODO
+    }
 }

@@ -1,14 +1,17 @@
-import Box from './box';
+/**
+ * @description cursor
+ */
+import Box from 'Canvas/box';
 
-interface Circle {
+interface ICircle {
     x: number;
     y: number;
     cssPosition: string;
 }
 
-const circlePath = 10; // 手势范围 认为这个范围内就是可以使用新手势
+const circlePath: number = 10; // 手势范围 认为这个范围内就是可以使用新手势
 
-const inCircle = (
+const inCircle: Function = (
     x: number,
     y: number,
     positionX: number,
@@ -21,20 +24,20 @@ const inCircle = (
 };
 
 export default class {
-    maskCircles: Array<Circle>;
-    box: Box;
+    public maskCircles: ICircle[];
+    public box: Box;
 
     constructor(box: Box) {
         this.box = box;
         this.maskCircles = [];
     }
 
-    getCursor(e: MouseEvent, type?: string) {
-        let result = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
-        for (let i of this.box.circles) {
+    public getCursor(e: MouseEvent, itype?: string): string {
+        let result: string = 'crosshair'; // 判断鼠标位置结果 默认即crosshair
+        for (const i of this.box.circles) {
             if (inCircle(i.x, i.y, e.clientX, e.clientY)) {
                 // 在这个范围内 对应的手势图标
-                if (type === 'eve') {
+                if (itype === 'eve') {
                     result = `${i.cssPositionEve}-resize`;
                 } else {
                     result = `${i.cssPosition}-resize`;

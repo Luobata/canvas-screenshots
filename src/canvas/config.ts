@@ -1,7 +1,10 @@
+/**
+ * @description config
+ */
 import { Emitter } from 'event-emitter';
-import { Rect, PluginType, Type } from 'LIB/interface';
+import { PluginType, Rect, Type } from 'LIB/interface';
 
-interface Config {
+interface IConfig {
     emitter?: Emitter;
     uid?: number;
     wrap?: HTMLElement;
@@ -12,11 +15,17 @@ interface Config {
     rate?: number; // deviceRate
     plugins?: PluginType[];
     debuggerMode?: boolean;
-    type?: Type;
+    outputType?: Type;
 }
 
-export const inBox = (e: MouseEvent) => {
-    if (!config.boxRect) return false;
+export const config: IConfig = {
+    uid: 0,
+};
+
+export const inBox: Function = (e: MouseEvent): boolean => {
+    if (!config.boxRect) {
+        return false;
+    }
     if (
         (e.clientX - config.boxRect.startX) *
             (e.clientX - config.boxRect.endX) <=
@@ -31,10 +40,6 @@ export const inBox = (e: MouseEvent) => {
     return false;
 };
 
-export const config: Config = {
-    uid: 0,
-};
-
-export const setConfig = (obj: Config) => {
+export const setConfig: Function = (obj: IConfig): void => {
     Object.assign(config, obj);
 };

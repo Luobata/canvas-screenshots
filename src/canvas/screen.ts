@@ -306,9 +306,9 @@ export default class Screen {
             (config.boxRect.endX - config.boxRect.startX) * config.rate,
             (config.boxRect.endY - config.boxRect.startY) * config.rate,
         );
-        if (config.type === 'imageData') {
+        if (config.outputType === 'imageData') {
             this.config.download.call(null, data);
-        } else if (config.type === 'png') {
+        } else if (config.outputType === 'png') {
             const image: HTMLImageElement = new Image();
             const tmpCanvas: HTMLCanvasElement = document.createElement(
                 'canvas',
