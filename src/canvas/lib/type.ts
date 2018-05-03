@@ -1,16 +1,15 @@
 /**
  * @description type lib
  */
-
 // tslint:disable no-any
-export const type = (obj: any, type: string) => {
+export const type: Function = (obj: any, type: string): boolean => {
     return Object.prototype.toString.call(obj) === `[object ${type}]`;
 };
-export const getType = (obj: any) => {
+export const getType: Function = (obj: any): string => {
     return Object.prototype.toString.call(obj);
 };
 
-export const getPlainObj = (obj: any) => {
+export const getPlainObj: Function = (obj: any): any => {
     const item: any = {};
     for (let i of Object.keys(obj)) {
         // console.log(i, getType(obj[i]));

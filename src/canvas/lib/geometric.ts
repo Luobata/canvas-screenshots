@@ -1,20 +1,23 @@
-import Vector, { vector } from 'LIB/vector';
+/**
+ * @description geometric
+ */
 import { Position } from 'LIB/interface';
+import Vector, { Ivector } from 'LIB/vector';
 
 // 点是否在矩形内
 // p1左上 p2右上 p3左下 p4右下
-export const pointInRectangular = (
-    p1: vector,
-    p2: vector,
-    p3: vector,
-    p4: vector,
-    p: vector,
-) => {
-    const P1 = new Vector(p1);
-    const P2 = new Vector(p2);
-    const P3 = new Vector(p3);
-    const P4 = new Vector(p4);
-    const P = new Vector(p);
+export const pointInRectangular: Function = (
+    p1: Ivector,
+    p2: Ivector,
+    p3: Ivector,
+    p4: Ivector,
+    p: Ivector,
+): boolean => {
+    const P1: Vector = new Vector(p1);
+    const P2: Vector = new Vector(p2);
+    const P3: Vector = new Vector(p3);
+    const P4: Vector = new Vector(p4);
+    const P: Vector = new Vector(p);
 
     const P1P3: Vector = P3.minus(P1);
     const P1P: Vector = P.minus(P1);
@@ -30,15 +33,17 @@ export const pointInRectangular = (
     );
 };
 
-export const pointInArea = (
-    positions: Array<Position>,
+export const pointInArea: Function = (
+    positions: Position[],
     point: Position,
 ): boolean => {
     // 只对凸多边形有用 凹多边形有bug
-    if (positions.length < 3) return false;
+    if (positions.length < 3) {
+        return false;
+    }
 
-    let total = 0;
-    for (let i = 0; i < positions.length; i++) {
+    let total: number = 0;
+    for (let i = 0; i < positions.length; i = i + 1) {
         let start: Position;
         let next: Position;
         if (i === positions.length - 1) {
@@ -49,13 +54,19 @@ export const pointInArea = (
             start = positions[i];
             next = positions[i + 1];
         }
-        const P1 = new Vector({ x: start.x - point.x, y: start.y - point.y });
-        const P2 = new Vector({ x: next.x - point.x, y: next.y - point.y });
+        const P1: Vector = new Vector({
+            x: start.x - point.x,
+            y: start.y - point.y,
+        });
+        const P2: Vector = new Vector({
+            x: next.x - point.x,
+            y: next.y - point.y,
+        });
         total += P1.ankle(P2);
     }
 
     // logger(total);
-    const margin = 0.05;
+    const margin: number = 0.05;
 
     return Math.abs(total / 360 - 1) < margin;
 };
@@ -66,14 +77,16 @@ export const pointInArea = (
  * @param pos 点的位置
  * @param margin  距离最大值 该值内认为在线上
  */
-export const pointInLine = (
-    positions: Array<Position>,
+export const pointInLine: Function = (
+    positions: Position[],
     pos: Position,
     margin: number,
-) => {
-    for (let i of positions) {
-        const vec = new Vector({ x: i.x - pos.x, y: i.y - pos.y });
-        if (vec.mod() <= margin) return true;
+): boolean => {
+    for (const i of positions) {
+        const vec: Vector = new Vector({ x: i.x - pos.x, y: i.y - pos.y });
+        if (vec.mod() <= margin) {
+            return true;
+        }
     }
 
     return false;
