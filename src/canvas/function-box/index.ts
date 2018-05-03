@@ -1,24 +1,45 @@
-import { config } from '../config';
+/**
+ * @description function box
+ */
+import Box from 'Canvas/box';
+import { config } from 'Canvas/config';
+import logger from 'Canvas/log';
 import { domEach } from 'LIB/dom';
-import Box from '../box';
-import logger from '../log';
 
-const childBoxContent = ['rectangular', 'circle', 'arrow', 'pen', 'text'];
-const activeBox = ['rectangular', 'circle', 'arrow', 'pen', 'text', 'mosaic'];
+const childBoxContent: string[] = [
+    'rectangular',
+    'circle',
+    'arrow',
+    'pen',
+    'text',
+];
+const activeBox: string[] = [
+    'rectangular',
+    'circle',
+    'arrow',
+    'pen',
+    'text',
+    'mosaic',
+];
+
+/**
+ * default class
+ */
 export default class FunctionBox {
-    box: HTMLDivElement;
-    wrapBox: Box;
-    items: Array<HTMLElement>;
-    colorItems: Array<HTMLElement>;
-    activeFun: string;
-    activeColor: string;
+    public box: HTMLDivElement;
+    public wrapBox: Box;
+    public items: HTMLElement[];
+    public colorItems: HTMLElement[];
+    public activeFun: string;
+    public activeColor: string;
+
     constructor(box: HTMLDivElement, wrapBox: Box) {
         this.box = box;
         this.wrapBox = wrapBox;
         this.event();
     }
 
-    event() {
+    public event(): void {
         const items = this.box.querySelectorAll('.box-item');
         const childWrap = this.box.querySelector(
             '.function-box-child',
