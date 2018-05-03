@@ -43,7 +43,7 @@ export const pointInArea: Function = (
     }
 
     let total: number = 0;
-    for (let i = 0; i < positions.length; i = i + 1) {
+    for (let i: number = 0; i < positions.length; i = i + 1) {
         let start: Position;
         let next: Position;
         if (i === positions.length - 1) {

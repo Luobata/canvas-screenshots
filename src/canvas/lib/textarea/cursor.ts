@@ -19,7 +19,7 @@ export default class Cursor {
     }
 
     public start(): void {
-        this.timer = window.setInterval(() => {
+        this.timer = window.setInterval((): void => {
             // draw();
         }, this.flashTime);
     }

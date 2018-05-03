@@ -1,17 +1,27 @@
+/**
+ * @description hack method
+ */
+import { addDebuggerData, deleteDebuggerData } from 'Canvas/log';
 import { Content } from 'LIB/interface';
-import { addDebuggerData, deleteDebuggerData } from '../log';
-export const hackArray = () => {};
-export const hackSet = function(set: Set<Content>) {
-    const addFun = set.add;
-    const deleteFun = set.delete;
-    set.add = function() {
-        const item = Array.prototype.slice.call(arguments)[0];
+
+// tslint:disable no-function-expression no-any no-unsafe-any
+export const hackArray: Function = (arr: Content[]): void => {
+    // TODO
+};
+export const hackSet: Function = function(cset: Set<Content>): void {
+    const addFun: Function = cset.add;
+    const deleteFun: Function = cset.delete;
+
+    cset.add = function(): any {
+        const item: any = Array.prototype.slice.call(arguments)[0];
         addDebuggerData(item);
-        return addFun.apply(set, arguments);
+
+        return addFun.apply(cset, arguments);
     };
-    set.delete = function() {
-        const item = Array.prototype.slice.call(arguments)[0];
+    cset.delete = function(): any {
+        const item: any = Array.prototype.slice.call(arguments)[0];
         deleteDebuggerData(item);
-        return deleteFun.apply(set, arguments);
+
+        return deleteFun.apply(cset, arguments);
     };
 };

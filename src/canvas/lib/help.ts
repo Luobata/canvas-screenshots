@@ -9,7 +9,7 @@ export const changeVal: Function = (
     keyA: string,
     keyB: string,
 ): void => {
-    const tmp = obj[keyA];
+    const tmp: any = obj[keyA];
     obj[keyA] = obj[keyB];
     obj[keyB] = tmp;
 };
