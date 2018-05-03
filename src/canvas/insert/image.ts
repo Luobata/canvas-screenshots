@@ -5,7 +5,7 @@ import { config, inBox } from 'Canvas/config';
 import Content from 'INSERT/content';
 import Mouse from 'INSERT/mouse-image';
 import { pointInRectangular } from 'LIB/geometric';
-import { getCircleMap } from 'LIB/help';
+import { getCircleMap, IcircleMap } from 'LIB/help';
 import { DragCircle, Position, Rect, Size } from 'LIB/interface';
 
 interface image {
@@ -125,7 +125,10 @@ export default class SImage extends Content {
             endX: this.property.position.x + this.property.width,
             endY: this.property.position.y + this.property.height,
         };
-        const circleMap = getCircleMap(rect, this.property.lineWidth);
+        const circleMap: IcircleMap[] = getCircleMap(
+            rect,
+            this.property.lineWidth,
+        );
         this.property.circles = circleMap;
         this.ctx.save();
         this.ctx.beginPath();
