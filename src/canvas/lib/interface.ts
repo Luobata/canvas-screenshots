@@ -7,7 +7,7 @@ import ImageInsert from 'INSERT/image';
 import Mosaic from 'INSERT/mosaic';
 import Pen from 'INSERT/pen';
 import Rectangular from 'INSERT/rectangular';
-import Text from 'INSERT/text';
+import Text from 'INSERT/textarea';
 
 // tslint:disable interface-name
 export interface DragCircle {

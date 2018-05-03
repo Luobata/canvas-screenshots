@@ -1,4 +1,4 @@
-import Text from './text';
+import Text from './textarea';
 
 let timer = new Date().getTime();
 const tick = 300; // 点击间隔 小于该值认为属于连续点击

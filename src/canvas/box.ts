@@ -12,7 +12,7 @@ import ImageInsert from 'INSERT/image';
 import Mosaic from 'INSERT/mosaic';
 import Pen from 'INSERT/pen';
 import Rectangular from 'INSERT/rectangular';
-import Text from 'INSERT/text';
+import Text from 'INSERT/textarea';
 import { hackArray, hackSet } from 'LIB/hack';
 import { getCircleMap } from 'LIB/help';
 import { Content, DragCircle, Rect, sContent } from 'LIB/interface';
