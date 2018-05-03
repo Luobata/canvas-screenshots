@@ -75,7 +75,7 @@ export default class Screen {
             rate: window.devicePixelRatio,
             plugins: conf.plugins,
             debuggerMode: conf.debuggerMode || false,
-            type: conf.type || 'imageData',
+            type: conf.outputType || 'imageData',
         });
         setDebuggerData();
     }

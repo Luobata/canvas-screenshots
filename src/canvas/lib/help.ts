@@ -1,17 +1,36 @@
-import { Rect, Circle } from 'LIB/interface';
+/**
+ * @description global help
+ */
+import { Circle, Rect } from 'LIB/interface';
 
-export const changeVal = (obj: any, keyA: string, keyB: string) => {
+// tslint:disable no-any no-unsafe-any
+export const changeVal: Function = (
+    obj: any,
+    keyA: string,
+    keyB: string,
+): void => {
     const tmp = obj[keyA];
     obj[keyA] = obj[keyB];
     obj[keyB] = tmp;
 };
 
-export const getCircleMap = (obj: Rect, borderWidth: number) => {
+interface IcircleMap {
+    x: number;
+    y: number;
+    position: string;
+    cssPositionEve: string;
+    cssPosition: string;
+}
+
+export const getCircleMap: Function = (
+    obj: Rect,
+    borderWidth: number,
+): IcircleMap[] => {
     // 转向后 翻转
-    const dir = (dirX: string, dirY: string) => {
-        const positiveX = obj.startX < obj.endX;
-        const positiveY = obj.startY < obj.endY;
-        let res = '';
+    const dir: Function = (dirX: string, dirY: string): string => {
+        const positiveX: boolean = obj.startX < obj.endX;
+        const positiveY: boolean = obj.startY < obj.endY;
+        let res: string = '';
 
         switch (dirY) {
             case 'top':
@@ -31,7 +50,6 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
                 }
                 break;
             default:
-                break;
         }
 
         switch (dirX) {
@@ -52,13 +70,13 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
             case 'middle':
                 break;
             default:
-                break;
         }
 
         return res;
     };
 
-    const circleMap = [
+    // const circleMap: IcircleMap[] = [
+    return [
         {
             x: obj.startX - borderWidth,
             y: obj.startY - borderWidth,
@@ -124,15 +142,15 @@ export const getCircleMap = (obj: Rect, borderWidth: number) => {
         },
     ];
 
-    return circleMap;
+    // return circleMap;
 };
 
-export const getArrowCircleMap = (obj: Rect) => {
+export const getArrowCircleMap: Function = (obj: Rect): IcircleMap[] => {
     // 转向后 翻转
-    const dir = (dirX: string, dirY: string) => {
-        const positiveX = obj.startX < obj.endX;
-        const positiveY = obj.startY < obj.endY;
-        let res = '';
+    const dir: Function = (dirX: string, dirY: string): string => {
+        const positiveX: boolean = obj.startX < obj.endX;
+        const positiveY: boolean = obj.startY < obj.endY;
+        let res: string = '';
 
         switch (dirY) {
             case 'top':
@@ -152,7 +170,6 @@ export const getArrowCircleMap = (obj: Rect) => {
                 }
                 break;
             default:
-                break;
         }
 
         switch (dirX) {
@@ -173,13 +190,13 @@ export const getArrowCircleMap = (obj: Rect) => {
             case 'middle':
                 break;
             default:
-                break;
         }
 
         return res;
     };
 
-    const circleMap = [
+    //const circleMap = [
+    return [
         {
             x: obj.startX,
             y: obj.startY,
@@ -196,5 +213,5 @@ export const getArrowCircleMap = (obj: Rect) => {
         },
     ];
 
-    return circleMap;
+    // return circleMap;
 };

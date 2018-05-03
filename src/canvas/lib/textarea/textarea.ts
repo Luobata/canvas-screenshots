@@ -1,7 +1,11 @@
-import Cursor from './cursor';
-import { Position } from 'LIB/interface';
+/**
+ * @description textare
+ */
 
-interface Text {
+import { Position } from 'LIB/interface';
+import Cursor from 'LIB/textarea/cursor';
+
+interface IText {
     position: Position;
     width: number;
     height: number;
@@ -17,18 +21,22 @@ interface Text {
     text?: string | number;
 }
 
+/**
+ * default class TextArea
+ */
 export default class TextArea {
-    ctx: CanvasRenderingContext2D;
-    property: Text;
-    Cursor: Cursor;
-    textarea: HTMLElement;
+    public property: IText;
+    public cursor: Cursor;
+    public textarea: HTMLElement;
+
+    private ctx: CanvasRenderingContext2D;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
         // this.Cursor = new Cursor();
     }
 
-    draw() {
+    public draw(): void {
         this.ctx.save();
         this.ctx.strokeStyle = this.property.borderColor;
         this.ctx.strokeRect(

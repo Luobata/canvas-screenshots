@@ -1,4 +1,4 @@
-import { Position, dragCircle, Rect } from 'LIB/interface';
+import { Position, DragCircle, Rect } from 'LIB/interface';
 import { config, inBox } from '../config';
 import { getArrowCircleMap } from 'LIB/help';
 import Mouse from './mouse-arrow';
@@ -9,7 +9,7 @@ const circlePath = 10; // 手势范围 认为这个范围内就是可以使用�
 
 interface arrow {
     rect?: Rect;
-    circles: Array<dragCircle>;
+    circles: Array<DragCircle>;
     lines: Array<Position>;
     color: string;
     circleWidth: number;

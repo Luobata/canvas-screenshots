@@ -15,7 +15,7 @@ import Rectangular from 'INSERT/rectangular';
 import Text from 'INSERT/text';
 import { hackArray, hackSet } from 'LIB/hack';
 import { getCircleMap } from 'LIB/help';
-import { Content, dragCircle, Rect, sContent } from 'LIB/interface';
+import { Content, DragCircle, Rect, sContent } from 'LIB/interface';
 import upload from 'LIB/upload';
 // tslint:disable
 const ee = require('event-emitter');
@@ -33,7 +33,7 @@ let globalMosaic: Mosaic;
  * default class Box
  */
 export default class Box {
-    public circles: dragCircle[];
+    public circles: DragCircle[];
     public rect?: Rect;
     public isFocus: Boolean;
     public isShowCircle: Boolean;
@@ -282,7 +282,7 @@ export default class Box {
             } else {
                 this.content.delete(item);
             }
-            for (let i: number = 0; i < this.childSaveArray.length;) {
+            for (let i: number = 0; i < this.childSaveArray.length; ) {
                 const child: Content | sContent = this.childSaveArray[i];
                 if (child === item) {
                     this.childSaveArray.splice(i, 1);
@@ -566,7 +566,7 @@ export default class Box {
                 config.rate,
         );
 
-        const circleMap: dragCircle[] = getCircleMap(this.rect, this.lineWidth);
+        const circleMap: DragCircle[] = getCircleMap(this.rect, this.lineWidth);
         this.circles = circleMap;
 
         for (const i of circleMap) {

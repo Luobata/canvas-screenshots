@@ -1,4 +1,4 @@
-import { dragCircle, Circle, Rect } from 'LIB/interface';
+import { DragCircle, Circle, Rect } from 'LIB/interface';
 import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
 import Mouse from './mouse-circle';
@@ -7,7 +7,7 @@ import Content from './content';
 
 interface circle {
     rect?: Rect;
-    circles?: Array<dragCircle>;
+    circles?: Array<DragCircle>;
     color: string;
     borderColor: string;
     auxLineColor: string;
@@ -212,16 +212,16 @@ export default class sCircle extends Content {
             radiusX:
                 Math.abs(
                     this.property.rect.startX -
-                    this.property.rect.endX +
-                    this.property.borderWidth * 2 * minuX,
+                        this.property.rect.endX +
+                        this.property.borderWidth * 2 * minuX,
                 ) /
                 2 *
                 config.rate,
             radiusY:
                 Math.abs(
                     this.property.rect.startY -
-                    this.property.rect.endY +
-                    this.property.borderWidth * 2 * minuY,
+                        this.property.rect.endY +
+                        this.property.borderWidth * 2 * minuY,
                 ) /
                 2 *
                 config.rate,

@@ -1,4 +1,4 @@
-import { Size, dragCircle, Rect, Position } from 'LIB/interface';
+import { Size, DragCircle, Rect, Position } from 'LIB/interface';
 import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
 import Content from './content';
@@ -7,7 +7,7 @@ import Mouse from './mouse-image';
 
 interface image {
     position: Position;
-    circles?: Array<dragCircle>;
+    circles?: Array<DragCircle>;
     lineWidth: number;
     circleWidth: number;
     width: number;

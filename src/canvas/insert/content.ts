@@ -1,4 +1,4 @@
-import { dragCircle, Rect } from 'LIB/interface';
+import { DragCircle, Rect } from 'LIB/interface';
 import logger from '../log';
 import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
@@ -128,9 +128,9 @@ export default class Content {
         };
     }
 
-    event() { }
+    event() {}
 
-    initBox() { }
+    initBox() {}
 
     hasBox() {
         return !!(
@@ -141,9 +141,9 @@ export default class Content {
         );
     }
 
-    inBoxBorder(positionX: number, positionY: number) { }
+    inBoxBorder(positionX: number, positionY: number) {}
 
-    inBox(positionX: number, positionY: number, circlePath = 0) { }
+    inBox(positionX: number, positionY: number, circlePath = 0) {}
 
-    draw() { }
+    draw() {}
 }

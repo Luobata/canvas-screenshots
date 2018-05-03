@@ -1,12 +1,16 @@
-import Rectangular from 'INSERT/rectangular';
-import cCircle from 'INSERT/circle';
+/**
+ * @description interface
+ */
 import Arrow from 'INSERT/arrow';
-import Pen from 'INSERT/pen';
-import Text from 'INSERT/text';
-import Mosaic from 'INSERT/mosaic';
+import cCircle from 'INSERT/circle';
 import ImageInsert from 'INSERT/image';
+import Mosaic from 'INSERT/mosaic';
+import Pen from 'INSERT/pen';
+import Rectangular from 'INSERT/rectangular';
+import Text from 'INSERT/text';
 
-export interface dragCircle {
+// tslint:disable interface-name
+export interface DragCircle {
     x: number;
     y: number;
     cssPosition: string;
@@ -59,11 +63,11 @@ export type PluginType =
     | 'back';
 
 export interface Config {
-    plugins?: Array<PluginType>;
+    plugins?: PluginType[];
     download: Function;
     imageFail?: Function;
     debuggerMode?: boolean;
-    type?: Type;
+    outputType?: Type;
 }
 
 export type Type = 'imageData' | 'png';

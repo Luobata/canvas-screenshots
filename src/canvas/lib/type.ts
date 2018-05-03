@@ -1,7 +1,7 @@
 /**
  * @description type lib
  */
-// tslint:disable no-any
+// tslint:disable no-any no-unsafe-any
 export const type: Function = (obj: any, type: string): boolean => {
     return Object.prototype.toString.call(obj) === `[object ${type}]`;
 };
@@ -28,4 +28,4 @@ export const getPlainObj: Function = (obj: any): any => {
     return item;
 };
 
-// tslint:enable no-any
+// tslint:enable no-any no-unsafe-any

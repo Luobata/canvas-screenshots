@@ -5,7 +5,7 @@ import { config } from 'Canvas/config';
 import { Content, sContent } from 'LIB/interface';
 import { getPlainObj, getType, type } from 'LIB/type';
 
-// tslint:disable no-any
+// tslint:disable no-any no-unsafe-any
 export default function log(...args: any[]): void {
     if (config.debuggerMode) {
         if (console.trace) {
@@ -44,4 +44,4 @@ export const deleteDebuggerData: Function = (obj: Con): void => {
     }
 };
 
-// tslint:enable no-any
+// tslint:enable no-any no-unsafe-any

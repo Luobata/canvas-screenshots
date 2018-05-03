@@ -1,5 +1,9 @@
-export const chinese = /^[\u4e00-\u9fa5]$/;
-export const isChinese = (val: string) => chinese.test(val);
+/**
+ * @description global reg
+ */
 
-export const twoByte = /^[\x00-\xff]$/;
-export const isTwoByte = (val: string) => twoByte.test(val);
+export const chinese: RegExp = /^[\u4e00-\u9fa5]$/;
+export const isChinese: Function = (val: string): boolean => chinese.test(val);
+
+export const twoByte: RegExp = /^[\x00-\xff]$/;
+export const isTwoByte: Function = (val: string): boolean => twoByte.test(val);

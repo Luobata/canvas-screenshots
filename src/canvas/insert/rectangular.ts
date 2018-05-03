@@ -1,4 +1,4 @@
-import { dragCircle, Rect } from 'LIB/interface';
+import { DragCircle, Rect } from 'LIB/interface';
 import { config, inBox } from '../config';
 import { getCircleMap } from 'LIB/help';
 import Content from './content';
@@ -6,7 +6,7 @@ import Mouse from './mouse-rectangular';
 
 interface rectangular {
     rect?: Rect;
-    circles?: Array<dragCircle>;
+    circles?: Array<DragCircle>;
     isStroke: boolean; // 是否是是空心的
     color: string;
     lineWidth: number;
@@ -122,11 +122,11 @@ export default class sRectangular extends Content {
             (this.property.rect.endX -
                 this.property.rect.startX +
                 this.property.lineWidth * 2) *
-            config.rate,
+                config.rate,
             (this.property.rect.endY -
                 this.property.rect.startY +
                 this.property.lineWidth * 2) *
-            config.rate,
+                config.rate,
         );
         if (this.property.isStroke) {
             this.ctx.strokeStyle = this.property.color;
