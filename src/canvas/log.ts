@@ -29,7 +29,7 @@ export const setDebuggerData: Function = (): void => {
 
 export const hookDispatch: Function = (): void => {
     const hook: any = (<any>window).__DATA_DEBUGGER_DEVTOOLS_GLOBAL_HOOK__;
-    if (!hook) {
+    if (!config.debuggerMode || !hook) {
         return;
     }
     hook.refresh();
