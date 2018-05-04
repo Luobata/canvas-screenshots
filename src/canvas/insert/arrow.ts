@@ -10,7 +10,7 @@ import { DragCircle, Position, Rect } from 'LIB/interface';
 
 const circlePath: number = 10; // 手势范围 认为这个范围内就是可以使用新手势
 
-interface arrow {
+interface Iarrow {
     rect?: Rect;
     circles: DragCircle[];
     lines: Position[];
@@ -22,7 +22,7 @@ interface arrow {
  * default class
  */
 export default class SArrow extends Content {
-    public property: arrow;
+    public property: Iarrow;
     private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
@@ -61,7 +61,7 @@ export default class SArrow extends Content {
     }
 
     public inBoxBorder(x: number, y: number): boolean {
-        return pointInArea(this.property.lines, { x, y });
+        return !!pointInArea(this.property.lines, { x, y });
     }
 
     public draw(): void {
@@ -134,14 +134,14 @@ export default class SArrow extends Content {
                 x: this.property.rect.startX - circlePath * minuX,
                 y: this.property.rect.startY - circlePath * minuY,
             },
-            // P3,
+            // p3,
             P1,
             {
                 x: this.property.rect.endX + circlePath * minuX,
                 y: this.property.rect.endY + circlePath * minuY,
             },
             P2,
-            // P4,
+            // p4,
         ];
         this.ctx.save();
         this.ctx.beginPath();

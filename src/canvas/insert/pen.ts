@@ -7,14 +7,17 @@ import Mouse from 'INSERT/mouse-pen';
 import { pointInLine } from 'LIB/geometric';
 import { Position } from 'LIB/interface';
 
-interface pen {
+interface Ipen {
     lines: Position[];
     color: string;
     lineWidth: number;
 }
 
+/**
+ * default class
+ */
 export default class SPen extends Content {
-    public property: pen;
+    public property: Ipen;
     private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
@@ -37,7 +40,7 @@ export default class SPen extends Content {
     }
 
     public getCursor(e: MouseEvent): string {
-        let result = 'crosshair';
+        let result: string = 'crosshair';
         if (this.inBoxBorder(e.clientX, e.clientY)) {
             result = 'all-scroll';
         }
@@ -71,7 +74,7 @@ export default class SPen extends Content {
         config.emitter.on('mouseup', this.mouseUp);
     }
 
-    public addPosition(pos: Position, isDraw = false): void {
+    public addPosition(pos: Position, isDraw: boolean = false): void {
         this.property.lines.push(pos);
 
         if (isDraw) {
@@ -80,7 +83,7 @@ export default class SPen extends Content {
     }
 
     public move(x: number, y: number): void {
-        for (let i of this.property.lines) {
+        for (const i of this.property.lines) {
             i.x += x;
             i.y += y;
         }
@@ -99,7 +102,7 @@ export default class SPen extends Content {
             this.property.lines[0].y * config.rate,
         );
 
-        for (let i = 1; i < this.property.lines.length; i++) {
+        for (let i: number = 1; i < this.property.lines.length; i = i + 1) {
             this.ctx.lineTo(
                 this.property.lines[i].x * config.rate,
                 this.property.lines[i].y * config.rate,

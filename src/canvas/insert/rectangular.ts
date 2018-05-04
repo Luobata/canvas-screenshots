@@ -7,7 +7,7 @@ import Mouse from 'INSERT/mouse-rectangular';
 import { getCircleMap, IcircleMap } from 'LIB/help';
 import { DragCircle, Rect } from 'LIB/interface';
 
-interface rectangular {
+interface Irectangular {
     rect?: Rect;
     circles?: DragCircle[];
     isStroke: boolean; // 是否是是空心的
@@ -21,7 +21,7 @@ interface rectangular {
  * default class
  */
 export default class SRectangular extends Content {
-    public property: rectangular;
+    public property: Irectangular;
     private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
@@ -108,7 +108,7 @@ export default class SRectangular extends Content {
             );
         };
 
-        return inRow() || inColumn();
+        return !!(inRow() || inColumn());
     }
 
     public draw(): void {

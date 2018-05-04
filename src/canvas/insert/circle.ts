@@ -8,7 +8,7 @@ import { pointInRectangular } from 'LIB/geometric';
 import { getCircleMap, IcircleMap } from 'LIB/help';
 import { Circle, DragCircle, Position, Rect } from 'LIB/interface';
 
-interface circle {
+interface Icircle {
     rect?: Rect;
     circles?: DragCircle[];
     color: string;
@@ -22,7 +22,7 @@ interface circle {
  * default class
  */
 export default class SCircle extends Content {
-    public property: circle;
+    public property: Icircle;
     private mouse: Mouse;
 
     constructor(ctx: CanvasRenderingContext2D, color: string) {
@@ -123,13 +123,13 @@ export default class SCircle extends Content {
                 y: positionY,
             };
 
-            return (
+            return !!(
                 !pointInRectangular(p1, p2, p3, p4, p) &&
                 pointInRectangular(P1, P2, P3, P4, p)
             );
         };
 
-        return inCircle() || inBorder();
+        return !!(inCircle() || inBorder());
     }
 
     public event(): void {

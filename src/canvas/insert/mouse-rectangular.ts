@@ -8,7 +8,7 @@ let timer: number = new Date().getTime();
 const tick: number = 300; // 点击间隔 小于该值认为属于连续点击
 
 /**
- * @default class
+ * default class
  */
 export default class Mouse {
     public box: Box;

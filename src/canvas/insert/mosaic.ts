@@ -5,14 +5,17 @@ import { config, inBox } from 'Canvas/config';
 import Content from 'INSERT/content';
 import { Position } from 'LIB/interface';
 
-interface mosaic {
+interface Imosaic {
     lines: Position[];
     width: number; // 单个马赛克大小
     num: number; // 一次操作生成马赛克数量(一个方向上)
 }
 
+/**
+ * default class
+ */
 export default class SMosaic extends Content {
-    public property: mosaic;
+    public property: Imosaic;
     private transctx: CanvasRenderingContext2D;
 
     constructor(
@@ -32,7 +35,7 @@ export default class SMosaic extends Content {
         };
     }
 
-    public addPosition(pos: Position, isDraw = false): void {
+    public addPosition(pos: Position, isDraw: boolean = false): void {
         this.property.lines.push(pos);
 
         if (isDraw) {
@@ -79,7 +82,7 @@ export default class SMosaic extends Content {
         for (const i of this.property.lines) {
             // 遍历所有点
             for (
-                let x =
+                let x: number =
                     i.x * config.rate - this.property.width * this.property.num;
                 x <=
                 i.x * config.rate + this.property.width * this.property.num;
@@ -98,8 +101,16 @@ export default class SMosaic extends Content {
                     let g: number = 0;
                     let b: number = 0;
                     const total: number = Math.pow(this.property.width + 1, 2);
-                    for (let j: number = 0; j <= this.property.width; j++) {
-                        for (let k: number = 0; k <= this.property.width; k++) {
+                    for (
+                        let j: number = 0;
+                        j <= this.property.width;
+                        j = j + 1
+                    ) {
+                        for (
+                            let k: number = 0;
+                            k <= this.property.width;
+                            k = k + 1
+                        ) {
                             const pX: number =
                                 x + j - config.boxRect.startX * config.rate;
                             const pY: number =
@@ -119,8 +130,16 @@ export default class SMosaic extends Content {
                     r = r / total;
                     g = g / total;
                     b = b / total;
-                    for (let j: number = 0; j <= this.property.width; j++) {
-                        for (let k: number = 0; k <= this.property.width; k++) {
+                    for (
+                        let j: number = 0;
+                        j <= this.property.width;
+                        j = j + 1
+                    ) {
+                        for (
+                            let k: number = 0;
+                            k <= this.property.width;
+                            k = k + 1
+                        ) {
                             const pX: number =
                                 x + j - config.boxRect.startX * config.rate;
                             const pY: number =

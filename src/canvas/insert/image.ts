@@ -8,7 +8,7 @@ import { pointInRectangular } from 'LIB/geometric';
 import { getCircleMap, IcircleMap } from 'LIB/help';
 import { DragCircle, Position, Rect, Size } from 'LIB/interface';
 
-interface image {
+interface Iimage {
     position: Position;
     circles?: DragCircle[];
     lineWidth: number;
@@ -22,7 +22,7 @@ interface image {
  * default class
  */
 export default class SImage extends Content {
-    public property: image;
+    public property: Iimage;
     // file: ImageData;
     private file: HTMLImageElement;
     private mouse: Mouse;
@@ -45,10 +45,10 @@ export default class SImage extends Content {
             height,
             color: 'black',
         };
-        const offCanvas = document.createElement('canvas');
+        const offCanvas: HTMLCanvasElement = document.createElement('canvas');
         offCanvas.width = width;
         offCanvas.height = height;
-        const offCtx = offCanvas.getContext('2d');
+        const offCtx: CanvasRenderingContext2D = offCanvas.getContext('2d');
         offCtx.drawImage(file, 0, 0);
         this.file = file;
         // this.file = offCtx.getImageData(0, 0, width, height);
@@ -115,7 +115,7 @@ export default class SImage extends Content {
             y,
         };
 
-        return pointInRectangular(p1, p2, p3, p4, p);
+        return !!pointInRectangular(p1, p2, p3, p4, p);
     }
 
     public draw(): void {

@@ -20,7 +20,11 @@ const inCircle: Function = (
     );
 };
 
+/**
+ * default class Content
+ */
 export default class Content {
+    // tslint:disable no-any no-unsafe-any
     public id: number;
     public name: string;
     public isFocus: boolean; // 是否聚焦 聚焦才会展示可拖动点
@@ -35,7 +39,8 @@ export default class Content {
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.id = config.uid++;
+        this.id = config.uid;
+        config.uid = config.uid + 1;
 
         this.isFocus = true;
         this.saveArray = [];
@@ -89,7 +94,7 @@ export default class Content {
         config.emitter.emit('draw-all');
     }
 
-    public setPosition(rect: Rect, isDraw = false): void {
+    public setPosition(rect: Rect, isDraw: boolean = false): void {
         Object.assign(this.property.rect, rect);
 
         if (isDraw) {
@@ -146,7 +151,8 @@ export default class Content {
         );
     }
 
-    public inBoxBorder(positionX: number, positionY: number): void {
+    public inBoxBorder(positionX: number, positionY: number): boolean {
+        return true;
         // TODO
     }
 

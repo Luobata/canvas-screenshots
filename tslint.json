@@ -25,6 +25,7 @@
             200,
             { "ignore-parameters-to-function-regex": "describe" }
         ],
+        "align": [true, "parameters", "statements"],
         "trailing-comma": [
             true,
             {

@@ -11,7 +11,10 @@ import { isChinese } from 'LIB/reg';
 let inputDiv: HTMLDivElement;
 
 const getStrLength: Function = (str: string): number => {
-    inputDiv.innerHTML = <string>new String(str.replace(/[ ]/g, '&nbsp;'));
+    // tslint:disable no-inner-html
+    // inputDiv.innerHTML = <string>new String(str.replace(/[ ]/g, '&nbsp;'));
+    inputDiv.innerHTML = str.replace(/[ ]/g, '&nbsp;');
+    // tslint:enable no-inner-html
     let len: number = 0;
     for (const i of str) {
         len += isChinese(i) ? 2 : 1;
@@ -37,7 +40,7 @@ const getMaxStrIndex: Function = (
     return num;
 };
 
-interface property {
+interface Iproperty {
     position: Position;
     text: string;
     txts: string[];
@@ -59,7 +62,7 @@ interface property {
  * default class
  */
 export default class SText extends Content {
-    public property: property;
+    public property: Iproperty;
 
     private input: HTMLTextAreaElement;
     private inputListener: EventListener;
@@ -143,7 +146,8 @@ export default class SText extends Content {
             x,
             y,
         };
-        return pointInRectangular(p1, p2, p3, p4, p);
+
+        return !!pointInRectangular(p1, p2, p3, p4, p);
     }
 
     public getMaxCols(): void {
@@ -269,7 +273,7 @@ export default class SText extends Content {
         this.property.isEditor = true;
         this.input = <HTMLTextAreaElement>document.createElement('textArea');
         if (!inputDiv) {
-            inputDiv = <HTMLDivElement>document.createElement('div');
+            inputDiv = document.createElement('div');
             inputDiv.style.position = 'absolute';
             inputDiv.style.display = 'inline-block';
             inputDiv.style.visibility = 'hidden';
