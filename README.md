@@ -74,16 +74,6 @@ screen.start();
   arguments: error
   ```
 
-- debuggerMode
-
-  ```js
-  debugger switch.
-
-  type: boolean
-  default: false
-  required: false
-  ```
-
 - **type**
 
   ```js
