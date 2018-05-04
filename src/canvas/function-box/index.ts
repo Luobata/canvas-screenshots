@@ -58,7 +58,7 @@ export default class FunctionBox {
         const that: FunctionBox = this;
         this.items.forEach((v: HTMLElement) => {
             v.addEventListener('click', function(): void {
-                const funType: string = this.getAttribute('funType');
+                const funType: string = this.getAttribute('type');
                 logger(funType);
                 that.activeFun = funType;
                 that.wrapBox.currentFun = funType;
