@@ -27,11 +27,23 @@ export const setDebuggerData: Function = (): void => {
     }
 };
 
+export const hookDispatch: Function = (): void => {
+    const hook: any = (<any>window).__DATA_DEBUGGER_DEVTOOLS_GLOBAL_HOOK__;
+    if (!hook) {
+        return;
+    }
+    hook.refresh();
+};
+
 export const addDebuggerData: Function = (obj: Con): void => {
     const item: Con = getPlainObj(obj);
-    if (!debuggerData.find((v: Con) => v.id === item.id)) {
+    let fItem: Con = debuggerData.find((v: Con) => v.id === item.id);
+    if (!fItem) {
         debuggerData.push(item);
+    } else {
+        fItem = obj;
     }
+    hookDispatch();
 };
 
 export const deleteDebuggerData: Function = (obj: Con): void => {
