@@ -25,6 +25,7 @@ const activeBox: string[] = [
 /**
  * default class
  */
+// tslint:disable no-this-assignment
 export default class FunctionBox {
     public box: HTMLDivElement;
     public wrapBox: Box;
@@ -40,55 +41,63 @@ export default class FunctionBox {
     }
 
     public event(): void {
-        const items = this.box.querySelectorAll('.box-item');
-        const childWrap = this.box.querySelector(
+        const items: NodeListOf<Element> = this.box.querySelectorAll(
+            '.box-item',
+        );
+        const childWrap: HTMLElement = this.box.querySelector(
             '.function-box-child',
-        ) as HTMLElement;
-        const colorWrap = this.box.querySelector('.color-wrap') as HTMLElement;
-        const colorItem = colorWrap.querySelectorAll('.color-item');
+        );
+        const colorWrap: HTMLElement = this.box.querySelector('.color-wrap');
+        const colorItem: NodeListOf<Element> = colorWrap.querySelectorAll(
+            '.color-item',
+        );
+        // tslint:disable no-unsafe-any
         this.items = Array.prototype.slice.call(items);
         this.colorItems = Array.prototype.slice.call(colorItem);
-        const that = this;
+        // tslint:enable no-unsafe-any
+        const that: FunctionBox = this;
         this.items.forEach((v: HTMLElement) => {
-            v.addEventListener('click', function() {
-                const type = this.getAttribute('type');
-                logger(type);
-                that.activeFun = type;
-                that.wrapBox.currentFun = type;
-                that.items.forEach((v: HTMLElement, i: number) => {
+            v.addEventListener('click', function(): void {
+                const funType: string = this.getAttribute('funType');
+                logger(funType);
+                that.activeFun = funType;
+                that.wrapBox.currentFun = funType;
+                that.items.forEach((vi: HTMLElement, i: number) => {
                     items[i].className = items[i].className.replace(
                         'active',
                         '',
                     );
                 });
-                if (activeBox.indexOf(type) !== -1) {
+                if (activeBox.indexOf(funType) !== -1) {
                     this.className += ' active';
                 }
-                if (childBoxContent.indexOf(type) !== -1) {
+                if (childBoxContent.indexOf(funType) !== -1) {
                     childWrap.style.display = 'inline-block';
                 } else {
                     childWrap.style.display = 'none';
                 }
-                if (type === 'back') {
+                if (funType === 'back') {
                     that.wrapBox.back();
                 }
-                if (type === 'close') {
+                if (funType === 'close') {
                     config.emitter.emit('destoryed');
                 }
-                if (type === 'image') {
+                if (funType === 'image') {
                     // that.wrapBox.uploadImage();
                 }
-                if (type === 'save') {
+                if (funType === 'save') {
                     config.emitter.emit('shot');
                 }
                 config.emitter.emit('blur');
             });
         });
         if (config.plugins.indexOf('image') !== -1) {
-            const uploadIcon = this.items.find((v: HTMLElement) => {
-                return v.getAttribute('type') === 'image';
-            });
-            const input = uploadIcon.querySelector('input');
+            const uploadIcon: HTMLElement = this.items.find(
+                (v: HTMLElement) => {
+                    return v.getAttribute('type') === 'image';
+                },
+            );
+            const input: HTMLInputElement = uploadIcon.querySelector('input');
             uploadIcon.addEventListener('change', (e: Event) => {
                 this.wrapBox.uploadImage(e);
             });
@@ -98,8 +107,8 @@ export default class FunctionBox {
         }
 
         this.colorItems.forEach((v: HTMLElement) => {
-            v.addEventListener('click', function() {
-                domEach(colorItem, (v: HTMLElement, i: number) => {
+            v.addEventListener('click', function(): void {
+                domEach(colorItem, (vi: HTMLElement, i: number) => {
                     colorItem[i].className = colorItem[i].className.replace(
                         'active',
                         '',
@@ -123,11 +132,11 @@ export default class FunctionBox {
         });
     }
 
-    setColor(color: string) {
+    public setColor(color: string): void {
         logger(color);
         this.activeColor = color;
         this.colorItems.forEach((v: HTMLElement, i: number) => {
-            const item = this.colorItems[i];
+            const item: HTMLElement = this.colorItems[i];
             item.className = item.className.replace('active', '');
             if (item.getAttribute('color') === color) {
                 item.className += 'active';
@@ -135,7 +144,7 @@ export default class FunctionBox {
         });
     }
 
-    remove() {
+    public remove(): void {
         this.box.remove();
     }
 }
