@@ -32,7 +32,7 @@ export default class SPen extends Content {
     }
 
     public inBoxBorder(x: number, y: number): boolean {
-        return pointInLine(
+        return !!pointInLine(
             this.property.lines,
             { x, y },
             this.property.lineWidth + 10,

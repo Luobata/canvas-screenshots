@@ -65,7 +65,9 @@ export default class SArrow extends Content {
     }
 
     public draw(): void {
-        const circleMap: IcircleMap[] = getArrowCircleMap(this.property.rect);
+        const circleMap: IcircleMap[] = <IcircleMap[]>getArrowCircleMap(
+            this.property.rect,
+        );
         this.property.circles = circleMap;
 
         const lineWid: number = Math.sqrt(

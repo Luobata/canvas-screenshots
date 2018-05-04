@@ -112,7 +112,7 @@ export default class SRectangular extends Content {
     }
 
     public draw(): void {
-        const circleMap: IcircleMap[] = getCircleMap(
+        const circleMap: IcircleMap[] = <IcircleMap[]>getCircleMap(
             this.property.rect,
             this.property.lineWidth,
         );

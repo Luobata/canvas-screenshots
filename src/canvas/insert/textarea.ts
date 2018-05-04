@@ -30,7 +30,7 @@ const getMaxStrIndex: Function = (
 ): number => {
     let num: number = 0;
     for (let i: number = begin; i <= str.length; i = i + 1) {
-        if (getStrLength(str.slice(begin, i)) <= max) {
+        if (<number>getStrLength(str.slice(begin, i)) <= max) {
             num = i - begin;
         } else {
             break;
@@ -239,7 +239,7 @@ export default class SText extends Content {
         const cols: string[] = [];
         let maxCols: number = 0;
         for (const i of rows) {
-            const length: number = getStrLength(i);
+            const length: number = <number>getStrLength(i);
             // logger(length);
             if (length > maxCols) {
                 maxCols =
@@ -251,7 +251,7 @@ export default class SText extends Content {
                     let k: number = 0;
                     let j: number = 0;
                     while (k < i.length) {
-                        j = getMaxStrIndex(i, k, this.property.maxCols);
+                        j = <number>getMaxStrIndex(i, k, this.property.maxCols);
                         const strObj: string = i.substr(k, j);
                         cols.push(strObj);
                         k += j;
@@ -323,11 +323,13 @@ export default class SText extends Content {
             if (this.property.text === '') {
                 this.destroyed();
             } else {
+                // tslint:disable
                 if (
                     !this.saveArray.length ||
                     this.property.text !==
                         this.saveArray[this.saveArray.length - 1].text
                 ) {
+                    // tslint:enable
                     this.save();
                     config.emitter.emit('addSave', this);
                 }
@@ -352,7 +354,7 @@ export default class SText extends Content {
         const size: string = `${(
             parseInt(this.property.fontSize, 10) * config.rate
         ).toString()}px`;
-        const lineHeight: number = getLineHeight();
+        const lineHeight: number = <number>getLineHeight();
         // const fixMargin = config.platform === 'windows' ? 1 : -1;
         const fixMargin: number = 1;
         this.ctx.save();

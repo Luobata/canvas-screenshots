@@ -157,7 +157,7 @@ export default class SCircle extends Content {
     public draw(): void {
         const minuX: number = -1;
         const minuY: number = -1;
-        const propertyMap: IcircleMap[] = getCircleMap(
+        const propertyMap: IcircleMap[] = <IcircleMap[]>getCircleMap(
             this.property.rect,
             this.property.borderWidth,
         );

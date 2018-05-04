@@ -566,7 +566,10 @@ export default class Box {
                 config.rate,
         );
 
-        const circleMap: DragCircle[] = getCircleMap(this.rect, this.lineWidth);
+        const circleMap: DragCircle[] = <DragCircle[]>getCircleMap(
+            this.rect,
+            this.lineWidth,
+        );
         this.circles = circleMap;
 
         for (const i of circleMap) {

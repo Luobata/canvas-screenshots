@@ -125,7 +125,7 @@ export default class SImage extends Content {
             endX: this.property.position.x + this.property.width,
             endY: this.property.position.y + this.property.height,
         };
-        const circleMap: IcircleMap[] = getCircleMap(
+        const circleMap: IcircleMap[] = <IcircleMap[]>getCircleMap(
             rect,
             this.property.lineWidth,
         );
