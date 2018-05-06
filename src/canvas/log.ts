@@ -32,7 +32,7 @@ export const hookDispatch: Function = (): void => {
     if (!config.debuggerMode || !hook) {
         return;
     }
-    hook.refresh();
+    hook.emit('refresh');
 };
 
 export const addDebuggerData: Function = (obj: Con): void => {
