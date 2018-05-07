@@ -18,6 +18,7 @@ export default function log(...args: any[]): void {
 
 type Con = Content | sContent;
 const debuggerData: Con[] = [];
+const hook: any = (<any>window).__DATA_DEBUGGER_DEVTOOLS_GLOBAL_HOOK__;
 export const setDebuggerData: Function = (): void => {
     if (config.debuggerMode) {
         if ((<any>window).__Canvas_Screen_Data) {
@@ -27,8 +28,11 @@ export const setDebuggerData: Function = (): void => {
     }
 };
 
+export const hookInstall: Function = (): void => {
+    hook.emit('install');
+};
+
 export const hookDispatch: Function = (): void => {
-    const hook: any = (<any>window).__DATA_DEBUGGER_DEVTOOLS_GLOBAL_HOOK__;
     if (!config.debuggerMode || !hook) {
         return;
     }

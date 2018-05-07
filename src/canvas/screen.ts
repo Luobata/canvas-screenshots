@@ -4,7 +4,7 @@
 import box from 'Canvas/box';
 import { config, setConfig } from 'Canvas/config';
 import functionBox from 'Canvas/function-box/function-box';
-import log, { setDebuggerData } from 'Canvas/log';
+import log, { hookInstall, setDebuggerData } from 'Canvas/log';
 import { Emitter } from 'event-emitter';
 import { Config, PluginType } from 'LIB/interface';
 
@@ -77,6 +77,7 @@ export default class Screen {
             debuggerMode: conf.debuggerMode || false,
             type: conf.outputType || 'imageData',
         });
+        hookInstall();
         setDebuggerData();
     }
 
