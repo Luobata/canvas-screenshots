@@ -536,14 +536,14 @@ export default class Box {
             frame = this.paintList.slice(0, 1)[0];
             this.ctx.drawImage(
                 frame,
-                this.rect.startX,
-                this.rect.startY,
-                this.rect.endX - this.rect.startX,
-                this.rect.endY - this.rect.startY,
-                this.rect.startX,
-                this.rect.startY,
-                this.rect.endX - this.rect.startX,
-                this.rect.endY - this.rect.startY,
+                config.rate * this.rect.startX,
+                config.rate * this.rect.startY,
+                config.rate * (this.rect.endX - this.rect.startX),
+                config.rate * (this.rect.endY - this.rect.startY),
+                config.rate * this.rect.startX,
+                config.rate * this.rect.startY,
+                config.rate * (this.rect.endX - this.rect.startX),
+                config.rate * (this.rect.endY - this.rect.startY),
             );
             this.paintList.shift();
             if (this.paintList.length) {
