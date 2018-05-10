@@ -100,6 +100,7 @@ export default class FunctionBox {
             const input: HTMLInputElement = uploadIcon.querySelector('input');
             uploadIcon.addEventListener('change', (e: Event) => {
                 this.wrapBox.uploadImage(e);
+                input.value = '';
             });
             config.emitter.on('image-fail', () => {
                 input.value = '';
