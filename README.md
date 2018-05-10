@@ -1,6 +1,6 @@
 # canvas-screenshots
 
-canvas-screenshots is a useful screenshots tools on your website created by canvas.The behavior is similar with your Pc clients like wechat or QQ.
+canvas-screenshots is a useful screenshots tools on your website created by canvas.The behavior is similar with your PC clients like wechat or QQ.
 
 ## Installation
 
@@ -41,48 +41,48 @@ screen.start();
 
 ## Config
 
-- **plugins**
+*   **plugins**
 
-  ```js
-  The switch to each function.
+    ```js
+    The switch to each function.
 
-  type: Array<pluginType> 
-  pluginType: 'rectangular' || 'circle' || 'arrow' || 'pen' || 'text' || 'mosaic' || 'image' || 'back'
-  default: Array<all pluginType>
-  required: false
-  ```
+    type: Array<pluginType>
+    pluginType: 'rectangular' || 'circle' || 'arrow' || 'pen' || 'text' || 'mosaic' || 'image' || 'back'
+    default: Array<all pluginType>
+    required: false
+    ```
 
-- **download**
+*   **download**
 
-  ```js
-  Trigger when click the download button, the type of output data will be decided by config type.
+    ```js
+    Trigger when click the download button, the type of output data will be decided by config type.
 
-  type: Function
-  default: noop function
-  required: true
-  arguments: data
-  ```
+    type: Function
+    default: noop function
+    required: true
+    arguments: data
+    ```
 
-- **imageFail**
+*   **imageFail**
 
-  ```js
-  Trigger when choose a image but not match the expected.
+    ```js
+    Trigger when choose a image but not match the expected.
 
-  type: Function
-  default: noop function
-  required: false
-  arguments: error
-  ```
+    type: Function
+    default: noop function
+    required: false
+    arguments: error
+    ```
 
-- **type**
+*   **type**
 
-  ```js
-  The output type with download.
+    ```js
+    The output type with download.
 
-  type: string('imageData' || 'png')
-  default: 'imageData'
-  required: false
-  ```
+    type: string('imageData' || 'png')
+    default: 'imageData'
+    required: false
+    ```
 
 ## Surrported browsers
 
