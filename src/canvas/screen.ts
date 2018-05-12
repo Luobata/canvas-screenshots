@@ -172,6 +172,7 @@ export default class Screen {
             if (this.show) {
                 // TODO resize box bug
                 this.destroyed();
+                config.emitter.emit('destoryed');
                 // this.resize();
             }
         });
