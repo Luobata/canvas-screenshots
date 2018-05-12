@@ -29,7 +29,9 @@ export const setDebuggerData: Function = (): void => {
 };
 
 export const hookInstall: Function = (): void => {
-    hook.emit('install');
+    if (hook) {
+        hook.emit('install');
+    }
 };
 
 export const hookDispatch: Function = (): void => {
