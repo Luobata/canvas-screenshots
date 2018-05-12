@@ -209,6 +209,7 @@ export default class Box {
                         width,
                         height,
                     );
+                    image.save();
                     this.content.add(image);
                     this.childSaveArray.push(image);
                     config.emitter.emit('draw-all');
