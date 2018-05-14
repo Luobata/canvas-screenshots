@@ -6,6 +6,7 @@ import { config, setConfig } from 'Canvas/config';
 import functionBox from 'Canvas/function-box/function-box';
 import log, { hookInstall, setDebuggerData } from 'Canvas/log';
 import { Emitter } from 'event-emitter';
+import blob from 'LIB/blob';
 import { Config, PluginType } from 'LIB/interface';
 
 // tslint:disable
@@ -320,6 +321,14 @@ export default class Screen {
             tmpCanvas.getContext('2d').putImageData(data, 0, 0);
             image.src = tmpCanvas.toDataURL('image/png');
             this.config.download.call(null, image);
+        } else if (config.outputType === 'file') {
+            const tmpCanvas: HTMLCanvasElement = document.createElement(
+                'canvas',
+            );
+            tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
+            tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
+            tmpCanvas.getContext('2d').putImageData(data, 0, 0);
+            blob(tmpCanvas.toDataURL('image/png'));
         }
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
