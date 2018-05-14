@@ -70,7 +70,7 @@ export interface Config {
     outputType?: Type;
 }
 
-export type Type = 'imageData' | 'png';
+export type Type = 'imageData' | 'png' | 'file';
 
 export type Content = Rectangular | cCircle | Arrow | Pen | Text | ImageInsert;
 export type sContent = Mosaic;

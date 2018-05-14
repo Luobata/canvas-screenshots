@@ -76,7 +76,7 @@ export default class Screen {
             rate: window.devicePixelRatio,
             plugins: conf.plugins,
             debuggerMode: conf.debuggerMode || false,
-            type: conf.outputType || 'imageData',
+            outputType: conf.outputType || 'imageData',
         });
         hookInstall();
         setDebuggerData();
@@ -328,7 +328,11 @@ export default class Screen {
             tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
             tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
             tmpCanvas.getContext('2d').putImageData(data, 0, 0);
-            blob(tmpCanvas.toDataURL('image/png'));
+
+            this.config.download.call(
+                null,
+                blob(tmpCanvas.toDataURL('image/png')),
+            );
         }
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
