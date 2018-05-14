@@ -74,12 +74,12 @@ screen.start();
     arguments: error
     ```
 
-*   **type**
+*   **outputType**
 
     ```js
     The output type with download.
 
-    type: string('imageData' || 'png')
+    type: string('imageData' || 'png' || 'file')
     default: 'imageData'
     required: false
     ```
