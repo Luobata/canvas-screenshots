@@ -20,7 +20,7 @@ window.onload = () => {
         },
         debuggerMode: true,
         // type: 'png',
-        outputType: 'file',
+        outputType: 'png',
     });
     screen.start();
     window.xxxx = () => {
