@@ -297,6 +297,10 @@ export default class Box {
             this.childSaveArray.push(item);
         });
 
+        config.emitter.on('blurAll', (): void => {
+            this.outFocus();
+        });
+
         boxEmitter.on('shot', (): void => {
             config.emitter.emit('shot');
         });

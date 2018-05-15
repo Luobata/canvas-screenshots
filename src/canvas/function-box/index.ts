@@ -70,6 +70,7 @@ export default class FunctionBox {
                 });
                 if (activeBox.indexOf(funType) !== -1) {
                     this.className += ' active';
+                    config.emitter.emit('blurAll');
                 }
                 if (childBoxContent.indexOf(funType) !== -1) {
                     childWrap.style.display = 'inline-block';
