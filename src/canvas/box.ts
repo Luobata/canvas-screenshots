@@ -536,25 +536,25 @@ export default class Box {
         if (this.paintList.length > 1) {
             return;
         }
-        window.requestAnimationFrame(() => {
-            // 先paint 然后再出队列
-            frame = this.paintList.slice(0, 1)[0];
-            this.ctx.drawImage(
-                frame,
-                config.rate * this.rect.startX,
-                config.rate * this.rect.startY,
-                config.rate * (this.rect.endX - this.rect.startX),
-                config.rate * (this.rect.endY - this.rect.startY),
-                config.rate * this.rect.startX,
-                config.rate * this.rect.startY,
-                config.rate * (this.rect.endX - this.rect.startX),
-                config.rate * (this.rect.endY - this.rect.startY),
-            );
-            this.paintList.shift();
-            if (this.paintList.length) {
-                this.painter();
-            }
-        });
+        // window.requestAnimationFrame(() => {
+        // 先paint 然后再出队列
+        frame = this.paintList.slice(0, 1)[0];
+        this.ctx.drawImage(
+            frame,
+            config.rate * this.rect.startX,
+            config.rate * this.rect.startY,
+            config.rate * (this.rect.endX - this.rect.startX),
+            config.rate * (this.rect.endY - this.rect.startY),
+            config.rate * this.rect.startX,
+            config.rate * this.rect.startY,
+            config.rate * (this.rect.endX - this.rect.startX),
+            config.rate * (this.rect.endY - this.rect.startY),
+        );
+        this.paintList.shift();
+        if (this.paintList.length) {
+            this.painter();
+        }
+        // });
     }
 
     private drawCircle(): void {
