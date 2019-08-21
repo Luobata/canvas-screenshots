@@ -131,6 +131,8 @@ export default class Screen {
 
         if (this.config.backgroundData) {
             const tmpC: HTMLCanvasElement = document.createElement('canvas');
+            tmpC.width = width * config.rate;
+            tmpC.height = height * config.rate;
             if (isString(this.config.backgroundData)) {
                 const img: HTMLImageElement = new Image();
                 img.onload = (): void => {
@@ -138,8 +140,8 @@ export default class Screen {
                         img,
                         0,
                         0,
-                        this.body.clientWidth * config.rate,
-                        this.body.clientHeight * config.rate,
+                        // this.body.clientWidth * config.rate,
+                        // this.body.clientHeight * config.rate,
                     );
                     innerInit(tmpC);
                 };
