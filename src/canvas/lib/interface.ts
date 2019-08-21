@@ -68,7 +68,7 @@ export interface Config {
     imageFail?: Function;
     debuggerMode?: boolean;
     outputType?: Type;
-    backgroundData?: ImageData;
+    backgroundData?: ImageData | string; // string 为base64
 }
 
 export type Type = 'imageData' | 'png' | 'file';

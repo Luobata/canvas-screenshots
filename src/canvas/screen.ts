@@ -8,6 +8,7 @@ import log, { hookInstall, setDebuggerData } from 'Canvas/log';
 import { Emitter } from 'event-emitter';
 import blob from 'LIB/blob';
 import { Config, PluginType } from 'LIB/interface';
+import { isString } from 'util';
 
 // tslint:disable
 const throttle: Function = require('throttle-debounce/throttle');
@@ -128,12 +129,21 @@ export default class Screen {
 
         if (this.config.backgroundData) {
             const tmpC: HTMLCanvasElement = document.createElement('canvas');
-            tmpC.getContext('2d').putImageData(
-                this.config.backgroundData,
-                0,
-                0,
-            );
-            innerInit(tmpC);
+            if (isString(this.config.backgroundData)) {
+                const img: HTMLImageElement = new Image();
+                img.onload = (): void => {
+                    tmpC.getContext('2d').drawImage(img, 0, 0);
+                    innerInit(tmpC);
+                };
+                img.src = this.config.backgroundData;
+            } else {
+                tmpC.getContext('2d').putImageData(
+                    this.config.backgroundData,
+                    0,
+                    0,
+                );
+                innerInit(tmpC);
+            }
         }
         // tslint:disable
         html2canvas(this.body).then(
