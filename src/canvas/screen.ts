@@ -132,13 +132,23 @@ export default class Screen {
             if (isString(this.config.backgroundData)) {
                 const img: HTMLImageElement = new Image();
                 img.onload = (): void => {
-                    tmpC.getContext('2d').drawImage(img, 0, 0);
+                    tmpC.getContext('2d').drawImage(
+                        img,
+                        0,
+                        0,
+                        this.body.clientWidth * config.rate,
+                        this.body.clientHeight * config.rate,
+                    );
                     innerInit(tmpC);
                 };
                 img.src = this.config.backgroundData;
             } else {
                 tmpC.getContext('2d').putImageData(
                     this.config.backgroundData,
+                    0,
+                    0,
+                    this.body.clientWidth * config.rate,
+                    this.body.clientHeight * config.rate,
                     0,
                     0,
                 );
