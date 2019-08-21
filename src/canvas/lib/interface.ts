@@ -68,6 +68,7 @@ export interface Config {
     imageFail?: Function;
     debuggerMode?: boolean;
     outputType?: Type;
+    backgroundData?: ImageData;
 }
 
 export type Type = 'imageData' | 'png' | 'file';

@@ -114,9 +114,7 @@ export default class Screen {
         this.reset();
         this.resize();
 
-        // tslint:disable
-        html2canvas(this.body).then((canvas: HTMLCanvasElement): void => {
-            // tslint:enable
+        const innerInit: Function = (canvas: HTMLCanvasElement): void => {
             log('finished', 1);
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
@@ -126,7 +124,24 @@ export default class Screen {
             this.body.appendChild(canvas);
             this.body.appendChild(this.mask);
             fn();
-        });
+        };
+
+        if (this.config.backgroundData) {
+            const tmpC: HTMLCanvasElement = document.createElement('canvas');
+            tmpC.getContext('2d').putImageData(
+                this.config.backgroundData,
+                0,
+                0,
+            );
+            innerInit(tmpC);
+        }
+        // tslint:disable
+        html2canvas(this.body).then(
+            (canvas: HTMLCanvasElement): void => {
+                // tslint:enable
+                innerInit(canvas);
+            },
+        );
     }
 
     private reset(): void {
@@ -168,15 +183,18 @@ export default class Screen {
     private initEvent(): void {
         let hasTrajectory: boolean = false; // 移动轨迹 避免只点击没有移动的情况
         // tslint:disable
-        this.resizeListener = throttle(50, (): void => {
-            // tslint:enable
-            if (this.show) {
-                // TODO resize box bug
-                this.destroyed();
-                config.emitter.emit('destoryed');
-                // this.resize();
-            }
-        });
+        this.resizeListener = throttle(
+            50,
+            (): void => {
+                // tslint:enable
+                if (this.show) {
+                    // TODO resize box bug
+                    this.destroyed();
+                    config.emitter.emit('destoryed');
+                    // this.resize();
+                }
+            },
+        );
 
         this.mouseDownListener = (e: MouseEvent): void => {
             hasTrajectory = false;
