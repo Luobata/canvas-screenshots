@@ -144,14 +144,15 @@ export default class Screen {
                 );
                 innerInit(tmpC);
             }
+        } else {
+            // tslint:disable
+            html2canvas(this.body).then(
+                (canvas: HTMLCanvasElement): void => {
+                    // tslint:enable
+                    innerInit(canvas);
+                },
+            );
         }
-        // tslint:disable
-        html2canvas(this.body).then(
-            (canvas: HTMLCanvasElement): void => {
-                // tslint:enable
-                innerInit(canvas);
-            },
-        );
     }
 
     private reset(): void {
