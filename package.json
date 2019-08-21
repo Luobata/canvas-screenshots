@@ -1,8 +1,8 @@
 {
     "name": "canvas-screenshots",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "",
-    "main": "dist/bundle.js",
+    "main": "dist/screenShots.js",
     "scripts": {
         "build": "node build/build.js",
         "dev:test": "node build/dev-server.js",
@@ -10,7 +10,9 @@
         "tslint": "tslint -c tslint.json -r src/ -p ./tsconfig.json",
         "lint": "eslint --fix src/"
     },
-    "pre-commit": ["tslint"],
+    "pre-commit": [
+        "tslint"
+    ],
     "devDependencies": {
         "@types/html2canvas": "^0.5.35",
         "@types/node": "^9.3.0",
