@@ -376,6 +376,9 @@ export default class Screen {
                 null,
                 blob(tmpCanvas.toDataURL('image/png')),
             );
+        } else if (config.outputType === 'base64') {
+            const base64Data: string = this.offMask.toDataURL();
+            this.config.download.call(null, base64Data);
         }
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
