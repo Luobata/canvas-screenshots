@@ -377,7 +377,13 @@ export default class Screen {
                 blob(tmpCanvas.toDataURL('image/png')),
             );
         } else if (config.outputType === 'base64') {
-            const base64Data: string = this.offMask.toDataURL();
+            const tmpCanvas: HTMLCanvasElement = document.createElement(
+                'canvas',
+            );
+            tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
+            tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
+            tmpCanvas.getContext('2d').putImageData(data, 0, 0);
+            const base64Data: string = tmpCanvas.toDataURL();
             this.config.download.call(null, base64Data);
         }
         config.emitter.emit('destoryed');
