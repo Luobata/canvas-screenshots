@@ -63,6 +63,7 @@ export type PluginType =
     | 'back';
 
 export interface Config {
+    body?: HTMLElement;
     plugins?: PluginType[];
     download: Function;
     imageFail?: Function;

@@ -72,7 +72,7 @@ export default class Screen {
         ];
         // this.config = {...conf, ...plugin};
         this.config = { ...conf };
-        this.body = document.body;
+        this.body = conf.body || document.body;
         setConfig({
             rate: window.devicePixelRatio,
             plugins: conf.plugins,
@@ -160,12 +160,10 @@ export default class Screen {
             }
         } else {
             // tslint:disable
-            html2canvas(this.body).then(
-                (canvas: HTMLCanvasElement): void => {
-                    // tslint:enable
-                    innerInit(canvas);
-                },
-            );
+            html2canvas(this.body).then((canvas: HTMLCanvasElement): void => {
+                // tslint:enable
+                innerInit(canvas);
+            });
         }
     }
 
@@ -208,18 +206,15 @@ export default class Screen {
     private initEvent(): void {
         let hasTrajectory: boolean = false; // 移动轨迹 避免只点击没有移动的情况
         // tslint:disable
-        this.resizeListener = throttle(
-            50,
-            (): void => {
-                // tslint:enable
-                if (this.show) {
-                    // TODO resize box bug
-                    this.destroyed();
-                    config.emitter.emit('destoryed');
-                    // this.resize();
-                }
-            },
-        );
+        this.resizeListener = throttle(50, (): void => {
+            // tslint:enable
+            if (this.show) {
+                // TODO resize box bug
+                this.destroyed();
+                config.emitter.emit('destoryed');
+                // this.resize();
+            }
+        });
 
         this.mouseDownListener = (e: MouseEvent): void => {
             hasTrajectory = false;
