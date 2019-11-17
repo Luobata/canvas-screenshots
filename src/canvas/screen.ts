@@ -7,7 +7,7 @@ import functionBox from 'Canvas/function-box/function-box';
 import log, { hookInstall, setDebuggerData } from 'Canvas/log';
 import { Emitter } from 'event-emitter';
 import blob from 'LIB/blob';
-import { Config, PluginType } from 'LIB/interface';
+import { Config, PluginType, Rect } from 'LIB/interface';
 import { isString } from 'util';
 
 // tslint:disable
@@ -329,6 +329,7 @@ export default class Screen {
         // 开始截图
         log('begin shots');
         this.box.allBlur();
+        const rect: Rect = this.box.rect;
         const bData: ImageData = this.transMaskCtx.getImageData(
             config.boxRect.startX * config.rate,
             config.boxRect.startY * config.rate,
@@ -348,7 +349,7 @@ export default class Screen {
             (config.boxRect.endY - config.boxRect.startY) * config.rate,
         );
         if (config.outputType === 'imageData') {
-            this.config.download.call(null, data);
+            this.config.download.call(null, data, rect);
         } else if (config.outputType === 'png') {
             const image: HTMLImageElement = new Image();
             const tmpCanvas: HTMLCanvasElement = document.createElement(
@@ -358,7 +359,7 @@ export default class Screen {
             tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
             tmpCanvas.getContext('2d').putImageData(data, 0, 0);
             image.src = tmpCanvas.toDataURL('image/png');
-            this.config.download.call(null, image);
+            this.config.download.call(null, image, rect);
         } else if (config.outputType === 'file') {
             const tmpCanvas: HTMLCanvasElement = document.createElement(
                 'canvas',
@@ -370,6 +371,7 @@ export default class Screen {
             this.config.download.call(
                 null,
                 blob(tmpCanvas.toDataURL('image/png')),
+                rect,
             );
         } else if (config.outputType === 'base64') {
             const tmpCanvas: HTMLCanvasElement = document.createElement(
@@ -379,7 +381,7 @@ export default class Screen {
             tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
             tmpCanvas.getContext('2d').putImageData(data, 0, 0);
             const base64Data: string = tmpCanvas.toDataURL();
-            this.config.download.call(null, base64Data);
+            this.config.download.call(null, base64Data, rect);
         }
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
