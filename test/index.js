@@ -18,6 +18,14 @@ window.onload = () => {
         imageFail: error => {
             console.log(error);
         },
+        customerDefined: [
+            {
+                icon: 'http://shared.ydstatic.com/fanyi/login/images/qq@2x.png',
+                callback: data => {
+                    console.log(data);
+                },
+            },
+        ],
         debuggerMode: true,
         // type: 'png',
         outputType: 'png',

@@ -5,6 +5,7 @@ import Box from 'Canvas/box';
 import { config } from 'Canvas/config';
 import logger from 'Canvas/log';
 import { domEach } from 'LIB/dom';
+import { CustomerDefined } from 'LIB/interface';
 
 const childBoxContent: string[] = [
     'rectangular',
@@ -68,6 +69,15 @@ export default class FunctionBox {
                         '',
                     );
                 });
+
+                if (funType === 'customer-defined') {
+                    const cb: Function = config.customerDefined.find(
+                        (t: CustomerDefined) =>
+                            t.icon === this.getAttribute('_src'),
+                    ).callback;
+
+                    config.emitter.emit('shot', cb);
+                }
                 if (activeBox.indexOf(funType) !== -1) {
                     this.className += ' active';
                     config.emitter.emit('blurAll');

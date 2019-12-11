@@ -2,7 +2,7 @@
  * @description config
  */
 import { Emitter } from 'event-emitter';
-import { PluginType, Rect, Type } from 'LIB/interface';
+import { CustomerDefined, PluginType, Rect, Type } from 'LIB/interface';
 
 interface IConfig {
     emitter?: Emitter;
@@ -14,6 +14,7 @@ interface IConfig {
     platform?: string;
     rate?: number; // deviceRate
     plugins?: PluginType[];
+    customerDefined?: CustomerDefined[];
     debuggerMode?: boolean;
     outputType?: Type;
 }

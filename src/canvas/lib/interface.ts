@@ -62,6 +62,12 @@ export type PluginType =
     | 'image'
     | 'back';
 
+export interface CustomerDefined {
+    // url or base64
+    icon?: string;
+    callback?: Function;
+}
+
 export interface Config {
     body?: HTMLElement;
     plugins?: PluginType[];
@@ -70,6 +76,7 @@ export interface Config {
     debuggerMode?: boolean;
     outputType?: Type;
     backgroundData?: ImageData | string; // string 为base64
+    customerDefined?: CustomerDefined[];
 }
 
 export type Type = 'imageData' | 'png' | 'file';

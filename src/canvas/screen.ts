@@ -78,6 +78,7 @@ export default class Screen {
             plugins: conf.plugins,
             debuggerMode: conf.debuggerMode || false,
             outputType: conf.outputType || 'imageData',
+            customerDefined: conf.customerDefined || [],
         });
         hookInstall();
         setDebuggerData();
@@ -117,15 +118,15 @@ export default class Screen {
 
         const innerInit: Function = (canvas: HTMLCanvasElement): void => {
             log('finished', 1);
-            // canvas.height = height;
-            // canvas.width = width;
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
             this.transMask.style.position = 'fixed';
             this.transMask.style.top = '0';
             this.transMask.style.left = '0';
-            this.transMask.style.width = `${canvas.width}px`;
-            this.transMask.style.height = `${canvas.height}px`;
+            this.transMask.style.width =
+                canvas.style.width || `${canvas.width}px`;
+            this.transMask.style.height =
+                canvas.style.height || `${canvas.height}px`;
             this.body.appendChild(canvas);
             this.body.appendChild(this.mask);
             fn();
@@ -164,6 +165,8 @@ export default class Screen {
             // tslint:disable
             html2canvas(this.body).then((canvas: HTMLCanvasElement): void => {
                 // tslint:enable
+                canvas.style.width = `${canvas.width / config.rate}px`;
+                canvas.style.height = `${canvas.height / config.rate}px`;
                 innerInit(canvas);
             });
         }
@@ -274,8 +277,8 @@ export default class Screen {
             this.destroyed();
         };
 
-        this.shotListener = (): void => {
-            this.screenShots();
+        this.shotListener = (data?: Function): void => {
+            this.screenShots(data);
         };
 
         this.blurListener = (): void => {
@@ -327,7 +330,8 @@ export default class Screen {
         this.globaldraw();
     }
 
-    private screenShots(): void {
+    private screenShots(cb?: Function): void {
+        const fn: Function = cb || this.config.download;
         // 开始截图
         log('begin shots');
         this.box.allBlur();
@@ -350,40 +354,29 @@ export default class Screen {
             (config.boxRect.endX - config.boxRect.startX) * config.rate,
             (config.boxRect.endY - config.boxRect.startY) * config.rate,
         );
+        const tmpCanvas: HTMLCanvasElement = document.createElement('canvas');
+        tmpCanvas.style.width = `${config.boxRect.endX -
+            config.boxRect.startX}px`;
+        tmpCanvas.style.height = `${config.boxRect.endY -
+            config.boxRect.startY}px`;
+        tmpCanvas.width =
+            (config.boxRect.endX - config.boxRect.startX) * config.rate;
+        tmpCanvas.height =
+            (config.boxRect.endY - config.boxRect.startY) * config.rate;
+        tmpCanvas.getContext('2d').putImageData(data, 0, 0);
         if (config.outputType === 'imageData') {
-            this.config.download.call(null, data, rect);
+            fn.call(null, data, rect);
         } else if (config.outputType === 'png') {
             const image: HTMLImageElement = new Image();
-            const tmpCanvas: HTMLCanvasElement = document.createElement(
-                'canvas',
-            );
-            tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
-            tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
-            tmpCanvas.getContext('2d').putImageData(data, 0, 0);
+            image.width = config.boxRect.endX - config.boxRect.startX;
+            image.height = config.boxRect.endY - config.boxRect.startY;
             image.src = tmpCanvas.toDataURL('image/png');
-            this.config.download.call(null, image, rect);
+            fn.call(null, image, rect);
         } else if (config.outputType === 'file') {
-            const tmpCanvas: HTMLCanvasElement = document.createElement(
-                'canvas',
-            );
-            tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
-            tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
-            tmpCanvas.getContext('2d').putImageData(data, 0, 0);
-
-            this.config.download.call(
-                null,
-                blob(tmpCanvas.toDataURL('image/png')),
-                rect,
-            );
+            fn.call(null, blob(tmpCanvas.toDataURL('image/png')), rect);
         } else if (config.outputType === 'base64') {
-            const tmpCanvas: HTMLCanvasElement = document.createElement(
-                'canvas',
-            );
-            tmpCanvas.width = config.boxRect.endX - config.boxRect.startX;
-            tmpCanvas.height = config.boxRect.endY - config.boxRect.startY;
-            tmpCanvas.getContext('2d').putImageData(data, 0, 0);
             const base64Data: string = tmpCanvas.toDataURL();
-            this.config.download.call(null, base64Data, rect);
+            fn.call(null, base64Data, rect);
         }
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);

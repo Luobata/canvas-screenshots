@@ -1,10 +1,14 @@
 .function-box-wrap
     .function-box
         -for(var i = 0; i < item.length; i++)
-            .box-item(class=`${prefix}-${item[i].className}` type=`${item[i].className}`)
-                .icon
-                if item[i].className === 'image'
-                    input.upload(type="file")
+            if item[i].ctype === 'customer-defined'
+                .box-item(type="customer-defined" _src=`${item[i].icon}`)
+                    img.icon(src=`${item[i].icon}`)
+            else
+                .box-item(class=`${prefix}-${item[i].className}` type=`${item[i].className}`)
+                    .icon
+                    if item[i].className === 'image'
+                        input.upload(type="file")
 .function-box-child
     .box-child.color-wrap
         .colors
