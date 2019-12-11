@@ -7,8 +7,8 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath,
     stats: {
         colors: true,
-        chunks: false
-    }
+        chunks: false,
+    },
 });
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler);
@@ -33,7 +33,7 @@ app.use(hotMiddleware);
 
 app.use('/', express.static('./asserts/'));
 // api
-var port = 9598;
+var port = 9599;
 module.exports = app.listen(port, function(err) {
     if (err) {
         console.log(err);

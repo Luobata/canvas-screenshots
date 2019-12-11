@@ -117,13 +117,15 @@ export default class Screen {
 
         const innerInit: Function = (canvas: HTMLCanvasElement): void => {
             log('finished', 1);
+            // canvas.height = height;
+            // canvas.width = width;
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
             this.transMask.style.position = 'fixed';
             this.transMask.style.top = '0';
             this.transMask.style.left = '0';
-            this.transMask.style.width = `${width}px`;
-            this.transMask.style.height = `${height}px`;
+            this.transMask.style.width = `${canvas.width}px`;
+            this.transMask.style.height = `${canvas.height}px`;
             this.body.appendChild(canvas);
             this.body.appendChild(this.mask);
             fn();
