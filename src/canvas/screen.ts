@@ -127,8 +127,8 @@ export default class Screen {
             this.transMask.style.position = 'fixed';
             this.transMask.style.top = '0';
             this.transMask.style.left = '0';
-            this.transMask.style.width = iwidth || `${canvas.width}px`;
-            this.transMask.style.height = iheight || `${canvas.height}px`;
+            this.transMask.style.width = iwidth || `${width}px`;
+            this.transMask.style.height = iheight || `${height}px`;
             this.body.appendChild(canvas);
             this.body.appendChild(this.mask);
             fn();
