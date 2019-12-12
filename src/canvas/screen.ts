@@ -116,17 +116,19 @@ export default class Screen {
         this.reset();
         this.resize();
 
-        const innerInit: Function = (canvas: HTMLCanvasElement): void => {
+        const innerInit: Function = (
+            canvas: HTMLCanvasElement,
+            iwidth?: string,
+            iheight?: string,
+        ): void => {
             log('finished', 1);
             this.transMask = canvas;
             this.transMaskCtx = canvas.getContext('2d');
             this.transMask.style.position = 'fixed';
             this.transMask.style.top = '0';
             this.transMask.style.left = '0';
-            this.transMask.style.width =
-                canvas.style.width || `${canvas.width}px`;
-            this.transMask.style.height =
-                canvas.style.height || `${canvas.height}px`;
+            this.transMask.style.width = iwidth || `${canvas.width}px`;
+            this.transMask.style.height = iheight || `${canvas.height}px`;
             this.body.appendChild(canvas);
             this.body.appendChild(this.mask);
             fn();
@@ -167,7 +169,7 @@ export default class Screen {
                 // tslint:enable
                 canvas.style.width = `${canvas.width / config.rate}px`;
                 canvas.style.height = `${canvas.height / config.rate}px`;
-                innerInit(canvas);
+                innerInit(canvas, canvas.style.width, canvas.style.height);
             });
         }
     }
