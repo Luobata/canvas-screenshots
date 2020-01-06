@@ -300,7 +300,7 @@ export default class Screen {
         window.addEventListener('resize', this.resizeListener);
         this.mask.addEventListener('mousedown', this.mouseDownListener);
         this.mask.addEventListener('mousemove', this.mouseMoveListener);
-        this.mask.addEventListener('mouseup', this.mouseUpListener);
+        document.addEventListener('mouseup', this.mouseUpListener);
         document.addEventListener('keyup', this.keyUpListener);
         emitter.on('image-fail', this.imageFailListener);
         emitter.on('draw', this.drawListener);
@@ -424,7 +424,7 @@ export default class Screen {
         config.emitter.off('draw-all', this.drawAllListener);
         this.mask.removeEventListener('mousedown', this.mouseDownListener);
         this.mask.removeEventListener('mousemove', this.mouseMoveListener);
-        this.mask.removeEventListener('mouseup', this.mouseUpListener);
+        document.removeEventListener('mouseup', this.mouseUpListener);
         document.removeEventListener('keyup', this.keyUpListener);
         emitter.off('image-fail', this.imageFailListener);
         emitter.off('draw', this.drawListener);
