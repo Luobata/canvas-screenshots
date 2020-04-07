@@ -110,7 +110,7 @@ export default class Screen {
         this.mask.style.top = '0';
         this.mask.style.left = '0';
         this.mask.style.cursor = this.cursorStyle;
-        this.mask.style.zIndex = '100';
+        this.mask.style.zIndex = '2147483647';
         this.mask.style.width = `${width}px`;
         this.mask.style.height = `${height}px`;
         this.reset();
@@ -268,6 +268,10 @@ export default class Screen {
         };
 
         this.keyUpListener = (e: KeyboardEvent): void => {
+            if (e.keyCode === 27) {
+                this.destroyed();
+                config.emitter.emit('destoryed');
+            }
             emitter.emit('keyup', e);
         };
 
@@ -357,10 +361,12 @@ export default class Screen {
             (config.boxRect.endY - config.boxRect.startY) * config.rate,
         );
         const tmpCanvas: HTMLCanvasElement = document.createElement('canvas');
-        tmpCanvas.style.width = `${config.boxRect.endX -
-            config.boxRect.startX}px`;
-        tmpCanvas.style.height = `${config.boxRect.endY -
-            config.boxRect.startY}px`;
+        tmpCanvas.style.width = `${
+            config.boxRect.endX - config.boxRect.startX
+        }px`;
+        tmpCanvas.style.height = `${
+            config.boxRect.endY - config.boxRect.startY
+        }px`;
         tmpCanvas.width =
             (config.boxRect.endX - config.boxRect.startX) * config.rate;
         tmpCanvas.height =
