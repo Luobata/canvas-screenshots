@@ -3,7 +3,8 @@
  */
 import screen from 'Canvas/screen';
 
-module.exports = screen;
+// module.exports = screen;
+export default screen;
 // export default ScreenShoot;
 // export default () => {
 //     let screen: ScreenShoot;

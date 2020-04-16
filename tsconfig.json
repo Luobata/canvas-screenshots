@@ -1,35 +1,24 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
+        "outDir": "./typings/",
         "sourceMap": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
         "noImplicitAny": true,
         "module": "commonjs",
-        "target": "es6",
+        "target": "es2015",
         "jsx": "react",
         "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
         "moduleResolution": "node",
         "baseUrl": "./",
         "paths": {
-            "LIB/*": [
-                "src/canvas/lib/*"
-            ],
-            "INSERT/*": [
-                "src/canvas/insert/*"
-            ],
-            "FunBox/*": [
-                "src/canvas/function-box/*"
-            ],
-            "Canvas/*": [
-                "src/canvas/*"
-            ]
+            "LIB/*": ["src/canvas/lib/*"],
+            "INSERT/*": ["src/canvas/insert/*"],
+            "FunBox/*": ["src/canvas/function-box/*"],
+            "Canvas/*": ["src/canvas/*"]
         },
-        "lib": [
-            "es2015",
-            "es2017",
-            "dom"
-        ]
+        "lib": ["es2015", "es2017", "dom"]
     },
-    "include": [
-        "./src/**/*"
-    ]
+    "include": ["./src/**/*"]
 }
