@@ -426,6 +426,7 @@ export default class Screen {
         this.mask.remove();
         this.offMask.remove();
         this.transMask.remove();
+        this.show = false;
 
         config.emitter.off('draw-all', this.drawAllListener);
         this.mask.removeEventListener('mousedown', this.mouseDownListener);
@@ -438,6 +439,10 @@ export default class Screen {
         emitter.off('shot', this.shotListener);
         emitter.off('cursor-change', this.cursorChangeListener);
         emitter.off('blur', this.blurListener);
+
+        if (this.config.onClose) {
+            this.config.onClose();
+        }
     }
 
     private blur(): void {

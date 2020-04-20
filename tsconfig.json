@@ -2,11 +2,9 @@
     "compilerOptions": {
         "outDir": "./typings/",
         "sourceMap": true,
-        "declaration": true,
-        "emitDeclarationOnly": true,
         "noImplicitAny": true,
         "module": "commonjs",
-        "target": "es2015",
+        "target": "es6",
         "jsx": "react",
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
@@ -20,5 +18,5 @@
         },
         "lib": ["es2015", "es2017", "dom"]
     },
-    "include": ["./src/**/*"]
+    "include": ["./src/**/*", "test/index.d.ts"]
 }

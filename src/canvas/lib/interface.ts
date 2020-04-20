@@ -73,6 +73,7 @@ export interface Config {
     plugins?: PluginType[];
     download: Function;
     imageFail?: Function;
+    onClose?: Function;
     debuggerMode?: boolean;
     outputType?: Type;
     backgroundData?: ImageData | string; // string 为base64
