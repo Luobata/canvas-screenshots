@@ -256,8 +256,8 @@ export default class Screen {
                 this.functionBoxPos();
                 setConfig({
                     boxRect: this.box.rect,
-                    width: this.box.rect.endX - this.box.rect.startX,
-                    height: this.box.rect.endY - this.box.rect.startY,
+                    width: Math.abs(this.box.rect.endX - this.box.rect.startX),
+                    height: Math.abs(this.box.rect.endY - this.box.rect.startY),
                 });
             } else if (!this.box.hasBox()) {
                 this.box.initBox();
@@ -340,44 +340,53 @@ export default class Screen {
         const fn: Function = cb || this.config.download;
         // 开始截图
         log('begin shots');
+
+        let { startX, startY, endX, endY } = config.boxRect;
+        // tslint:disable
+        if (startX > endX) {
+            startX ^= endX; endX ^= startX; startX ^= endX;
+        }
+        if (startY > endY) {
+            startY ^= endY; endY ^= startY; startY ^= endY;
+        }
+        // tslint:enable
+        const width: number = endX - startX;
+        const height: number = endY - startY;
+        const cvsWidth: number = width * config.rate;
+        const cvsHeight: number = height * config.rate;
+
         this.box.allBlur();
         const rect: Rect = this.box.rect;
         const bData: ImageData = this.transMaskCtx.getImageData(
-            config.boxRect.startX * config.rate,
-            config.boxRect.startY * config.rate,
-            (config.boxRect.endX - config.boxRect.startX) * config.rate,
-            (config.boxRect.endY - config.boxRect.startY) * config.rate,
+            startX * config.rate,
+            startY * config.rate,
+            cvsWidth,
+            cvsHeight,
         );
         this.offMaskCtx.putImageData(
             bData,
-            config.boxRect.startX * config.rate,
-            config.boxRect.startY * config.rate,
+            startX * config.rate,
+            startY * config.rate,
         );
         this.box.getData();
         const data: ImageData = this.offMaskCtx.getImageData(
-            config.boxRect.startX * config.rate,
-            config.boxRect.startY * config.rate,
-            (config.boxRect.endX - config.boxRect.startX) * config.rate,
-            (config.boxRect.endY - config.boxRect.startY) * config.rate,
+            startX * config.rate,
+            startY * config.rate,
+            cvsWidth,
+            cvsHeight,
         );
         const tmpCanvas: HTMLCanvasElement = document.createElement('canvas');
-        tmpCanvas.style.width = `${
-            config.boxRect.endX - config.boxRect.startX
-        }px`;
-        tmpCanvas.style.height = `${
-            config.boxRect.endY - config.boxRect.startY
-        }px`;
-        tmpCanvas.width =
-            (config.boxRect.endX - config.boxRect.startX) * config.rate;
-        tmpCanvas.height =
-            (config.boxRect.endY - config.boxRect.startY) * config.rate;
+        tmpCanvas.style.width = `${width}px`;
+        tmpCanvas.style.height = `${height}px`;
+        tmpCanvas.width = cvsWidth;
+        tmpCanvas.height = cvsHeight;
         tmpCanvas.getContext('2d').putImageData(data, 0, 0);
         if (config.outputType === 'imageData') {
             fn.call(null, data, rect);
         } else if (config.outputType === 'png') {
             const image: HTMLImageElement = new Image();
-            image.width = config.boxRect.endX - config.boxRect.startX;
-            image.height = config.boxRect.endY - config.boxRect.startY;
+            image.width = width;
+            image.height = height;
             image.src = tmpCanvas.toDataURL('image/png');
             fn.call(null, image, rect);
         } else if (config.outputType === 'file') {

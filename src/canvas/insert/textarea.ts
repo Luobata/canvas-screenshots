@@ -154,7 +154,7 @@ export default class SText extends Content {
         setTimeout(() => {
             // 20 = padding-left + paddin-right
             const num: number =
-                config.boxRect.endX - this.property.position.x - 20;
+                Math.max(config.boxRect.startX, config.boxRect.endX) - this.property.position.x - 20;
             this.property.maxCols = num;
         }, 0);
     }
