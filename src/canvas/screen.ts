@@ -103,8 +103,10 @@ export default class Screen {
     }
 
     private initBackGround(fn: Function): void {
-        const width: number = this.body.clientWidth;
-        const height: number = this.body.clientHeight;
+        // const width: number = this.body.clientWidth;
+        // const height: number = this.body.clientHeight;
+        const width: number = window.innerWidth;
+        const height: number = window.innerHeight;
 
         this.mask.style.position = 'fixed';
         this.mask.style.top = '0';
@@ -344,10 +346,14 @@ export default class Screen {
         let { startX, startY, endX, endY } = config.boxRect;
         // tslint:disable
         if (startX > endX) {
-            startX ^= endX; endX ^= startX; startX ^= endX;
+            startX ^= endX;
+            endX ^= startX;
+            startX ^= endX;
         }
         if (startY > endY) {
-            startY ^= endY; endY ^= startY; startY ^= endY;
+            startY ^= endY;
+            endY ^= startY;
+            startY ^= endY;
         }
         // tslint:enable
         const width: number = endX - startX;
