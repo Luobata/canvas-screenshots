@@ -1,6 +1,6 @@
 {
     "name": "canvas-screenshots",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "",
     "main": "dist/screenShots.js",
     "scripts": {
