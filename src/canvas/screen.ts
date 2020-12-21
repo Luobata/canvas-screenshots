@@ -158,8 +158,8 @@ export default class Screen {
                     this.config.backgroundData,
                     0,
                     0,
-                    this.body.clientWidth * config.rate,
-                    this.body.clientHeight * config.rate,
+                    window.innerWidth * config.rate,
+                    window.innerHeight * config.rate,
                     0,
                     0,
                 );
@@ -177,8 +177,10 @@ export default class Screen {
     }
 
     private reset(): void {
-        const width: number = this.body.clientWidth * config.rate;
-        const height: number = this.body.clientHeight * config.rate;
+        // const width: number = this.body.clientWidth * config.rate;
+        // const height: number = this.body.clientHeight * config.rate;
+        const width: number = window.innerWidth;
+        const height: number = window.innerHeight;
         this.mask.width = width;
         this.mask.height = height;
 
@@ -188,8 +190,10 @@ export default class Screen {
 
     private resize(): void {
         // TODO 防抖
-        const width: number = this.body.clientWidth * config.rate;
-        const height: number = this.body.clientHeight * config.rate;
+        // const width: number = this.body.clientWidth * config.rate;
+        // const height: number = this.body.clientHeight * config.rate;
+        const width: number = window.innerWidth;
+        const height: number = window.innerHeight;
 
         // this.reset();
 
