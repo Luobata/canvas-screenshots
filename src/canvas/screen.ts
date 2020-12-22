@@ -179,8 +179,8 @@ export default class Screen {
     private reset(): void {
         // const width: number = this.body.clientWidth * config.rate;
         // const height: number = this.body.clientHeight * config.rate;
-        const width: number = window.innerWidth;
-        const height: number = window.innerHeight;
+        const width: number = window.innerWidth * config.rate;
+        const height: number = window.innerHeight * config.rate;
         this.mask.width = width;
         this.mask.height = height;
 
@@ -192,8 +192,8 @@ export default class Screen {
         // TODO 防抖
         // const width: number = this.body.clientWidth * config.rate;
         // const height: number = this.body.clientHeight * config.rate;
-        const width: number = window.innerWidth;
-        const height: number = window.innerHeight;
+        const width: number = window.innerWidth * config.rate;
+        const height: number = window.innerHeight * config.rate;
 
         // this.reset();
 
