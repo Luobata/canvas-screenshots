@@ -10,10 +10,23 @@ window.onload = () => {
     // console.log(ScreenShoot);
     screen = new ScreenShoot({
         // plugins: ['rectangular', 'circle'],
-        download: (data) => {
-            console.log(data);
-            document.getElementById('back').remove();
-            document.body.append(data);
+        noBackground: true,
+        download: (data, rect) => {
+            console.log(rect);
+            if (data.x) {
+                const ctx = data.actionCtx;
+                const imagedata = ctx.getImageData(
+                    data.x,
+                    data.y,
+                    data.width,
+                    data.height,
+                );
+                console.log(imagedata);
+            } else {
+                console.log(data);
+                document.getElementById('back').remove();
+                document.body.append(data);
+            }
         },
         imageFail: (error) => {
             console.log(error);

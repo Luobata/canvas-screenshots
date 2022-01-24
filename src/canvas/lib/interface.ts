@@ -71,6 +71,7 @@ export interface CustomerDefined {
 export interface Config {
     body?: HTMLElement;
     plugins?: PluginType[];
+    noBackground?: boolean;
     download: Function;
     imageFail?: Function;
     onClose?: Function;

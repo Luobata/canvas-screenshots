@@ -30,6 +30,7 @@ setConfig({
 export default class Screen {
     private config: Config;
     private body: HTMLElement;
+    // transMask是带有背景图的，在上面叠加内容
     private transMask: HTMLCanvasElement;
     private transMaskCtx: CanvasRenderingContext2D;
     private mask: HTMLCanvasElement;
@@ -165,6 +166,10 @@ export default class Screen {
                 );
                 innerInit(tmpC);
             }
+        } else if (this.config.noBackground) {
+            // nobackground
+            // 用一个空canvas减少报错
+            innerInit(document.createElement('canvas'), 0, 0);
         } else {
             // tslint:disable
             html2canvas(this.body).then((canvas: HTMLCanvasElement): void => {
@@ -367,43 +372,58 @@ export default class Screen {
 
         this.box.allBlur();
         const rect: Rect = this.box.rect;
-        const bData: ImageData = this.transMaskCtx.getImageData(
-            startX * config.rate,
-            startY * config.rate,
-            cvsWidth,
-            cvsHeight,
-        );
-        this.offMaskCtx.putImageData(
-            bData,
-            startX * config.rate,
-            startY * config.rate,
-        );
-        this.box.getData();
-        const data: ImageData = this.offMaskCtx.getImageData(
-            startX * config.rate,
-            startY * config.rate,
-            cvsWidth,
-            cvsHeight,
-        );
-        const tmpCanvas: HTMLCanvasElement = document.createElement('canvas');
-        tmpCanvas.style.width = `${width}px`;
-        tmpCanvas.style.height = `${height}px`;
-        tmpCanvas.width = cvsWidth;
-        tmpCanvas.height = cvsHeight;
-        tmpCanvas.getContext('2d').putImageData(data, 0, 0);
-        if (config.outputType === 'imageData') {
-            fn.call(null, data, rect);
-        } else if (config.outputType === 'png') {
-            const image: HTMLImageElement = new Image();
-            image.width = width;
-            image.height = height;
-            image.src = tmpCanvas.toDataURL('image/png');
-            fn.call(null, image, rect);
-        } else if (config.outputType === 'file') {
-            fn.call(null, blob(tmpCanvas.toDataURL('image/png')), rect);
-        } else if (config.outputType === 'base64') {
-            const base64Data: string = tmpCanvas.toDataURL();
-            fn.call(null, base64Data, rect);
+        if (this.config.noBackground) {
+            fn.call(
+                null,
+                {
+                    x: startX,
+                    y: startY,
+                    width: cvsWidth,
+                    height: cvsHeight,
+                    actionCtx: this.offMaskCtx,
+                },
+                rect,
+            );
+        } else {
+            const bData: ImageData = this.transMaskCtx.getImageData(
+                startX * config.rate,
+                startY * config.rate,
+                cvsWidth,
+                cvsHeight,
+            );
+            this.offMaskCtx.putImageData(
+                bData,
+                startX * config.rate,
+                startY * config.rate,
+            );
+            this.box.getData();
+            const data: ImageData = this.offMaskCtx.getImageData(
+                startX * config.rate,
+                startY * config.rate,
+                cvsWidth,
+                cvsHeight,
+            );
+            const tmpCanvas: HTMLCanvasElement =
+                document.createElement('canvas');
+            tmpCanvas.style.width = `${width}px`;
+            tmpCanvas.style.height = `${height}px`;
+            tmpCanvas.width = cvsWidth;
+            tmpCanvas.height = cvsHeight;
+            tmpCanvas.getContext('2d').putImageData(data, 0, 0);
+            if (config.outputType === 'imageData') {
+                fn.call(null, data, rect);
+            } else if (config.outputType === 'png') {
+                const image: HTMLImageElement = new Image();
+                image.width = width;
+                image.height = height;
+                image.src = tmpCanvas.toDataURL('image/png');
+                fn.call(null, image, rect);
+            } else if (config.outputType === 'file') {
+                fn.call(null, blob(tmpCanvas.toDataURL('image/png')), rect);
+            } else if (config.outputType === 'base64') {
+                const base64Data: string = tmpCanvas.toDataURL();
+                fn.call(null, base64Data, rect);
+            }
         }
         config.emitter.emit('destoryed');
         // this.maskCtx.putImageData(data, 0, 0);
