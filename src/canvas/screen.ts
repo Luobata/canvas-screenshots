@@ -381,6 +381,7 @@ export default class Screen {
                     width: cvsWidth,
                     height: cvsHeight,
                     actionCtx: this.offMaskCtx,
+                    actionCanvas: this.offMask,
                 },
                 rect,
             );
